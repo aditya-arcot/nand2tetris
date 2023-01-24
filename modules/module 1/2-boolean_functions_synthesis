@@ -23,6 +23,7 @@ f(x) = (NOT(x) AND NOT(y) AND NOT(z)) OR (NOT(x) AND y AND NOT(z)) OR (x AND NOT
 any boolean function can be represented using an expression with only AND, OR, NOT
 	unlike integer functions
 	OR is also unnecessary - can be expressed using AND, NOT
+==========
 
 
 == NAND ==
@@ -37,7 +38,7 @@ x NAND y = NOT(x AND y)
 any boolean function can be represented using an expression with only NAND
 	NOT(x) = x NAND x
 	x AND y = NOT(x NAND y)
-
+==========
 
 
 
