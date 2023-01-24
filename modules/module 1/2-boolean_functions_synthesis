@@ -1,0 +1,44 @@
+== steps ==
+convert truth table to boolean expression
+	focus on rows with value of 1
+	write an expression for each of the above rows
+	combine expressions with OR
+simplify expression
+
+
+example:
+x y z f
+0 0 0 1 <- NOT(x) AND NOT(y) AND NOT(z)
+0 0 1 0
+0 1 0 1 <- NOT(x) AND y AND NOT(z)
+0 1 1 0
+1 0 0 1 <- x AND NOT(y) AND NOT(z)
+1 0 1 0
+1 1 0 0
+1 1 1 0
+
+f(x) = (NOT(x) AND NOT(y) AND NOT(z)) OR (NOT(x) AND y AND NOT(z)) OR (x AND NOT(y) AND NOT(z))
+
+
+any boolean function can be represented using an expression with only AND, OR, NOT
+	unlike integer functions
+	OR is also unnecessary - can be expressed using AND, NOT
+
+
+== NAND ==
+x y NAND
+0 0 1
+0 1 1
+1 0 1
+1 1 0
+
+x NAND y = NOT(x AND y)
+
+any boolean function can be represented using an expression with only NAND
+	NOT(x) = x NAND x
+	x AND y = NOT(x NAND y)
+
+
+
+
+
