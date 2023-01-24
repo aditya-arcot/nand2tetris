@@ -1,0 +1,26 @@
+boolean operations - AND, OR, NOT
+
+boolean expressions - created using parenthesis
+
+boolean functions - set number of inputs
+	ex: f(x,y) = x AND y
+	possible inputs, output can be specified in truth table 
+
+boolean identities
+	commutative laws
+		x AND y = y AND x
+		x OR y = y OR x
+	associative laws
+		x AND (y AND z) = (x AND y) AND z
+		x OR (y OR z) = (x OR y) OR z
+	distributive laws
+		x AND (y OR z) = (x AND y) OR (x AND z)
+		x OR (y AND z) = (x OR y) AND (x OR z)
+	De Morgan laws
+		NOT(x AND y) = NOT(x) OR NOT(y)
+		NOT(x OR y) = NOT(x) AND NOT(y)
+
+boolean algebra - can use identities to simplify expression
+
+
+
