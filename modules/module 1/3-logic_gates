@@ -1,0 +1,27 @@
+gate logic - technique for implementing boolean functions using logic gates
+
+
+== logic gates ==
+1+ inputs, 1 output
+
+
+elementary
+	NAND - if (a==1 and b==1) then out=0 else out=1
+	AND
+	OR
+	NOT
+composite - created using multiple elementary gates
+	ex: 3-way AND
+
+
+gate interface - shows inputs and output
+	only 1 unique description
+gate implementation - shows how the chip is constructed
+	may be several possible
+==========
+
+
+this course does not deal with physical implementations
+	ex: circuits, transistors, relays
+	scope of EE, not CS
+
