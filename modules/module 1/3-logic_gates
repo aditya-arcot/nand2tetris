@@ -14,9 +14,11 @@ composite - created using multiple elementary gates
 	ex: 3-way AND
 
 
-gate interface - shows inputs and output
-	only 1 unique description
-gate implementation - shows how the chip is constructed
+gate interface - diagram left
+	shows inputs and output
+	only 1 unique description for a chip
+gate implementation - diagram right
+	shows how the chip is constructed
 	may be several possible
 	dashed line shows boundary of chip (black box)
 ==========
