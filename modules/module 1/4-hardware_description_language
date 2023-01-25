@@ -11,7 +11,7 @@ HDL file - text description of gate diagram
 ==========
 
 
-== example (see image) ==
+== HDL file example (see image) ==
 /** Xor gate: out = (a AND NOT(b)) OR (NOT(a) AND b)) */
 
 CHIP Xor {
