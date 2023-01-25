@@ -1,0 +1,49 @@
+== designing a gate/chip ==
+requirements - truth table, gate diagram
+
+design gate logic diagram for boolean function with available gates
+	signals can be copied - HDL has unlimited thin out
+	each internal connection must be named
+
+HDL file - text description of gate diagram
+	name of chip, inputs of chip, output - interface
+	implementation
+==========
+
+
+== example (see image) ==
+/** Xor gate: out = (a AND NOT(b)) OR (NOT(a) AND b)) */
+
+CHIP Xor {
+	IN a, b;
+	OUT out;
+
+	PARTS: //implementation
+	Not (in=a, out=nota);
+	Not (in=b, out=notb);
+	And (a=a, b=notb, out=aAndNotb);
+	And (a=nota, b=b, out=notaAndb);
+	Or (a=aAndNotb, b=notaAndb, out=out);
+}
+==========
+
+
+== HDL ==
+similar expectations to other programming languages
+	good documentation
+	descriptive names - chips, connections
+	readability
+	indentation
+unique features
+	functional / declarative language
+		no execution
+		static description of chip
+	order of implementation statements doesn't matter
+	 	typically left to right
+	commit to using documented interface for off-the-shelf gates
+		certain conventions
+
+many languages
+	most common - VHDL, Verilog
+	custom HDL provided by this course
+==========
