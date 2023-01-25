@@ -1,0 +1,45 @@
+== hardware simulation ==
+used to test HDL code
+	syntax / logical errors
+
+
+interactive
+	start hardware simulator
+	load HDL file
+	enter values and evaluate chip logic
+	inspect resulting values
+		output pins
+		internal pins
+script-based (.tst)
+	series of commands to simulator	
+		load HDL (ex: load Xor.hdl;)
+		tests (ex: set a 0, set b 0, eval;)
+	"automatic"
+	replicable
+	can use output file
+		output results to file	
+		ex:
+			load Xor.hdl, output-file Xor.out, output-list a b out;
+			set a 0, set b 0, eval, output;
+	can use compare file (.cmp)
+		used when manually checking output is unfeasible
+		ex: load Xor.hdl, output-file Xor.out, compare-to Xor.cmp, output-list a b out;
+		created using behavioral simulation
+			chip logic can be implemented in any language
+			enables high-level planning and testing of hardware arch before writing HDL code
+==========
+
+
+== hardware construction ==
+players
+	system architects
+	developers
+
+system architect decides what lower-level chips are needed
+for each chip, architect creates:
+	chip API - documentation, interface
+	test script
+	compare file
+
+developer then build the chips
+==========
