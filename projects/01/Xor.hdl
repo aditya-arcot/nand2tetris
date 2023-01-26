@@ -9,9 +9,12 @@
  */
 
 CHIP Xor {
-    IN a, b;
-    OUT out;
+	IN a, b;
+	OUT out;
 
-    PARTS:
-    // Put your code here:
+	PARTS:
+	Or(a=a, b=b, out=aORb);
+	And(a=a, b=b, out=aANDb);
+	Not(in=aANDb, out=NOTaANDb);
+	And(a=aORb, b=NOTaANDb, out=out);
 }

@@ -10,9 +10,12 @@
  */
 
 CHIP Or {
-    IN a, b;
-    OUT out;
+	IN a, b;
+	OUT out;
 
-    PARTS:
-    // Put your code here:
+	PARTS:
+	Not(in=a, out=nota);
+	Not(in=b, out=notb);
+	And(a=nota, b=notb, out=notaandnotb);
+	Not(in=notaandnotb, out=out);
 }
