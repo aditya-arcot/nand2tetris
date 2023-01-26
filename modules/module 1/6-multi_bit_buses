@@ -17,6 +17,8 @@ CHIP Add16 {
 
 
 individual bits of a bus can be accessed
+important - multi-bit buses are indexed right to left
+	convention
 
 ex: AND together all 4 bits of input
 CHIP AND4Way {
