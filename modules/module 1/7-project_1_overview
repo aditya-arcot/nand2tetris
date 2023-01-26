@@ -1,0 +1,97 @@
+== project 1 ==
+given: Nand
+goal: build following gates
+	elementary logic gates
+		Not
+		And
+		Or
+		Xor
+		Mux
+		Dmux
+	16-bit variants	
+		Not16
+		And16
+		Or16
+		Mux16
+	Multi-way variants	
+		Or8Way
+		Mux4Way16
+		Mux8Way16
+		DMux4Way
+		DMux8Way
+
+why these gates
+	commonly used
+	comprise all elementary logic gates needed to build Hack computer
+
+chip building materials
+	gate diagram
+	incomplete HDL file
+	test script
+	compare file
+
+Hack chipset API shows names of inputs, outputs for built-in chips
+==========
+
+
+== multiplexer ==
+3 inputs - a, b, sel
+
+
+if (sel==0)
+	out=a
+else
+	out=b
+
+
+abbreviated truth table
+sel	out
+0	a
+1	b
+
+
+can be implemented with And, Or, Not gates
+==========
+
+
+== using mux logic to build a programmable gate ==
+gate can act as either AND or OR depending on sel
+
+a and b signals are fanned out to both AND and OR
+depending on sel, decide which output to return
+
+CHIP AndMuxOr {
+	IN a, b, sel;
+	OUT out;
+
+	PARTS:
+		And (a=a, b=b, out=andOut);
+		OR (a=a, b=b, out=orOut);
+		Mux (a=andOut, b=orOut, sel=sel, out=out);
+}
+==========
+
+
+== demultiplexer ==
+inputs - in, sel
+depending on sel, either output to a or b
+==========
+
+
+== multiplexing / demultiplexing in communications networks ==
+multiple simulataneous data streams need to pass through single, shared communications line
+
+Mux before shared line, DMux after shared line
+
+sel bit causes alternation between streams
+	can be connected to an oscillator that produces repetitive train of alternating 0s and 1s
+==========
+
+
+== Mux4Way16 ==
+4 16-bit inputs
+1 2-bit sel
+
+can be built from multiple Mux16 gates
+==========
+
