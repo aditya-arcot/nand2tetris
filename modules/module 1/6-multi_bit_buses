@@ -1,0 +1,62 @@
+sometimes we manipulate an array of bits together
+
+conceptually convenient to think about such a group of bits as a single entity
+	termed "bus"
+
+HDLs usually provide some convenient notation for handling buses
+
+
+ex: add 2 16-bit values
+CHIP Add16 {
+	IN a[16], b[16];
+	OUT out[16];
+
+	PARTS:
+		...
+}
+
+
+individual bits of a bus can be accessed
+
+ex: AND together all 4 bits of input
+CHIP AND4Way {
+	IN a[4];
+	OUT out;
+
+	PARTS:
+		AND(a=a[0], b=a[1], out=t01); //temp variable
+		AND(a=t01, b=a[2], out=t012);
+		AND(a=t012, b=a[3], out=out);
+}
+
+
+this works for bits of out as well
+
+ex: bit-wise AND of 2 2-bit input buses
+CHIP AND2 {
+	IN a[2], b[2];
+	OUT out[2];
+
+	PARTS:
+		AND(a=a[0], b=b[0], out=out[0]);
+		AND(a=a[1], b=b[1], out=out[1]);
+}
+
+
+buses can be composed from (and broken into) sub-buses
+
+ex:	
+	IN lsb[8], msb[8], ...
+	...
+	ADD16(a[0..7]=lsb, a[8..15]=msb, b=..., out=...);
+	ADD16(..., out[0..3]=t1, out[4..15]=t2);
+
+
+syntactic choices for this course's HDL
+	overlaps of sub-buses are allowed on output buses of parts
+	width of internal pins deduced automatically
+	"false" and "true" may be used as buses of any width
+		ex: a=true when a is a 16-bit bus makes all 16 values 1
+
+
+
