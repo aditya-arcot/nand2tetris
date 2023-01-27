@@ -1,0 +1,13 @@
+N bits can represent 2^N numbers
+- max (starting at 0): 2^N - 1
+
+converting binary to decimal
+- muliply bits from right to left by increasing powers of 2 starting at 0
+
+left-most bit is usually used for sign of number
+
+converting decimal to binary
+- find largest power of 2 that is less than or equal to decimal number
+- subtract and repeat until left with 0
+- assign 1 if power is in sum or 0 if not
+
