@@ -1,0 +1,31 @@
+== binary addition ==
+add bits from right to left
+carry bit if greater than 1
+	ex: if sum is 2, write 0, carry 1
+	ex: if sum is 3, write 1, carry 1
+in case of overflow, usually ignore overflow bits
+	operation is technically addition mod 2^(width)
+==========
+
+
+== building an adder ==
+progression
+- half adder - adds 2 bits
+- full adder - adds 3 bits
+- multi-bit adder - adds 2 numbers
+
+half adder
+- inputs - 2 bits - a, b
+- outputs - 2 bits - sum, carry
+- 1st week 2 implementation exercise
+
+full adder
+- inputs - 3 bits - a, b, c (from previous addition)
+- outputs - 2 bits - sum, carry
+- 2nd implementation exercise
+
+multi-bit adder
+- use half adder for first addition
+- use full adder for remaining additions
+==========
+
