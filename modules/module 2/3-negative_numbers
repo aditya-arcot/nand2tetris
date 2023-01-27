@@ -1,0 +1,66 @@
+== possible implementation - sign bit ==
+1st bit represents sign of number 
+- 0 positive, 1 negative
+
+complications
+- both 0 and -0 exist
+- implementations need to explicitly handle sign
+==========
+
+
+== 2s complement ==
+represent negative number -X as positive number 2^N - X
+
+if first bit is 1, it represents a negative number
+
+ex: 4 bits
+0000  0
+0001  1
+...
+0110  6
+0111  7
+1000  -8 (8)
+1001  -9 (9)
+...
+1110  -2 (14)
+1111  -1 (15)
+
+positive numbers: 0 to 2^(N-1) - 1
+negative numbers: -1 to -2^(N-1)
+==========
+
+
+== addition in 2s complement ==
+free operation - no new implementation
+throw away overflow bit
+	both representation and addition are modulo 2^N
+
+ex: -2 + -3 = -5
+-2 => 14 => 1110
+-3 => 13 => 1101
+1110 + 1101 = 11011 (27) => 1011 => 11-16 = -5
+
+ex: 7 - 5 = 2
+7 => 0111
+-5 => 11 => 1011
+0111 + 1011 = 10010 (18) => 0010 => 2
+==========
+
+
+== computing -x ==
+2^N - x = 1 + (2^N - 1) - x
+2^N - 1 is represented as 11111...
+subtracting x from sequence of 1s is simply flipping bits of x
+adding 1 to result is simple
+
+ex: 4 => -4
+4 => 0100
+1111 - 0100 = 1011
+1 + 1011 = 1100 => 12-16 = -4
+
+ex: 6 => -6
+6 => 0110
+1111 - 0110 = 1001
+1 + 1001 = 1010 => 10-16 = -6
+==========
+
