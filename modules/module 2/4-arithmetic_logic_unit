@@ -1,0 +1,34 @@
+== ALU ==
+inputs - a, b, f
+output - f(a,b)
+
+f - one out of family of pre-defined arithmetic and logical functions
+
+determining what operations are defined in the ALU is a hardware / software tradeoff
+- ex: can implement multiplication, division in software and not ALU
+==========
+
+
+== Hack ALU ==
+inputs - 16-bit x, 16-bit y, 6 control bits (zx, nx, zy, ny, f, no)
+outputs - 16-bit function output, 2 additional bits (zr, ng)
+
+operations (in order)
+- if zx == 1 then x = 0
+- if nx == 1 then x = ~x
+- if zy == 1 then y = 0
+- if ny == 1 then y = ~y
+- if f == 1 then out = x+y, else out = x&y
+- if no == 1 then out = ~out
+- if out == 0 then zr = 1, else zr = 0
+- if out < 0 then ng = 1, else ng = 0
+
+18 possible functions
+- 0 1 -1 x y !x !y -x -y x+1 y+1 x-1 y-1 x+y x-y y-x x&y x|y
+
+characteristics
+- simple
+- elegant
+- easy to implement
+==========
+
