@@ -1,0 +1,37 @@
+== Project 2 ==
+given - chips from Project 1
+goal - build following chips (family of combinatorial chips)
+- HalfAdder
+- FullAdder
+- Add16
+- Inc16
+- ALU
+==========
+
+
+== Half Adder ==
+input - a, b
+output - sum, carry
+
+can be built using elementary gates
+- Xor for sum
+- And for carry
+
+a b sum carry
+0 0 0   0
+0 1 1   0
+1 0 1   0
+1 1 0   1
+==========
+
+
+== Full Adder ==
+input - a, b, c
+output - sum, cary
+
+can be built from 2 half-adders
+==========
+
+
+== 16-bit Adder ==
+
