@@ -1,0 +1,8 @@
+next week - memory systems
+
+most gates we have built are standard
+- ALU is not standard (simplified version)
+
+adder efficiency could be improved
+- lots of delay due to long chain
+- possibility - carry look-ahead
