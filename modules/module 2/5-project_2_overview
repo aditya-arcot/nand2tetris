@@ -30,8 +30,44 @@ input - a, b, c
 output - sum, cary
 
 can be built from 2 half-adders
+
+a b c sum carry
+0 0 0 0   0
+0 0 1 1   0
+0 1 0 1   0
+0 1 1 0   1
+1 0 0 1   0
+1 0 1 0   1
+1 1 0 0   1
+1 1 1 1   1
 ==========
 
 
 == 16-bit Adder ==
+input - a (16), b (16)
+output - out (16)
+
+can be built from n full-adders
+carry bit is "piped" from right to left
+most significant carry bit is ignored
+==========
+
+
+== Incrementer ==
+input - in (16)
+output - out (16)
+
+add 1 to input
+
+tip - 0 and 1 can be represented in HDL as false and true
+==========
+
+
+== ALU ==
+input - x (16), y (16), zx, nx, zy, ny, f, no
+output - out (16), zr, ng
+
+can be built using 16-bit adder and Project 1 chips
+needs less than 20 lines of HDL code
+==========
 
