@@ -67,8 +67,7 @@ CHIP ALU {
 	Or8Way(in=outleft, out=leftor);
 	Or8Way(in=outright, out=rightor);
 	Or(a=leftor, b=rightor, out=fullor);
-	Not(in=fullor, out=notfullor);
-	Mux16(a=false, b=true, sel=notfullor, out[0]= zr);
+	Not(in=fullor, out=zr);
 	
 	// set ng equal to left digit
 	Mux16(a=false, b=true, sel=outlast, out[0]=ng);
