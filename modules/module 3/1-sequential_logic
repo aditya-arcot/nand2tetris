@@ -1,0 +1,41 @@
+== combinatorial logic ==
+so far, we ignored issue of time
+
+inputs were fixed and unchanging
+output was function of input
+
+output was computed instantaneously
+==========
+
+
+== concerns ==
+use same hardware over time
+- inputs change and ouputs should follow
+
+remember state
+- memory
+- counters
+
+deal with speed
+==========
+
+
+== clock ==
+oscillates at fixed rate
+each cycle is a discrete time unit
+- ex: inputs to a gate can change once each cycle
+
+as long as cycle is not too fast, we can ignore delays
+- system state is stabilized
+==========
+
+
+== combinatorial vs sequential logic ==
+combinatorial - out[t] = function(in[t])
+sequential - out[t] = function(in[t])
+- output based on previous time step input
+
+input and output can become the same physical component
+- state[t] = function(state[t-1])
+==========
+
