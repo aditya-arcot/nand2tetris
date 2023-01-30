@@ -27,20 +27,20 @@
 // if (out < 0) set ng = 1
 
 CHIP ALU {
-    IN  
-        x[16], y[16],  // 16-bit inputs        
-        zx, // zero the x input?
-        nx, // negate the x input?
-        zy, // zero the y input?
-        ny, // negate the y input?
-        f,  // compute out = x + y (if 1) or x & y (if 0)
-        no; // negate the out output?
+	IN
+	x[16], y[16],  // 16-bit inputs        
+	zx, // zero the x input?
+	nx, // negate the x input?
+	zy, // zero the y input?
+	ny, // negate the y input?
+	f,  // compute out = x + y (if 1) or x & y (if 0)
+	no; // negate the out output?
 
-    OUT 
-        out[16], // 16-bit output
-        zr, // 1 if (out == 0), 0 otherwise
-        ng; // 1 if (out < 0),  0 otherwise
-
-    PARTS:
-   // Put you code here:
+	OUT
+	out[16], // 16-bit output
+	zr, // 1 if (out == 0), 0 otherwise
+	ng; // 1 if (out < 0),  0 otherwise
+	
+	PARTS:
+	
 }
