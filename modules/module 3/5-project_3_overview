@@ -1,0 +1,33 @@
+== project 3 ==
+given
+- all chips built in projects 1, 2
+- DFF gate
+
+goal - build following chips
+- Bit
+- Register (16-bit)
+- RAM8
+- RAM64
+- RAM512
+- RAM4K
+- RAM16K
+- PC
+
+first 7 chips are family of sequential chips
+==========
+
+
+== 8-register RAM ==
+take in value and feed to all 8 registers
+use Mux, Dmux logic to select right register
+==========
+
+
+for remaining registers, stack previous size RAM
+
+
+== program counter ==
+can be built using register, incrementor, and some logic gates
+==========
+
+
