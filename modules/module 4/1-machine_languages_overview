@@ -1,0 +1,33 @@
+computers are flexible, unlike most machines
+- universality - same hardware can run many different software programs
+
+program
+- stored in memory
+- consists of sequence of instructions coded in binary
+- hardware executes instructions in order 
+- changes result in different functionality
+
+compiler converts program written in high-level language to program in machine language
+
+
+== machine language ==
+components
+- operations (ex: addition)
+- program counter (to move between instructions)
+- addressing (what to operate on)
+
+binary instructions can be read easily by computer
+not usually used to directly write programs
+
+easier to interpret and write in symbolic form
+- sequence of bits goes by a mnemonic 
+- ex: 0100010 -> ADD
+==========
+
+
+== assembly language ==
+allows writing machine language in easier format
+assembler then converts the program to machine language
+
+symbolic assembler - converts variables (ex: memory location) to set value
+==========
