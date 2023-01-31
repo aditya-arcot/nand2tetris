@@ -1,0 +1,78 @@
+== memory ==
+main memory - RAM, ...
+- hardwired into motherboard
+secondary memory - disks, ...
+
+volatile - requires power for persistence
+non-volatile - info persists without power
+
+RAM
+- stores both data, instructions for programs
+- random access memory - each register can be accessed in same time, regardless of how many
+
+perspective
+- physical
+- logical
+
+focus of this course - RAM, logical perspective
+==========
+
+
+== register ==
+most basic memory element
+
+1-bit register can be expanded to store multiple bits
+
+width (w) - 16 for this course
+
+inputs - in (w), load (1)
+output - out(w)
+
+state (w) - value currently stored
+
+reading value - probe out
+writing value
+- set in = v
+- set load = 1
+==========
+
+
+Hardware Simulator clock can be manually advanced
+- 2 advancements = 1 time out
+
+
+== RAM unit ==
+RAM abstraction
+- sequence of n addressable registers, with addressees 0 to n-1
+- at any given point of time, only 1 register in RAM is selected
+
+address of register
+- width = k = log_2(n) 
+
+inputs - in (w), address (k), load (1)
+output - out (w)
+
+sequential chip with clocked behavior
+
+reading from register i
+- set address = i
+- out emits state of register i
+
+writing to register i
+- set address = i
+- set in - v
+- set load = 1
+==========
+
+
+== RAM chips ==
+name	n	k
+RAM8	8	3
+RAM64	64	6
+RAM512	512	9
+RAM4K	4096	12
+RAM16K	16384	14i
+
+will be used in Hack computer
+==========
+
