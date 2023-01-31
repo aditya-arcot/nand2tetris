@@ -1,0 +1,49 @@
+== remembering state ==
+missing ingredient
+- remember 1 info bit from t-1 and to use at t
+- at end of t-1, either of 2 states
+  - remembering 0 or remembering 1
+- remembers by flipping between possible states
+
+flip-flops - gates that can flip between 2 states
+==========
+
+
+== clocked data flip flop ==
+1 input, 1 output
+
+out[t] = in[t-1]
+out[0] unknown
+
+triangle in diagram signifes sequential chip
+
+all sequential logic provided in this course
+- treat as primitive, like Nand
+
+physical implementation can be built from Nand gates
+- steps
+  - create "loop" for "unclocked" flip-flop
+  - isolate across time steps using "master-slave" setup
+- conceptually confusing, so not covered
+- our Hardware Simulator forbids "combinatorial loops"
+==========
+
+
+== sequential logic implementation ==
+array of DDF's represents memory
+- output + new input fed into combinatorial logic
+- output of logic changes state of DFF's
+==========
+
+
+== 1-bit register / memory ==
+goal - remember input bit until requested to load new value
+
+if load(t-1) then out(t) = int(t-1)
+else out(t) = out(t-1)
+
+can be implemented using Mux
+- sel is load
+==========
+
+
