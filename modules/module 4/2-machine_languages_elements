@@ -1,0 +1,78 @@
+== machine language ==
+specification of hardware / software interface
+- what are supported operations?
+- what do they operate on?
+- how is the program controlled?
+
+usually in close correspondence to actual hardware architecture
+- but not always
+
+cost-performance tradeoff
+- silicon area
+- time to complete instruction
+==========
+
+
+== machine operations ==
+usually correspond to what's implemented in hardware
+- arithmetic operations - add, subtract, ...
+- logical operations - and, or, ...
+- flow control - go to instruction X, if C, ...
+
+differences between machine languages
+- richness of set of operations
+  - divisions? bulk copy? ...
+- data types
+  - floating point ...
+==========
+
+
+== addressing ==
+accessing memory location is expensive
+- need to supply long address
+- getting memory contents into CPU take time
+
+solution - memory hierarchy
+- no 1 large block of memory
+- sequence of different memories of different sizes
+- smallest memories are easiest, quickest to access
+- registers -> cache -> main memory -> disk
+
+registers
+- few located throughout CPU
+- easily accessed
+- number, functions are a central part of machine language
+- types
+  - data registers
+  - address registers
+
+modes
+- register: Add R1, R2
+  - R2 <- R2 + R1
+- direct: Add R1, M[200]
+  - Mem[200] <- Mem[200] + R1
+- indirect: Add R1, @A
+  - Mem[A] <- Mem[A] + R1
+- immediate: Add 73, R1
+  - R1 <- R1 + 73
+==========
+
+
+== input / output ==
+many types of devices
+CPU needs some kind of protocol to talk to each
+- software drivers know protocols
+
+general method of interaction - memory mapping
+- ex: memory location X holds direction of last movement of mouse
+==========
+
+
+== flow control ==
+CPU usually executes machine instructions in sequence
+
+unconditional jump (ex: loop)
+- either using number or name
+conditional jump
+- if condition not met, continue
+==========
