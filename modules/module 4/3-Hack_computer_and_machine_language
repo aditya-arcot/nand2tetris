@@ -1,0 +1,102 @@
+== Hack machine ==
+16-bit machine
+- atomic unit of info
+
+components
+- data memory (RAM)
+  - 0-indexed sequence of 16-bit registers
+- instruction memory (ROM)
+  - 0-indexed sequence of 16-bit registers
+- CPU
+  - contains ALU
+  - reads from RAM, ROM
+  - writes to RAM
+- instruction bus / data bus / address bus
+  - move info around
+
+Hack machine language
+- 16-bit A-instructions
+- 16-bit C-instructions
+
+Hack program
+- sequence of instructions written in Hack machine language
+
+control
+- ROM loaded with a Hack program
+- reset button is pushed
+- program starts running
+
+3 types of registers
+- D register
+  - holds 16-bit value
+- A register
+  - holds 16-bit value
+- M register
+  - represents 16-bit RAM register addressed by A
+==========
+
+
+== A-instruction ==
+syntax - @value
+
+value is either
+- non-negative decimal constant
+- symbol referring to such a constant (later)
+
+semantics
+- sets A register to value
+- side effect - RAM[A] becomes selected RAM register (M)
+
+ex: set RAM[100] to -1
+@100 // A=100
+M=-1 // RAM[100] = -1
+==========
+
+
+== C-instruction ==
+syntax
+- dest = comp ; jump
+- dest, jump are optional
+
+dest
+- null, M, D, MD, A, AM, AD, AMD
+- allows for storing in more than 1 container
+
+comp
+- 0, 1, -1, D, A, M, !D, !A, !M, -D, -A, -M
+- D+1, A+1, M+1, D-1, A-1, M-1, D+A, D+M
+- D-A, D-M, A-D, M-D, D&A, D&M, D|A, D|M
+
+jump
+- null, JGT, JEQ, JGE, JLT, JNE, JLE, JMP
+- compare result of computation to 0
+- jump to A
+
+semantics
+- compute value of comp
+- store result in dest
+- if boolean expression (comp jump 0) is true, jump to execute instruction stored in ROM[A]
+==========
+
+
+== examples ==
+- set D register to -1
+D=-1
+
+- set RAM[300] to value of D register minus 1
+@300 // A=300
+M=D-1 // RAM[300]=D-1
+
+- if (d-1==0) jump to 56
+@56 // A=56
+D-1; JEQ // if (D-1 == 0) go to 56
+
+- unconditional jump
+0; JMP
+
+- set A to 1, store A-1 in M, jump if A-1 == 0
+@1
+M=A-1; JEQ
+==========
+
+
