@@ -1,0 +1,52 @@
+== peripheral I/O devices ==
+ex: keyboard, screen
+
+used for
+- getting data from users
+- displaying data to users
+
+high-level approach
+- sophisticated software libraries
+- explored in Part II
+low-level approach
+- bits
+==========
+
+
+== screen memory map ==
+area of RAM dedicated to manage display unit
+used to continuously refresh physical display
+
+Hack display unit
+- 256 x 512 table of pixels
+- black/white
+
+16 bits x 8192 rows
+- can only be accessed 16-bits at a time
+
+Screen chip
+- used for Hack computer
+- behaves exactly like memory unit
+- serves as memory map
+
+to set pixel on/off
+- word = Screen[32*row + col/16]
+  - relative address (actual - Screen base address)
+  - same as: word = RAM[16384 + 32*row + col/16]
+- set (col % 16)th bit of word to 0 or 1
+- commit word to RAM
+==========
+
+
+== keyboard memory map ==
+Keyboard chip
+- single 16-bit register
+- RAM[24576] in Hack computer
+
+key scan code appears in map when pressed
+- 0 when no key pressed
+
+to check currently-pressed key
+- probe contents of Keyboard chip
+==========
+
