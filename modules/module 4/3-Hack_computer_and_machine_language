@@ -27,12 +27,14 @@ control
 - program starts running
 
 3 types of registers
-- D register
+- D - data
   - holds 16-bit value
-- A register
+  - in CPU
+- A - data/address (depends on context)
   - holds 16-bit value
-- M register
-  - represents 16-bit RAM register addressed by A
+  - in CPU
+- M - currently selected memory register
+  - represents RAM[A]
 ==========
 
 
