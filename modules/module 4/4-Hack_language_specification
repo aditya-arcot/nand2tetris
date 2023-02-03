@@ -2,7 +2,7 @@
 - binary code
   - can be directly executed
 - symbolic language
-  - must be translated before execution
+  - must be translated (by assembler) before execution
 
 
 == A-instruction ==
