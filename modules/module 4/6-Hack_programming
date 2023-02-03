@@ -1,5 +1,6 @@
-CPU emulator can be used for debugging, executing programs written in machine language
+Hack assembly language
 
+CPU emulator can be used for debugging, executing
 
 == typical registers, memory operations ==
 // D=10
@@ -31,26 +32,10 @@ M=D
 ==========
 
 
-== add 2 numbers ==
-// Program: Add2.asm
-// Computes: RAM[2] = RAM[0] + RAM[1]
-// Usage: put values in RAM[0], RAM[1]
-
-@0
-D=M
-
-@1
-D=D+M
-
-@2
-M=D
-==========
-
-
 == terminating a program properly ==
 infinite loop
-- @6
-- 0; JMP
+- @N // use current line num
+- 0; JMP // always jump
 
 prevent NOP slide
 ==========
@@ -74,8 +59,33 @@ used in implementation of Hack virtual machine
 ==========
 
 
-== branching ==
-see 6-sign_num.asm
+== labels ==
+declaration - (LABELNAME)
+referencing - @LABELNAME
+
+assembler operations
+- declarations not translated
+- each reference to label replaced with reference to instruction number following label's declaration
+==========
+
+
+== variables ==
+declaration - @varname
+- looks same as label reference, but no corresponding label declaration
+
+type - 16-bit value
+allocated to RAM from address 16 onwards
+
+semantics
+- for declaration, system finds available memory register (n)
+- in future references, @varname translated to @n
+
+benefits
+- readability, easy to debug
+- relocatable code
+  - avoids explicit memory locations
+==========
+
 
 
 
