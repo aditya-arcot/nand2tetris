@@ -36,6 +36,7 @@ ex: 1111010101101100 -> AM=D|M;JLT
 
 == Hack program ==
 sequence of Hack instructions
+case sensitive
 either symbolic or binary
 white space permitted, but ignored for line numbers
 comments can be used
