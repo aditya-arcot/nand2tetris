@@ -70,7 +70,7 @@ comp
 jump
 - null, JGT, JEQ, JGE, JLT, JNE, JLE, JMP
 - compare result of computation to 0
-- jump to A
+- jump to instruction A in ROM
 
 semantics
 - compute value of comp
@@ -87,7 +87,7 @@ D=-1
 @300 // A=300
 M=D-1 // RAM[300]=D-1
 
-- if (d-1==0) jump to 56
+- if (d-1==0) jump to ROM[56]
 @56 // A=56
 D-1; JEQ // if (D-1 == 0) go to 56
 
