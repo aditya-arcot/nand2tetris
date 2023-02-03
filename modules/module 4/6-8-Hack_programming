@@ -1,0 +1,75 @@
+CPU emulator can be used for debugging, executing programs written in machine language
+
+
+== typical registers, memory operations ==
+// D=10
+@10
+D=A
+
+// D++
+D=D+1
+
+// D=RAM[17]
+@17
+D=M
+
+// RAM[17]=0
+@17
+M=0
+
+// RAM[17]=10
+@10
+D=A
+@17
+M=D
+
+// RAM[5] = RAM[3]
+@3
+D=M
+@5
+M=D
+==========
+
+
+== add 2 numbers ==
+// Program: Add2.asm
+// Computes: RAM[2] = RAM[0] + RAM[1]
+// Usage: put values in RAM[0], RAM[1]
+
+@0
+D=M
+
+@1
+D=D+M
+
+@2
+M=D
+==========
+
+
+== terminating a program properly ==
+infinite loop
+- @6
+- 0; JMP
+
+prevent NOP slide
+==========
+
+
+== built-in symbols ==
+virtual registers
+- use when A register is used as address to improve readability
+- R0, R1, ... R15 - correspond to 0, 1, ... 15
+
+base addresses of I/O memory maps
+- SCREEN -> 16384
+- KBD -> 24576
+
+used in implementation of Hack virtual machine
+- SP -> 0
+- LCL -> 1
+- ARG -> 2
+- THIS -> 3
+- THAT -> 4
+==========
+
