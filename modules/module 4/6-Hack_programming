@@ -87,11 +87,16 @@ benefits
 ==========
 
 
+== pointers ==
+variables that store memory addresses
 
+to access memory using a pointer, we need an instruction like A=M
+- explicit setting of A-register
 
-
-
-
+arrays
+- stored as continuous block of registers in memory
+- pointer needed for beginning of array
+==========
 
 
 
