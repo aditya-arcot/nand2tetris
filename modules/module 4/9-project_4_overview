@@ -1,0 +1,44 @@
+tasks
+- simple algebraic program
+- simple interactive program
+  - keyboard, screen
+
+
+== Mult ==
+perform R2 = R0 * R1
+only needs to satisfy R0 >= 0, R1 >= 0, and R0*R1 < 32768
+
+use a loop to change multiplication problem to addition
+==========
+
+
+== Fill ==
+fill screen while any key is pressed
+
+infinite loop
+listen to keyboard
+
+testing
+- select no animation
+- manual testing (no test script)
+==========
+
+
+== best practice ==
+short
+efficient
+elegant
+self-describing
+==========
+
+
+== technical tips ==
+use symbolic variables, labels
+use sensible variable, label names
+lower-case variables
+upper-case labels
+use indentation
+start with pseudo code
+==========
+
+
