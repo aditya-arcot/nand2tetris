@@ -1,0 +1,83 @@
+== Hack CPU ==
+16-bit processor
+
+functions
+- execute current instruction
+- figure out which instruction to execute next
+
+connected to instruction & data memory
+
+inputs
+- inM (16)
+  - value of currently selected data register
+- instruction (16)
+  - value of currently selected instruction register
+- reset (1)
+  - restarts program if 1
+
+outputs
+- outM (16)
+  - data value
+- writeM (1)
+  - load bit that enables writing
+- addressM (16)
+  - where to write data
+- pc (15)
+  - address of next instruction
+
+parts
+- A register
+- D register
+- PC
+- ALU
+- 2 Mux16
+==========
+
+
+== instruction handling ==
+decode into op-code (1) + remaining (15)
+
+A-instruction (op-code 0)
+- store value in A-register
+- output value (addressM)
+
+C-instruction (op-code 1)
+- decode remaining into comp, dest, jump
+- run through ALU
+==========
+
+
+== ALU operation ==
+data inputs
+- from D-register
+- from A-register / M-register
+
+control inputs
+- control bits from instruction
+
+data output
+- possibilities
+  - D-register
+  - A-register
+  - outM
+- destination bits determine which register actually receives data output
+  - 0 for ignore
+  - 1 for accept
+
+control outputs
+- zr (1)
+- ng (1)
+==========
+
+
+== program counter ==
+output address of next instruction
+
+logic
+if (reset == 1) PC = 0
+else
+  load = f(jump bits, ALU control outputs)
+  if (load == 1) PC = A
+  else PC ++ 
+==========
+
