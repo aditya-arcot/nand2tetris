@@ -1,55 +1,13 @@
 parts of computer
-- memory
-  - program (ROM)
-  - data (RAM)
+- memory (physically 1 component)
+  - program - stores instructions
+  - data
 - CPU
-  - ALU
-  - registers
+  - ALU - performs numerical operations
+  - registers - store intermediate results
 
 
 information flows (implemented with buses)
 - data
 - control
 - address
-
-
-ALU
-- performs operations on numbers
-- data bus
-  - input numbers
-  - output output of operation
-- control bus
-  - input what operation
-  - output operation of other system parts
-
-
-CPU registers
-- store intermediate results
-- data bus
-  - input data to store
-  - output stored data
-- address bus (for address or data/address registers)
-  - output memory address
-- control bus
-  - input control info
-
-
-data memory
-- stores data
-- data bus
-  - input data to store
-  - output stored data
-- address bus
-  - input memory address
-
-
-program memory
-- stores instructions
-- data bus
-  - output data
-- address bus
-  - input address of next instruction
-- control bus
-  - output instructions
-
-
