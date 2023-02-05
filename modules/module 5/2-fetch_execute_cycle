@@ -1,0 +1,37 @@
+basic CPU loop
+- fetch instruction from program memory
+- execute it
+
+
+== fetching ==
+input location of next instruction to program counter (register)
+- data bus
+- usually old value + 1
+program counter outputs instruction address to program memory
+- address bus
+program memory ouputs instruction code
+- data bus
+==========
+
+
+== executing ==
+instruction code specifies what to do
+- may need to access registers, data memory
+
+different subsets of bits control different aspects of operation
+==========
+
+
+== fetch-execute clash ==
+both program and data are in same memory
+
+solution - multiplexer
+- switch between storing program counter and data address in memory register
+- instruction register used to store current instruction
+
+simpler solution - Harvard architecture
+- keep program and data in 2 separate memory modules
+- variant of von Neumann achitecture
+==========
+
+
