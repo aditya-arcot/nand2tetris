@@ -28,21 +28,16 @@
   @KBD
   D=M
 
-  // if greater than 0, jump to BLACK
-  @BLACK
+  // if greater than 0, jump directly to FILL, skip WHITE
+  @FILL
   D;JGT
 
+// change selected color to white
 (WHITE)
   @color
   M=0
 
-  @FILL
-  0;JMP
-
-(BLACK)
-  // no extra code needed
-  // continues to FILL
-
+// fill entire screen using selected color
 (FILL)
   // check diff between RAM[addr] and KBD
   // if 0, jump to LISTEN
