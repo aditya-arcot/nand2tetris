@@ -1,0 +1,30 @@
+Hack computer is a hierarchy of chip parts
+- lowest level - elementary logic gates
+
+
+== CPU implementation ==
+chip parts - Mux16, ARegister, DRegister, PC, ALU, ...
+control - use HDL subscripting to route instruction bits to control bits of relevant chip-parts
+
+add necessary logic between pieces
+==========
+
+
+== data memory implementation ==
+chips - RAM 16K, Screen, Keyboard
+
+if address is in Screen or Keyboard, route to chip relative address
+==========
+
+
+== ROM 32K ==
+simpler version of RAM
+no write functionality necessary
+
+use built-in chip
+==========
+
+
+== Hack ==
+connect CPU, memory, ROM
+==========
