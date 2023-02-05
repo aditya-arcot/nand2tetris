@@ -1,0 +1,15 @@
+Von Neumann
+- single memory - data and program
+- need 2 cycles
+  - can be implemented by State register
+- good for general-purpose computer
+
+Harvard
+- separate memory units
+- single cycle
+- good for embedded system, since ROM doesn't change
+
+
+device controller
+- dedicated hardware for managing an I/O device
+- takes load off of CPU
