@@ -1,0 +1,81 @@
+abstraction
+- computer capable of running programs written in Hack machine language
+
+implementation
+- built from Hack chipset
+
+
+== CPU ==
+if instruction includes D and A
+- respective values are read from, and/or written to, D and A register in computer
+
+if instruction is @x
+- x is stored in A-register
+- value emitted by addressM
+
+if instruction right hand side includes M
+- value read from inM
+
+if instruction left hand side includes M
+- ALU output emitted by outM
+- writeM bit asserted
+
+if reset == 0
+- CPU logic uses instruction's jump bits and ALU's output to decide if there should be a jump
+  - if jump
+    - PC set to value of A-register
+  - else
+    - PC++
+  - updated PC value emitted by pc
+if reset == 1
+  - PC set to 0
+  - pc emits 0 (causes program restart)
+==========
+
+
+== data memory ==
+inputs
+- in (16)
+- address (15)
+output
+- out (16)
+
+3 logical segments
+- data memory - 0 to 16383
+- screen memory map - 16384 to 24575
+- keyboard memory map - 24576
+
+implementation
+- RAM
+  - 16-bit / 16K RAM chip
+  - already built in Project 3
+  - same inputs / output as overall memory chip
+- Screen
+  - 16-bit / 8K memory chip with raster display side-effect
+  - built-in chip
+- Keyboard
+  - 16-bit register with keyboard side-effect
+  - built-in chip
+==========
+
+
+== instruction memory ==
+to run program
+- load into ROM
+- press Reset button
+
+hardware implementation options
+- plug-and-play ROM chip
+  - 1 for each program
+- hardware simulation
+  - programs stored in text files
+  - program loading emulated by built-in ROM chip
+    - very similar to RAM chip
+
+input - address (15)
+output - ROM32K[address] (16)
+
+implementation
+- built-in ROM32K chip
+- contains sequence of Hack instructions
+==========
