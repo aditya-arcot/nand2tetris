@@ -1,0 +1,15 @@
+staged development
+- basic assembler (no symbol support)
+- develop ability to handle symbols
+- morph basic assembler to add symbol support
+
+test programs are given in 2 versions
+- other than Add.asm
+- with / without symbols
+
+in - file.asm
+out - file.hack
+
+testing
+- use supplied Assembler to translate file.asm and compare to our output
+
