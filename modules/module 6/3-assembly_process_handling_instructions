@@ -1,0 +1,26 @@
+== translating A-instructions ==
+symbolic - @value
+binary - 0value_in_binary
+
+steps
+- parse value
+- generate binary version of value
+- pad until 15-bit
+- add 0 op-code to beginning
+==========
+
+
+== translating C-instructions ==
+symbolic - dest=comp;jump
+binary - 1 1 1 a c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
+
+steps
+- start output with 111
+- parse instruction into 3 fields separated by = and ;
+- translate comp field into next 7 bits
+- translate dest into next 3 bits
+  - if not included, pad result
+- translate jump into next 3 bits
+  - if not included, pad result
+==========
+
