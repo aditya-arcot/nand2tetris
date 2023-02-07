@@ -1,0 +1,65 @@
+symbols do not exist in C instructions
+only in A instructions and label declarations
+
+
+== pre-defined symbols ==
+23 in Hack language
+
+only in A instructions
+==========
+
+
+== label symbols ==
+used to label destination of goto commands
+
+declared by (label_name)
+
+symbol refers to memory location holding next instruction in program
+- skip line numbers of declarations
+==========
+
+
+== variable symbols ==
+any sumbol which is not pre-defined and is not defined elsewhere using label declaration
+
+each variable assigned unique memory address, starting at 16
+==========
+
+
+== symbol table ==
+DS that stores symbol, value pairs
+
+population
+- initialize with pre-defined symbols
+- 1st pass - run through program to look for label declarations
+  - add label symbols to table
+- 2nd pass - add variable symbols
+
+usage - look up value to resolve symbol
+==========
+
+
+== assembly process ==
+initialization
+- construct empty symbol table
+- add pre-defined symbols
+
+1st pass
+- scan entire program
+- for each instruction in form (label)
+  - add pair to symbol table
+
+2nd pass
+- set n to 16
+- scan entire program
+- for each instruction
+  - if @symbol, look up symbol
+    - if found, use value to complete translation
+    - if not found
+      - add pair to table
+      - use n to complete translation
+      - n++
+  - if C-instruction, complete translation
+  - write instruction to output file
+==========
+
