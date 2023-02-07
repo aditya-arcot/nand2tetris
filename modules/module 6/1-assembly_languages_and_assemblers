@@ -13,7 +13,7 @@ ours will be a cross-compiler
 == basic assembler logic ==
 repeat until EOF
 - read next assembly language command
-  - ignore whitespace lines, comments
+  - ignore whitespace, comments
   - read into array of characters
 - break into different fields
 - lookup binary code for each field
