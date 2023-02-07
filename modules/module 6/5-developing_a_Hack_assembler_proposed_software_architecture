@@ -1,0 +1,21 @@
+sub-tasks
+- parser
+- handling symbols
+- converting mnemonics to code
+  - for C instructions
+
+
+== parser ==
+start reading file with given name
+move to next command in file
+get fields of current command
+- 3 types of commands - A, C, label declaration
+==========
+
+
+== symbol table ==
+create empty table
+add pre-defined symbols
+1st pass - add labels
+2nd pass - add new variables, replace @symbol with address
+==========
