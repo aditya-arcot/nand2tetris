@@ -1,0 +1,30 @@
+A and C instruction specifications are straight forward to translate
+
+need to be able to translate both pre-defined symbols and user-defined labels and variables
+
+assembly program elements
+- white space
+  - empty lines / indentation
+  - line comments
+  - in-line comments
+  - block comments
+- instructions
+  - A
+  - C
+- symbols
+  - references
+  - labels
+
+simplifying assumption
+- deal with symbols later
+
+handling programs without symbols
+- much simpler
+- white space
+- instructions
+
+plan ahead
+- develop basic assembler that translates symbol-less Hack programs
+- develop ability to handle symbols
+- morph basic assembler into assembler that translates any Hack program
+
