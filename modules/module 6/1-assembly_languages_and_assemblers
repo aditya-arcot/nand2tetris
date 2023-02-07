@@ -1,0 +1,43 @@
+== assembler ==
+converts assembly code to machine language
+
+first software layer above hardware
+
+ours will be a cross-compiler
+- cannot run directly on Hack, since it only understands machine language
+- runs on our machine and produces machine language program which is then run on Hack
+- can be written in a high-level language
+==========
+
+
+== basic assembler logic ==
+repeat until EOF
+- read next assembly language command
+  - ignore whitespace lines, comments
+  - read into array of characters
+- break into different fields
+- lookup binary code for each field
+- combine codes into single machine language command
+  - sometimes need padding
+- output machine language command
+==========
+
+
+== handling symbols ==
+need to replace names with addresses
+
+variables
+- if already in table, perform replacement
+- otherwise, find unallocated memory cell, allocate for variable, add to table, then replace
+
+labels
+- for declaration, add label, address to table
+- for retrieval, check table
+- 2 approaches to allow for forward references
+  - leave address entry blank until declaration appears
+    - then fix table and label references
+    - usually more complicated
+  - use 2 passes
+    - 1st pass - figure out all addresses
+    - 2nd pass - replace labels with addresses
+==========
