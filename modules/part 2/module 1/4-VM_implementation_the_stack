@@ -1,0 +1,51 @@
+each memory segment must be mapped to RAM
+
+
+== pointer manipulation ==
+notation
+- *p 	// memory location that value of p points at
+- x++	// x += 1
+- x--	// x -= 1
+
+ex: store value at location of value of p as D
+- high-level assembly
+D = *p	
+- Hack assembly
+@p
+A=M
+D=M
+
+ex: decrement p, store value at location as D
+p--
+D = *p
+
+ex: store 9 at location of value of q, incrememt q
+*q = 9
+q++
+==========
+
+
+== stack machine ==
+assumptions
+- SP stored in RAM[0]
+- stack base addr = 256
+
+SP always contains next empty location
+
+ex: push constant i
+- high-level assembly
+*SP = i		// push to stack
+SP++		// increment SP
+- Hack assembly
+@i	// D=i
+D=A
+@SP	// *SP=D
+A=M
+M=D
+==========
+
+
+VM translator
+- translates VM code into machine language
+- each VM command generates several assembly commands
+
