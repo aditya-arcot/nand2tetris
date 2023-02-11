@@ -1,0 +1,30 @@
+variable kinds
+- ex: argument, local, static
+- preserved during compilation through virtual memory segments
+  - different segments for different kinds of variables
+
+removes need for preserving variable names
+- instead referred only by memory segment location
+
+8 segments
+- local
+- argument
+- this
+- that
+- constant
+- static
+- pointer
+- temp
+
+syntax - push/pop segment i
+- cannot pop from constant segment
+
+ex:
+push static 0		// push value at static[0] to stack
+push argument 1		// push value at argument[0] to stack
+add			// pop last 2 values, add, push to stack
+pop local 2		// pop last value, store at local[2]
+
+still only uses 1 stack
+
+
