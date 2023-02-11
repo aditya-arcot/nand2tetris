@@ -1,0 +1,104 @@
+== implementing local ==
+SP
+- address after top value of stack
+- RAM[0]
+LCL
+- base address of local segment
+- RAM[1]
+
+- pop local i
+addr=LCL+i	// relative = base = index
+SP--
+*addr=*SP
+
+- ex: push local i
+addr=LCL+i
+*SP=*addr
+SP++
+==========
+
+
+pop operation doesn't need to delete garbage in stack
+- only move pointer
+- will be recycled on next push operation
+
+
+== implementing local, argument, this, that segments ==
+map method local, argument vars onto local, argument segments
+map object fields, array entries that method is processing onto this, that segments
+
+all implemented the same way as local
+- base addresses stored as ARG (RAM[2]), THIS (RAM[3]), THAT (RAM[4])
+
+locations in RAM don't matter
+- will look into optimization later
+==========
+
+
+== constant segment ==
+compiler translates operations involving constants into VM operations involving constant segment
+
+implementation - truly virtual
+
+- push constant i
+*SP = i
+SP++
+==========
+
+
+== static segment
+challenge
+- should be seen by all methods in a program
+- stack is only for a single method
+
+solution - store in "global space"
+- VM reference (Foo.vm) -> assembly reference
+  - static i -> Foo.i
+- following assembly, Hack assembler will map references onto RAM[16] ... RAM[255]
+  - unlikely to have more static vars
+  - mapped in order in which they appear in program
+
+syntax - @Foo.i
+
+platform dependent, unlike above implementations
+- use feature unique to Hack assembler
+==========
+
+
+== temp segment ==
+temporary variable storage
+8 temp vars
+- fixed 8-place memory segment
+- RAM locations 5-12
+
+- push temp i
+addr = 5+i
+*SP = *addr
+SP++
+
+- pop temp i
+addr = 5+i
+SP--
+*addr = *SP
+==========
+
+
+== pointer segment ==
+keeps track of base addresses of this and that segments using pointer segment
+fixed 2-place memory segment
+- accessing 0 == accessing THIS
+- accessing 1 == accessing THAT
+
+push pointer 0/1
+- *SP = THIS/THAT
+- SP++
+pop pointer 0/1
+- SP--
+- THIS/THAT = SP*
+
+implementation supplies THIS or THAT
+
+reasoning will be understood better when creating compiler
+==========
+
+
