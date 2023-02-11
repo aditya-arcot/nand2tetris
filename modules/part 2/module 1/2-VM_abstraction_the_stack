@@ -1,0 +1,88 @@
+VM is a stack machine manipulated by
+- arithmetic / logical commands
+- memory segment commands
+- branching commands
+- function commands
+
+stack interacts with memory
+
+tradeoff between higher/lower level
+
+
+== stack ==
+stack pointer
+- points to next location of push
+
+push x
+- push x to stack
+- x unchanged in memory
+- pointer++
+
+pop y
+- pop y from stack
+- change y in memory to new value
+- pointer--
+
+applying function f
+- pop argument(s) from stack
+- compute f on arguments
+- push result on stack
+ - can be number or boolean
+==========
+
+
+== commands ==
+earlier arg is always lower in stack
+
+add: x+y
+sub: x-y
+neg: -y
+eq: x==0
+gt: x>y
+lt: x<y
+and: x and y
+or: x or y
+not: not y
+
+any arithmetic or logical expression can be expressed and evaluated by some seuqence of above operations on a stack
+==========
+
+
+== example ==
+high-level code: d = (2-x) + (y+9)
+
+compiler translates to VM code:
+push 2
+push x
+sub
+push y
+push 9
+add
+add
+pop d
+
+result
+- stack empty
+- new value in memory - d
+==========
+
+
+== example 2 ==
+high-level code: (x<7) or (y==8)
+
+VM code:
+push x
+push 7
+lt
+push y
+push 8
+eq
+or
+
+result
+- stack - true
+==========
+
+
+
+
