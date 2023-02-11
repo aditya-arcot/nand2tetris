@@ -1,0 +1,68 @@
+== VM translator ==
+VM code -> assembly code
+
+each VM command translated into several assembly commands
+
+to create, must be familiar with
+- source language - VM language
+  - arithmetic / logical commands
+  - memory access commands
+  - branching commands - project 8
+  - function commands - project 8
+- target language - symbolic Hack code
+- VM mapping on target platform
+  - how to map VM data structures using host hardware
+  - how to express VM commands using host machine language
+==========
+
+
+== standard mapping ==
+benefits
+- compatibility with other software systems
+- standard testing
+
+local, argument, this, that
+- allocated dynamically to RAM
+- segment pointers LCL, ARG, THIS, THAT
+- segment i -> RAM[*segmentPointer + i]
+
+constant
+- constant i -> constant i
+
+static
+- static i (Foo.vm) -> assembly variable Foo.i
+
+temp
+- fixed segment, RAM 5-12
+- temp i -> RAM[*(5+i)]
+
+pointer
+- fixed segment, RAM 3,4
+- pointer 0 -> THIS
+- pointer 1 -> THAT
+
+RAM locations
+- 0 - SP
+- 1 - LCL
+- 2 - ARG
+- 3 - THIS
+- 4 - THAT
+- 5-12 - temp segment
+- 13-15 - R13-R15
+- 16-255 - static segment
+- 256-2047 - stack
+
+symbols
+- SP
+  - predefined
+  - point to RAM address following topmost stack value
+- LCL, ARG, THIS, THAT
+  - predefined
+  - point to base addresses of local, argument, this, that of currently running VM function
+- R13-R15
+  - general purpose
+- Xxx.i symbols
+
+few more implementation details will be added in project 8
+==========
+
