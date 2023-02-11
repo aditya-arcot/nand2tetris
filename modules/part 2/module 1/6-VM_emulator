@@ -1,0 +1,16 @@
+typical uses
+- running (compiled) Jack programs
+- testing programs (systematically)
+- experimenting with VM commands
+- observing the VM internals (stack, memory segments)
+- observing how the VM is realized on host platform
+
+missing elements in project 7 files
+- function / return "envelope"
+- initializing stack, memory segments on host RAM
+  - done in test scripts for project 7
+  - added in project 8
+
+left pane - abstract implementations of segments, stack
+right pane - implementation on host RAM
+
