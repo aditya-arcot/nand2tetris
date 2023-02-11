@@ -1,0 +1,70 @@
+== implementation ==
+proposed design
+- Parser
+  - parses each VM command into lexical elements
+- CodeWriter
+  - writes assembly code that implements parsed command
+- Main
+  - drives process (VMTranslator)
+==========
+
+
+== Main ==
+input - fileName.vm
+output - fileName.asm
+
+logic
+- constructs Parser to handle input file
+- constructs CodeWriter to handle output file
+- marches through input file, parsing each line and generating code from it
+==========
+
+
+== Parser ==
+handles parsing of single .vm file
+reads VM command, parses command into lexical components, provides convenient access to these components
+ignores all whitespace, comments
+
+routines
+- constructor
+  - args - input file / stream
+  - opens input file/stream, gets ready to parse
+- hasMoreCommands
+  - returns - boolean
+  - more commands in input?
+- advance
+  - reads next command from input and makes it current
+  - called only if hasMoreCommands() is true
+  - initially no current command
+- commandType
+  - returns constant representing type of current command
+  - arithmetic/logical, push, pop, label, goto, if, function, return, call
+- arg1
+  - returns 1st arg of current command
+  - not called if commandType is return
+- arg2
+  - returns 2nd arg of current command
+  - called only if current command is push, pop, function, call
+==========
+
+
+== CodeWriter ==
+generates assembly code from parsed VM command
+
+routines
+- constructor
+  - args - output file / stream
+  - opens output file / stream, gets ready to write
+- writeArithmetic
+  - args - command (string)
+  - writes assembly code to output file
+- writePushPop
+  - args - command type (push or pop), segment (string), index (int)
+  - writes assembly code to output file
+- close
+  - closes output file
+
+additional routines in project 8
+==========
+
+
