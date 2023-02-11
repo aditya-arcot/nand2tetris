@@ -1,0 +1,28 @@
+== compilation ==
+need high-level program to run on many types of devices
+devices use different processors with their own machine language
+options
+- 1-tier compilation - create compiler for each device
+- 2-tier compilation
+  - translate program to VM code 
+    - designed to run on VM
+    - ex: bytecode for Java
+  - translate VM code to specific assembly language
+    - ex: JVM implementation for Java
+==========
+
+
+== Jack compilation ==
+2 devices
+- your PC
+- Hack computer
+
+tier 1 - Jack compiler
+- Jack program -> VM code
+tier 2
+- your PC - VM emulator
+  - already provided
+- Hack computer - VM translator
+==========
+
+
