@@ -1,0 +1,9 @@
+VM translator part 1
+
+add comment to assembly code for each new VM program line
+
+process
+- create VM translator
+- translate program into assembly
+- test assembly with VMEmulator and programVME.tst
+
