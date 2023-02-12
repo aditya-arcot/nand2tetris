@@ -1,11 +1,15 @@
+'''translates VM code to Hack assembly symbolic code'''
+
 import sys
 import os
 
-newline = '\n'
+NEWLINE = '\n'
 
 class Parser:
+    '''reads, filters .vm file'''
+
     def __init__(self, input_file_path):
-        with open(input_file_path, 'r') as input_file:
+        with open(input_file_path, 'r', encoding='utf8') as input_file:
             unfiltered_lines = input_file.readlines()
 
         self.lines = []
@@ -19,180 +23,131 @@ class Parser:
             self.lines.append(line)
 
         self.ind = 0
+        self.current_command = None
 
-    def hasMoreCommands(self):
+    def has_more_commands(self):
+        '''returns whether file has more commands'''
+
         if self.ind <= len(self.lines) - 1:
             return True
         return False
 
     def advance(self):
+        '''advances current command and index'''
+
         self.current_command = self.lines[self.ind]
         self.ind += 1
 
 
 class CodeWriter:
+    '''converts VM code, writes to output file'''
+
     def __init__(self, output_file, filename):
         self.output_file = output_file
         self.filename = filename
         self.labelnum = 0
 
     def join_with_newline(self, lst):
+        '''converts list into string separated by newlines'''
+
         out = ''
         for i in lst:
-            out += i + newline
+            out += i + NEWLINE
         return out.strip()
 
     def write(self, command):
-        self.output_file.write('// ' + command + newline)
+        '''writes assembly code for a command'''
+
+        self.output_file.write('// ' + command + NEWLINE)
 
         args = command.split()
 
         # implement other types in project 8
         if args[0] == 'push' or args[0] == 'pop':
-            out = self.writePushPop(args)
+            out = self.convert_memory_access(args)
         else:
-            out = self.writeArithmeticLogical(args)
+            out = self.convert_arithmetic_logical(args)
 
-        self.output_file.write(out)
-        self.output_file.write(newline + newline)
+        self.output_file.write(self.join_with_newline(out))
+        self.output_file.write(NEWLINE + NEWLINE)
 
     def get_label_num(self):
-        n = self.labelnum
-        self.labelnum += 1
-        return n
+        '''returns, advances label number'''
 
-    def writeArithmeticLogical(self, args):
+        temp = self.labelnum
+        self.labelnum += 1
+        return temp
+
+    def convert_arithmetic_logical(self, args):
+        '''returns arithmetic or logical assembly commands'''
+
         cmd = args[0]
-        n = self.get_label_num()
+        labelnum = self.get_label_num()
 
         if cmd == 'add':
-            commands = ['@SP', 'AM=M-1', 'D=M', 'A=A-1', 'M=D+M']
+            commands = ['M=D+M']
         elif cmd == 'sub':
-            commands = ['@SP', 'AM=M-1', 'D=M', 'A=A-1', 'M=M-D']
-        elif cmd == 'neg':
-            commands = ['@SP', 'A=M-1', 'M=-M']
-        elif cmd == 'eq' or cmd == 'gt' or cmd == 'lt':
-            commands = self.comp(cmd, n)
+            commands = ['M=M-D']
         elif cmd == 'and':
-            commands = ['@SP', 'AM=M-1', 'D=M', 'A=A-1', 'M=D&M']
+            commands = ['M=D&M']
         elif cmd == 'or':
-            commands = ['@SP', 'AM=M-1', 'D=M', 'A=A-1', 'M=D|M']
+            commands = ['M=D|M']
+        elif cmd in ('eq', 'gt', 'lt'):
+            commands = self.comp(cmd, labelnum)
+        elif cmd == 'neg':
+            return ['@SP', 'A=M-1', 'M=-M']
         elif cmd == 'not':
-            commands = ['@SP', 'A=M-1', 'M=!M']
+            return ['@SP', 'A=M-1', 'M=!M']
         else:
             raise Exception('unrecognized operation')
 
-        return self.join_with_newline(commands)
+        return ['@SP', 'AM=M-1', 'D=M', 'A=A-1'] + commands
 
-    def comp(self, cmd, n):
-        return ['@SP', 'AM=M-1', 'D=M', 'A=A-1', 'D=M-D', f'@TRUE{n}', \
-                'D;J' + cmd.upper(), 'D=0', f'@FALSE{n}', '0;JMP', f'(TRUE{n})', \
-                'D=-1', f'(FALSE{n})', '@SP', 'A=M-1', 'M=D']
+    def comp(self, cmd, num):
+        '''returns assembly commands for VM comparisons'''
 
-    def writePushPop(self, args):
+        return ['D=M-D', f'@TRUE{num}', 'D;J' + cmd.upper(), 'D=0', f'@FALSE{num}', \
+                '0;JMP', f'(TRUE{num})', 'D=-1', f'(FALSE{num})', '@SP', 'A=M-1', 'M=D']
+
+    def convert_memory_access(self, args):
+        '''returns memory assembly commands'''
+
         cmd = args[0]
         segment = args[1]
         i = args[2]
 
-        if cmd == 'push':
-            if segment == 'constant':
-                commands = self.push_constant(i)
-            elif segment == 'temp':
-                commands = self.push_temp(i)
-            elif segment == 'local':
-                commands = self.push_local(i)
-            elif segment == 'argument':
-                commands = self.push_argument(i)
-            elif segment == 'this':
-                commands = self.push_this(i)
-            elif segment == 'that':
-                commands = self.push_that(i)
-            elif segment == 'pointer':
-                commands = self.push_pointer(i)
-            elif segment == 'static':
-                commands = self.push_static(i)
-            else:
-                raise Exception('unrecognized segment')
-
-            commands += self.push_core()
-
+        if segment == 'constant':
+            commands = [f'@{i}', 'D=A']
+        elif segment == 'temp':
+            commands = ['@5', 'D=A']
+        elif segment == 'local':
+            commands = ['@LCL', 'D=M']
+        elif segment == 'argument':
+            commands = ['@ARG', 'D=M']
+        elif segment == 'this':
+            commands = ['@THIS', 'D=M']
+        elif segment == 'that':
+            commands = ['@THAT', 'D=M']
+        elif segment == 'pointer':
+            commands = ['@THIS', 'D=A']
+        elif segment == 'static':
+            if cmd == 'pop':
+                return ['@SP', 'AM=M-1', 'D=M', f'@{self.filename}.{i}', 'M=D']
+            commands = [f'@{self.filename}.{i}', 'D=M']
         else:
-            if segment == 'temp':
-                commands = self.pop_temp()
-            elif segment == 'local':
-                commands = self.pop_local()
-            elif segment == 'argument':
-                commands = self.pop_argument()
-            elif segment == 'this':
-                commands = self.pop_this()
-            elif segment == 'that':
-                commands = self.pop_that()
-            elif segment == 'pointer':
-                commands = self.pop_pointer()
-            elif segment == 'static':
-                commands = self.pop_static(i)
-            else:
-                raise Exception('unrecognized segment')
+            raise Exception('unrecognized segment')
 
-            if not segment == 'static':
-                commands += self.pop_core(i)
+        if cmd == 'push':
+            if not segment in ('constant', 'static'):
+                commands += [f'@{i}', 'A=D+A', 'D=M']
+            return commands + ['@SP', 'A=M', 'M=D', '@SP', 'M=M+1']
 
-        return self.join_with_newline(commands)
-
-    def pop_core(self, i):
-        return [f'@{i}', 'D=D+A', '@R13', 'M=D', '@SP', 'M=M-1', \
-                'A=M', 'D=M', '@R13', 'A=M', 'M=D']
-
-    def pop_temp(self):
-        return ['@5', 'D=A']
-
-    def pop_local(self):
-        return ['@LCL', 'D=M']
-
-    def pop_argument(self):
-        return ['@ARG', 'D=M']
-
-    def pop_this(self):
-        return ['@THIS', 'D=M']
-
-    def pop_that(self):
-        return ['@THAT', 'D=M']
-
-    def pop_pointer(self):
-        return ['@THIS', 'D=A']
-
-    def pop_static(self, i):
-        return ['@SP', 'M=M-1', 'A=M', 'D=M', f'@{self.filename}.{i}', 'M=D']
-
-    def push_core(self):
-        return ['@SP', 'A=M', 'M=D', '@SP', 'M=M+1']
-
-    def push_constant(self, i):
-        return [f'@{i}', 'D=A']
-
-    def push_temp(self, i):
-        return ['@5', 'D=A', f'@{i}', 'A=D+A', 'D=M']
-
-    def push_local(self, i):
-        return ['@LCL', 'D=M', f'@{i}', 'A=D+A', 'D=M']
-
-    def push_argument(self, i):
-        return ['@ARG', 'D=M', f'@{i}', 'A=D+A', 'D=M']
-
-    def push_this(self, i):
-        return ['@THIS', 'D=M', f'@{i}', 'A=D+A', 'D=M']
-
-    def push_that(self, i):
-        return ['@THAT', 'D=M', f'@{i}', 'A=D+A', 'D=M']
-
-    def push_static(self, i):
-        return [f'@{self.filename}.{i}', 'D=M']
-
-    def push_pointer(self, i):
-        return ['@THIS', 'D=A', f'@{i}', 'A=D+A', 'D=M']
-
+        return commands +[f'@{i}', 'D=D+A', '@R13', 'M=D', '@SP', 'AM=M-1', \
+                        'D=M', '@R13', 'A=M', 'M=D']
 
 def main():
+    '''checks input, creates classes, iterates for each line'''
+
     if len(sys.argv) < 2:
         print('enter file name')
         return
@@ -210,12 +165,12 @@ def main():
     filename = os.path.split(input_file_path)[1].split('.')[0]
     output_file_path = '.'.join(input_file_path.split('.')[:-1]) + '.asm'
 
-    with open(output_file_path, 'w') as output_file:
+    with open(output_file_path, 'w', encoding='utf8') as output_file:
         parser = Parser(input_file_path)
-        codeWriter = CodeWriter(output_file, filename)
+        code_writer = CodeWriter(output_file, filename)
 
-        while parser.hasMoreCommands():
+        while parser.has_more_commands():
             parser.advance()
-            codeWriter.write(parser.current_command)
+            code_writer.write(parser.current_command)
 
 main()
