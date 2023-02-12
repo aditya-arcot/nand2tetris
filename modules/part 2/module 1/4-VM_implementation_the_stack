@@ -9,7 +9,7 @@ notation
 
 ex: store value at location of value of p as D
 - high-level assembly
-D = *p	
+D = *p
 - Hack assembly
 @p
 A=M
@@ -19,7 +19,7 @@ ex: decrement p, store value at location as D
 p--
 D = *p
 
-ex: store 9 at location of value of q, incrememt q
+ex: store 9 at location of value of q, increment q
 *q = 9
 q++
 ==========
@@ -42,10 +42,11 @@ D=A
 @SP	// *SP=D
 A=M
 M=D
+@SP // SP++
+M=M+1
 ==========
 
 
 VM translator
 - translates VM code into machine language
 - each VM command generates several assembly commands
-
