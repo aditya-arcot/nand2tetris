@@ -43,7 +43,7 @@ class CodeWriter:
         return out.strip()
 
     def write(self, command):
-        self.output_file.write('// ' + command + '\n')
+        self.output_file.write('// ' + command + newline)
 
         args = command.split()
 
