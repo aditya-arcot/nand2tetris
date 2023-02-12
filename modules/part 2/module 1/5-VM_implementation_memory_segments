@@ -7,7 +7,7 @@ LCL
 - RAM[1]
 
 - pop local i
-addr=LCL+i	// relative = base = index
+addr=LCL+i	// relative = base + index
 SP--
 *addr=*SP
 
@@ -100,5 +100,3 @@ implementation supplies THIS or THAT
 
 reasoning will be understood better when creating compiler
 ==========
-
-
