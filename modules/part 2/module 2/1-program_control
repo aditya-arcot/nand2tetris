@@ -1,0 +1,15 @@
+functions
+- basic language can be extended at will
+- abstractions that can be implemented by anyone
+
+branching
+- allows non-linear movement through code
+
+new commands (VM)
+- branching
+  - goto, if-goto, label
+- function
+  - call, function, return
+
+will understand abstractions, build implementations in this unit
+
