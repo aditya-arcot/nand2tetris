@@ -1,0 +1,18 @@
+previously, VM code flow was only linear
+
+label
+- syntax - label labelname
+
+unconditional branching
+- syntax - goto labelname
+- jumps to execute command just after label
+
+conditional branching
+- syntax - if-goto labelname
+- push condition to stack before
+- pop cond and if cond, jump to execute command just after label
+
+implementation
+- translate each branching command into assembly instructions that effect specified operation
+- assembly language has similar branching commands, so translation should be trivial
+
