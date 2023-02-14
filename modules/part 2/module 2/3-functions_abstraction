@@ -1,0 +1,63 @@
+VM language features
+- primitive operations (fixed) - add, sub, ...
+- abstract operations (extensible) - multiply, sqrt, ...
+
+calling a function
+- push necessary values onto stack
+- syntax - call function_name n_args
+
+defining a function
+- syntax - function function_name n_local
+
+
+== example ==
+function mult 2
+  push constant 0
+  pop local 0
+  push constant 1
+  pop local 1
+label LOOP
+  push local 1
+  push argument 1
+  // computes product into local 0
+label END
+  push local 0  // stack now only contains result
+  return
+
+function main 0
+  push constant 3
+  push constant 5
+  call mult 2
+  return
+==========
+
+
+== execution ==
+function called from main
+- empty stack
+- args segment contains n_args from top of main stack
+- n_local local vars initialized to 0
+function code runs
+when function returns, topmost value of stack is placed at top of main stack
+- required to push at least 1 value on stack
+- takes place of n_args topmost values
+==========
+
+
+== implementation ==
+for each function call
+- pass parameters from calling function to called function
+- determine return address within caller's code
+- save caller's return address, stack, memory segments
+- jump to execute called function
+
+for each function return
+- return value computed by called function to caller
+- recycle memory resources used by called function
+- reinstate caller's stack, memory segments
+- jump to return address in caller's code
+==========
+
+
+
+
