@@ -7,6 +7,7 @@ M=D
 @SP
 M=M+1
 
+
 // push constant 17
 @17
 D=A
@@ -15,6 +16,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 
 // eq
 @SP
@@ -34,6 +36,7 @@ D=-1
 A=M-1
 M=D
 
+
 // push constant 17
 @17
 D=A
@@ -43,6 +46,7 @@ M=D
 @SP
 M=M+1
 
+
 // push constant 16
 @16
 D=A
@@ -51,6 +55,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 
 // eq
 @SP
@@ -70,6 +75,7 @@ D=-1
 A=M-1
 M=D
 
+
 // push constant 16
 @16
 D=A
@@ -79,6 +85,7 @@ M=D
 @SP
 M=M+1
 
+
 // push constant 17
 @17
 D=A
@@ -87,6 +94,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 
 // eq
 @SP
@@ -106,6 +114,7 @@ D=-1
 A=M-1
 M=D
 
+
 // push constant 892
 @892
 D=A
@@ -115,6 +124,7 @@ M=D
 @SP
 M=M+1
 
+
 // push constant 891
 @891
 D=A
@@ -123,6 +133,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 
 // lt
 @SP
@@ -142,6 +153,7 @@ D=-1
 A=M-1
 M=D
 
+
 // push constant 891
 @891
 D=A
@@ -151,6 +163,7 @@ M=D
 @SP
 M=M+1
 
+
 // push constant 892
 @892
 D=A
@@ -159,6 +172,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 
 // lt
 @SP
@@ -178,14 +192,6 @@ D=-1
 A=M-1
 M=D
 
-// push constant 891
-@891
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
 
 // push constant 891
 @891
@@ -195,6 +201,17 @@ A=M
 M=D
 @SP
 M=M+1
+
+
+// push constant 891
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
 
 // lt
 @SP
@@ -214,6 +231,7 @@ D=-1
 A=M-1
 M=D
 
+
 // push constant 32767
 @32767
 D=A
@@ -223,6 +241,7 @@ M=D
 @SP
 M=M+1
 
+
 // push constant 32766
 @32766
 D=A
@@ -231,6 +250,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 
 // gt
 @SP
@@ -250,6 +270,7 @@ D=-1
 A=M-1
 M=D
 
+
 // push constant 32766
 @32766
 D=A
@@ -259,6 +280,7 @@ M=D
 @SP
 M=M+1
 
+
 // push constant 32767
 @32767
 D=A
@@ -267,6 +289,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 
 // gt
 @SP
@@ -286,14 +309,6 @@ D=-1
 A=M-1
 M=D
 
-// push constant 32766
-@32766
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
 
 // push constant 32766
 @32766
@@ -303,6 +318,17 @@ A=M
 M=D
 @SP
 M=M+1
+
+
+// push constant 32766
+@32766
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
 
 // gt
 @SP
@@ -322,6 +348,7 @@ D=-1
 A=M-1
 M=D
 
+
 // push constant 57
 @57
 D=A
@@ -330,6 +357,7 @@ A=M
 M=D
 @SP
 M=M+1
+
 
 // push constant 31
 @31
@@ -340,6 +368,7 @@ M=D
 @SP
 M=M+1
 
+
 // push constant 53
 @53
 D=A
@@ -349,12 +378,14 @@ M=D
 @SP
 M=M+1
 
+
 // add
 @SP
 AM=M-1
 D=M
 A=A-1
 M=D+M
+
 
 // push constant 112
 @112
@@ -365,6 +396,7 @@ M=D
 @SP
 M=M+1
 
+
 // sub
 @SP
 AM=M-1
@@ -372,10 +404,12 @@ D=M
 A=A-1
 M=M-D
 
+
 // neg
 @SP
 A=M-1
 M=-M
+
 
 // and
 @SP
@@ -383,6 +417,7 @@ AM=M-1
 D=M
 A=A-1
 M=D&M
+
 
 // push constant 82
 @82
@@ -393,6 +428,7 @@ M=D
 @SP
 M=M+1
 
+
 // or
 @SP
 AM=M-1
@@ -400,8 +436,10 @@ D=M
 A=A-1
 M=D|M
 
+
 // not
 @SP
 A=M-1
 M=!M
+
 
