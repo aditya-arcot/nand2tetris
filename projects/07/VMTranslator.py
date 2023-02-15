@@ -5,6 +5,16 @@ import os
 
 NEWLINE = '\n'
 
+
+def join_with_newline(lst):
+    '''converts list into string separated by newlines'''
+
+    out = ''
+    for i in lst:
+        out += i + NEWLINE
+    return out #.strip()
+
+
 class Parser:
     '''reads, filters .vm file'''
 
@@ -15,12 +25,8 @@ class Parser:
         self.lines = []
         for line in unfiltered_lines:
             line = line.strip()
-            if line == "":
-                continue
-            if line.startswith('//'):
-                continue
-            args = line.split()
-            self.lines.append(line)
+            if line != "" and not line.startswith('//'):
+                self.lines.append(line)
 
         self.ind = 0
         self.current_command = None
@@ -56,42 +62,69 @@ class CodeWriter:
 
         if args[0] == 'push' or args[0] == 'pop':
             out = self.convert_memory_access(args)
+        
         elif args[0] == 'label':
             out = [f'({args[1]})']
+        
         elif args[0] == 'goto':
             out = [f'@{args[1]}', '0;JMP']
+        
         elif args[0] == 'if-goto':
             out = ['@SP', 'AM=M-1', 'D=M', f'@{args[1]}', 'D;JNE']
+        
         elif args[0] == 'function':
             name = args[1]
             n_local = int(args[2])
             out = [f'({name})']
             for _ in range(n_local):
-                out += ['@0', 'D=A', '@SP', 'M=M+1','A=M-1', 'M=D']
+                out += ['@0', 'D=A', '@SP', 'M=M+1','A=M-1', 'M=D'] # initialize local as 0
+        
         elif args[0] == 'return':
-            out = ['@LCL', 'D=M', '@end_frame', 'M=D', # store LCL as end_frame
-                '@5', 'D=D-A', 'A=D', 'D=M', '@ret_addr', 'M=D', # get return address
-                '@SP', 'M=M-1', 'A=M', 'D=M', '@ARG', 'A=M', 'M=D', # reposition return value
-                '@ARG', 'D=M', '@SP', 'M=D+1', # reposition SP
-                '@end_frame', 'D=M', '@1', 'D=D-A', '@R13', 'M=D','A=D', 'D=M', '@THAT', 'M=D', # restore THAT, store end_frame-n in R13
-                '@R13', 'MD=M-1', 'A=D', 'D=M', '@THIS', 'M=D', # restore THIS
-                '@R13', 'MD=M-1', 'A=D', 'D=M', '@ARG', 'M=D', # restore ARG
-                '@R13', 'MD=M-1', 'A=D', 'D=M', '@LCL', 'M=D', # restore LCL
-                '@ret_addr', 'A=M', '0;JMP'] # go to return address
+            out = [
+                # store LCL as end_frame
+                '@LCL', 'D=M', '@end_frame', 'M=D',
+                # get return address
+                '@5', 'D=D-A', 'A=D', 'D=M', '@ret_addr', 'M=D', 
+                # reposition return value
+                '@SP', 'M=M-1', 'A=M', 'D=M', '@ARG', 'A=M', 'M=D', 
+                # reposition SP
+                '@ARG', 'D=M', '@SP', 'M=D+1', 
+                # restore THAT, store end_frame-n in R13
+                '@end_frame', 'D=M', '@1', 'D=D-A', '@R13', 'M=D','A=D', 'D=M', '@THAT', 'M=D', 
+                # restore THIS
+                '@R13', 'MD=M-1', 'A=D', 'D=M', '@THIS', 'M=D', 
+                # restore ARG
+                '@R13', 'MD=M-1', 'A=D', 'D=M', '@ARG', 'M=D',
+                # restore LCL
+                '@R13', 'MD=M-1', 'A=D', 'D=M', '@LCL', 'M=D', 
+                # go to return address
+                '@ret_addr', 'A=M', '0;JMP'] 
+        
         elif args[0] == 'call':
             function = args[1]
             n_args = args[2]
             labelnum = self.get_label_num()
 
-            out = [f'@{function}$ret.{labelnum}', 'D=A', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push return address
-                '@LCL', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push LCL
-                '@ARG', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push ARG
-                '@THIS', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push THIS
-                '@THAT', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push THAT
-                f'@{str(5 + int(n_args))}', 'D=A', '@SP', 'D=M-D', '@ARG', 'M=D', # ARG = SP - 5 - n_args
-                '@SP', 'D=M', '@LCL', 'M=D', # LCL = SP
-                f'@{function}', '0;JMP', # goto function
-                f'({function}$ret.{labelnum})'] # declare return address label
+            out = [
+                # push return address
+                f'@{function}$ret.{labelnum}', 'D=A', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1',
+                # push LCL
+                '@LCL', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1',
+                # push ARG
+                '@ARG', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1',
+                # push THIS
+                '@THIS', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1',
+                # push THAT
+                '@THAT', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1',
+                # ARG = SP - 5 - n_args
+                f'@{str(5 + int(n_args))}', 'D=A', '@SP', 'D=M-D', '@ARG', 'M=D',
+                # LCL = SP
+                '@SP', 'D=M', '@LCL', 'M=D',
+                # goto function
+                f'@{function}', '0;JMP',
+                # declare return address label
+                f'({function}$ret.{labelnum})']
+        
         else:
             out = self.convert_arithmetic_logical(args)
 
@@ -114,20 +147,28 @@ class CodeWriter:
 
         if cmd == 'add':
             commands += ['M=D+M']
+        
         elif cmd == 'sub':
             commands += ['M=M-D']
+        
         elif cmd == 'and':
             commands += ['M=D&M']
+        
         elif cmd == 'or':
             commands += ['M=D|M']
+        
         elif cmd in ('eq', 'gt', 'lt'):
             commands += self.comp(cmd)
+        
         elif cmd == 'neg':
             return ['@SP', 'A=M-1', 'M=-M']
+        
         elif cmd == 'not':
             return ['@SP', 'A=M-1', 'M=!M']
+        
         else:
-            raise Exception(f'unrecognized operation - {cmd}')
+            print(f'unrecognized operation - {cmd}')
+            sys.exit(0)
 
         return commands
 
@@ -147,24 +188,33 @@ class CodeWriter:
 
         if segment == 'constant':
             commands = [f'@{i}', 'D=A']
+        
         elif segment == 'temp':
             commands = ['@5', 'D=A']
+        
         elif segment == 'local':
             commands = ['@LCL', 'D=M']
+        
         elif segment == 'argument':
             commands = ['@ARG', 'D=M']
+        
         elif segment == 'this':
             commands = ['@THIS', 'D=M']
+        
         elif segment == 'that':
             commands = ['@THAT', 'D=M']
+        
         elif segment == 'pointer':
             commands = ['@THIS', 'D=A']
+        
         elif segment == 'static':
             if cmd == 'pop':
                 return ['@SP', 'AM=M-1', 'D=M', f'@{self.filename}.{i}', 'M=D']
             commands = [f'@{self.filename}.{i}', 'D=M']
+        
         else:
-            raise Exception('unrecognized segment')
+            print('unrecognized segment')
+            sys.exit(0)
 
         if cmd == 'push':
             if not segment in ('constant', 'static'):
@@ -174,19 +224,12 @@ class CodeWriter:
         return commands +[f'@{i}', 'D=D+A', '@R13', 'M=D', '@SP', 'AM=M-1', \
                         'D=M', '@R13', 'A=M', 'M=D']
 
-def join_with_newline(lst):
-    '''converts list into string separated by newlines'''
-
-    out = ''
-    for i in lst:
-        out += i + NEWLINE
-    return out #.strip()
 
 def main():
     '''checks input, creates classes, iterates for each line'''
 
     if len(sys.argv) < 2:
-        print('enter file name')
+        print('enter file / folder name')
         return
 
     input_path = sys.argv[1]
@@ -215,15 +258,15 @@ def main():
                 parser.advance()
                 code_writer.write(parser.current_command)
 
-    else: # directory
+    elif os.path.isdir(input_path):
         dirname = os.path.basename(os.path.normpath(input_path))
         output_file_path = os.path.join(input_path, dirname + '.asm')
 
         with open(output_file_path, 'w', encoding='utf8') as output_file:
-            output_file.write(join_with_newline(['// bootstrap', '@256', 'D=A', '@SP', 'M=D', NEWLINE]))
+            bootstrap = ['// bootstrap', '@256', 'D=A', '@SP', 'M=D', NEWLINE]
+            output_file.write(join_with_newline(bootstrap))
 
-            c = CodeWriter(output_file, 'bootstrap')
-            c.write('call Sys.init 0')
+            CodeWriter(output_file, 'bootstrap').write('call Sys.init 0')
 
             for i in os.listdir(input_path):
                 if i.endswith('.vm'):
@@ -236,5 +279,8 @@ def main():
                     while parser.has_more_commands():
                         parser.advance()
                         code_writer.write(parser.current_command)
+
+    else:
+        return 'enter either a file or folder'
 
 main()
