@@ -77,15 +77,15 @@ class CodeWriter:
             for _ in range(n_local):
                 out += ['@0', 'D=A', '@SP', 'M=M+1','A=M-1', 'M=D']
         elif args[0] == 'return':
-            out = ['@LCL', 'D=M', '@end_frame', 'M=D',
-                '@5', 'D=D-A', 'A=D', 'D=M', '@ret_addr', 'M=D',
-                '@SP', 'M=M-1', 'A=M', 'D=M', '@ARG', 'A=M', 'M=D',
-                '@ARG', 'D=M', '@SP', 'M=D+1',
-                '@end_frame', 'D=M', '@1', 'D=D-A', 'A=D', 'D=M', '@THAT', 'M=D',
-                '@end_frame', 'D=M', '@2', 'D=D-A', 'A=D', 'D=M', '@THIS', 'M=D',
-                '@end_frame', 'D=M', '@3', 'D=D-A', 'A=D', 'D=M', '@ARG', 'M=D',
-                '@end_frame', 'D=M', '@4', 'D=D-A', 'A=D', 'D=M', '@LCL', 'M=D',
-                '@ret_addr', 'A=M', '0;JMP']
+            out = ['@LCL', 'D=M', '@end_frame', 'M=D', # store LCL as end_frame
+                '@5', 'D=D-A', 'A=D', 'D=M', '@ret_addr', 'M=D', # get return address
+                '@SP', 'M=M-1', 'A=M', 'D=M', '@ARG', 'A=M', 'M=D', # reposition return value
+                '@ARG', 'D=M', '@SP', 'M=D+1', # reposition SP
+                '@end_frame', 'D=M', '@1', 'D=D-A', 'A=D', 'D=M', '@THAT', 'M=D', # restore THAT
+                '@end_frame', 'D=M', '@2', 'D=D-A', 'A=D', 'D=M', '@THIS', 'M=D', # restore THIS
+                '@end_frame', 'D=M', '@3', 'D=D-A', 'A=D', 'D=M', '@ARG', 'M=D', # restore ARG
+                '@end_frame', 'D=M', '@4', 'D=D-A', 'A=D', 'D=M', '@LCL', 'M=D', # restore LCL
+                '@ret_addr', 'A=M', '0;JMP'] # go to return address
         else:
             out = self.convert_arithmetic_logical(args)
 
