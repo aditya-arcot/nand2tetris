@@ -1,0 +1,42 @@
+changes to VM translator
+- add branching, function commands
+- handle directory with multiple VM files to create single assembly file 
+
+
+== Main ==
+input
+- fileName.vm / directoryName
+
+output
+- fileName.asm / directoryName.asm
+
+process
+- construct CodeWriter
+- if input is .vm file
+  - construct Parser
+  - march through input file, parsing each line and generating code from it
+- if input is directory
+  - handles every .vm file in same way as above
+==========
+
+
+== Parser ==
+handles parsing of single .vm file
+read VM command, parse into lexical components, provide access to components
+remove white space, comments
+==========
+
+
+== CodeWriter ==
+additional functionality
+- setFileName
+- writeInit
+- writeLabel
+- writeGoto
+- writeIf
+- writeFunction
+- writeCall
+- writeReturn
+==========
+
+
