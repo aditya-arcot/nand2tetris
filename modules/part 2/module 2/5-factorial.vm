@@ -1,0 +1,25 @@
+function main 0
+	push constant 1
+	call factorial 1
+	return
+
+function factorial 0
+	push argument 0
+	push constant 1
+	eq			// check n == 1
+	if-goto BASECASE
+
+	push argument 0		// n
+	push argument 0
+	push constant 1
+	sub
+	call factorial 1	// factorial(n-1)
+	call mult 2		// n * n-1
+	return
+
+	label BASECASE
+	push constant 1		// factorial(1) == 1
+	return
+
+function mult 2
+	// code omitted
