@@ -17,9 +17,9 @@ class Parser:
             line = line.strip()
             if line == "":
                 continue
-            args = line.split()
-            if args[0] == '//':
+            if line.startswith('//'):
                 continue
+            args = line.split()
             self.lines.append(line)
 
         self.ind = 0
@@ -62,9 +62,21 @@ class CodeWriter:
 
         args = command.split()
 
-        # implement other types in project 8
         if args[0] == 'push' or args[0] == 'pop':
             out = self.convert_memory_access(args)
+        elif args[0] == 'label':
+            out = [f'({args[1]})']
+        elif args[0] == 'goto':
+            out = [f'@{args[1]}', '0;JMP']
+        elif args[0] == 'if-goto':
+            out = ['@SP', 'AM=M-1', 'D=M', f'@{args[1]}', 'D;JNE']
+        elif args[0] == 'function':
+            name = args[1]
+            n_local = args[2]
+            for _ in range(n_local):
+                out += ['@0', 'D=A', '@SP', 'M=M+1','A=M-1', 'M=D']
+        #elif args[0] == 'return':
+        #    pass
         else:
             out = self.convert_arithmetic_logical(args)
 
@@ -99,7 +111,7 @@ class CodeWriter:
         elif cmd == 'not':
             return ['@SP', 'A=M-1', 'M=!M']
         else:
-            raise Exception('unrecognized operation')
+            raise Exception(f'unrecognized operation - {cmd}')
 
         return ['@SP', 'AM=M-1', 'D=M', 'A=A-1'] + commands
 
