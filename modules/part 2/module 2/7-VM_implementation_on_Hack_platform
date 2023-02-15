@@ -1,0 +1,52 @@
+== creation of assembly code ==
+1+ Jack files placed in program directory
+
+Jack Compiler
+- applied on directory
+- creates 1 VM file for each Jack file
+
+VM Translator
+- applied on VM files
+- creates single assembly file
+==========
+
+
+== conventions for Hack computer ==
+VM programming 
+- 1 file in any VM program must be named Main.vm
+- 1 function in Main must be named main
+
+VM implementation
+- when VM implementation starts running (or reset), starts executing argument-less OS function Sys.init
+- Sys.init calls Main.main and enters infinite loop
+
+hardware platform
+- bootstrap code (assembly)
+  - SP=256		// ROM[0]
+  - Call Sys.init	// ROM[1]
+==========
+
+
+== Hack RAM standard mapping ==
+0-15 		pointers, register
+16-255		static vars
+256-2046	stack
+2048-16383	heap
+16384-24576	memory mapped I/O
+24577-32767	unused memory space
+==========
+
+
+== VM symbols ==
+SP
+LCL
+ARG
+THIS
+THAT
+R13-R15
+Xxx.i
+functionName		ex: Xxx.foo
+functionName$label	ex: Xxx.foo$label
+functionName$ret.i	ex: Xxx.foo$ret.0
+==========
+
