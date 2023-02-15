@@ -1,0 +1,61 @@
+== calling function's view ==
+before calling another function, push args that it expects
+
+invoke function using call function_name n_args
+
+after called function returns
+- arg values pushed before call have been replaced by function return value
+- memory segments are same as before call
+  - exceptions
+    - temp - undefined
+    - static segment values may have changed
+==========
+
+
+== called function's view ==
+segments
+- argument initialized with args passed by caller
+- local allocated, initialized to 0s
+- static set to static of VM file
+- this, that, pointer, temp undefined
+
+working stack empty
+
+before returning, must push value onto stack
+- including void functions
+==========
+
+
+== handling call (psuedo VM code) ==
+push return_address	// using label declared below
+push LCL		// save caller segment locations
+push ARG
+push THIS
+push THAT
+ARG = SP - 5 - n_args	// reposition ARG
+LCL = SP		// reposition LCL
+goto function_name	// transfer control to called function
+(return_address)	// declare label
+==========
+
+
+== handling function (pseudo VM code) ==
+(function_name)
+repeat n_vars times:	// build local segment
+	push 0
+==========
+
+
+== handling return (pseudo VM code) ==
+end_frame = LCL			// temp var
+ret_addr = *(end_frame - 5)	// get return address
+*ARG = pop()			// reposition return value
+SP = ARG + 1			// reposition SP
+THAT = *(end_frame - 1)		// restore THAT
+THIS = *(end_frame - 2)		// restore THIS
+ARG = *(end_frame - 3)		// restore ARG
+LCL = *(end_frame - 4)		// restore LCL
+goto ret_addr			// go to return address
+==========
+
+
