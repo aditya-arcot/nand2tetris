@@ -103,18 +103,19 @@ class CodeWriter:
         '''returns arithmetic or logical assembly commands'''
 
         cmd = args[0]
-        labelnum = self.get_label_num()
+
+        commands = ['@SP', 'AM=M-1', 'D=M', 'A=A-1']
 
         if cmd == 'add':
-            commands = ['M=D+M']
+            commands += ['M=D+M']
         elif cmd == 'sub':
-            commands = ['M=M-D']
+            commands += ['M=M-D']
         elif cmd == 'and':
-            commands = ['M=D&M']
+            commands += ['M=D&M']
         elif cmd == 'or':
-            commands = ['M=D|M']
+            commands += ['M=D|M']
         elif cmd in ('eq', 'gt', 'lt'):
-            commands = self.comp(cmd, labelnum)
+            commands += self.comp(cmd)
         elif cmd == 'neg':
             return ['@SP', 'A=M-1', 'M=-M']
         elif cmd == 'not':
@@ -122,10 +123,12 @@ class CodeWriter:
         else:
             raise Exception(f'unrecognized operation - {cmd}')
 
-        return ['@SP', 'AM=M-1', 'D=M', 'A=A-1'] + commands
+        return commands
 
     def comp(self, cmd, num):
         '''returns assembly commands for VM comparisons'''
+
+        labelnum = self.get_label_num()
 
         return ['D=M-D', f'@TRUE{num}', 'D;J' + cmd.upper(), 'D=0', f'@FALSE{num}', \
                 '0;JMP', f'(TRUE{num})', 'D=-1', f'(FALSE{num})', '@SP', 'A=M-1', 'M=D']
@@ -200,13 +203,20 @@ def main():
                 code_writer.write(parser.current_command)
 
     else: # directory
-        pass
+        dirname = os.path.split(input_path)[1]
+        output_file_path = os.path.join(input_path, dirname + '.asm')
 
+        with open(output_file_path, 'w', encoding='utf8') as output_file:
+            ### TODO write bootstrap code
 
+            for i in os.listdir(input_path):
+                if i.endswith('.vm'):
+                    filename = i.split('.')[0]
+                    file_path = os.path.join(input_path, i)
+                    code_writer = CodeWriter(output_file, filename)
 
-
-
-
-
+                    while parser.has_more_commands():
+                        parser.advance()
+                        code_writer.write(parser.current_command)
 
 main()
