@@ -73,7 +73,7 @@ class CodeWriter:
         elif args[0] == 'function':
             name = args[1]
             n_local = int(args[2])
-            out = []
+            out = [f'({name})']
             for _ in range(n_local):
                 out += ['@0', 'D=A', '@SP', 'M=M+1','A=M-1', 'M=D']
         elif args[0] == 'return':
@@ -173,25 +173,40 @@ def main():
         print('enter file name')
         return
 
-    input_file_path = sys.argv[1]
+    input_path = sys.argv[1]
 
-    if not input_file_path.endswith('.vm'):
-        print('supply .vm file')
+    if not os.path.exists(input_path):
+        print('path does not exist')
         return
 
-    if not os.path.isfile(input_file_path):
-        print('file not found')
-        return
+    if os.path.isfile(input_path):
+        if not input_path.endswith('.vm'):
+            print('supply .vm file')
+            return
 
-    filename = os.path.split(input_file_path)[1].split('.')[0]
-    output_file_path = '.'.join(input_file_path.split('.')[:-1]) + '.asm'
+        if not os.path.isfile(input_path):
+            print('file not found')
+            return
 
-    with open(output_file_path, 'w', encoding='utf8') as output_file:
-        parser = Parser(input_file_path)
-        code_writer = CodeWriter(output_file, filename)
+        filename = os.path.split(input_path)[1].split('.')[0]
+        output_file_path = '.'.join(input_path.split('.')[:-1]) + '.asm'
 
-        while parser.has_more_commands():
-            parser.advance()
-            code_writer.write(parser.current_command)
+        with open(output_file_path, 'w', encoding='utf8') as output_file:
+            parser = Parser(input_path)
+            code_writer = CodeWriter(output_file, filename)
+
+            while parser.has_more_commands():
+                parser.advance()
+                code_writer.write(parser.current_command)
+
+    else: # directory
+        pass
+
+
+
+
+
+
+
 
 main()
