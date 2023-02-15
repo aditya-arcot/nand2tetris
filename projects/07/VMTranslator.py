@@ -47,14 +47,6 @@ class CodeWriter:
         self.filename = filename
         self.labelnum = 0
 
-    def join_with_newline(self, lst):
-        '''converts list into string separated by newlines'''
-
-        out = ''
-        for i in lst:
-            out += i + NEWLINE
-        return out.strip()
-
     def write(self, command):
         '''writes assembly code for a command'''
 
@@ -86,10 +78,24 @@ class CodeWriter:
                 '@R13', 'MD=M-1', 'A=D', 'D=M', '@ARG', 'M=D', # restore ARG
                 '@R13', 'MD=M-1', 'A=D', 'D=M', '@LCL', 'M=D', # restore LCL
                 '@ret_addr', 'A=M', '0;JMP'] # go to return address
+        elif args[0] == 'call':
+            function = args[1]
+            n_args = args[2]
+            labelnum = self.get_label_num()
+
+            out = [f'@{function}$ret.{labelnum}', 'D=A', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push return address
+                '@LCL', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push LCL
+                '@ARG', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push ARG
+                '@THIS', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push THIS
+                '@THAT', 'D=M', '@SP', 'A=M', 'M=D', '@SP', 'M=M+1', # push THAT
+                f'@{str(5 + int(n_args))}', 'D=A', '@SP', 'D=M-D', '@ARG', 'M=D', # ARG = SP - 5 - n_args
+                '@SP', 'D=M', '@LCL', 'M=D', # LCL = SP
+                f'@{function}', '0;JMP', # goto function
+                f'({function}$ret.{labelnum})'] # declare return address label
         else:
             out = self.convert_arithmetic_logical(args)
 
-        self.output_file.write(self.join_with_newline(out))
+        self.output_file.write(join_with_newline(out))
         self.output_file.write(NEWLINE + NEWLINE)
 
     def get_label_num(self):
@@ -125,13 +131,12 @@ class CodeWriter:
 
         return commands
 
-    def comp(self, cmd, num):
+    def comp(self, cmd):
         '''returns assembly commands for VM comparisons'''
 
         labelnum = self.get_label_num()
-
-        return ['D=M-D', f'@TRUE{num}', 'D;J' + cmd.upper(), 'D=0', f'@FALSE{num}', \
-                '0;JMP', f'(TRUE{num})', 'D=-1', f'(FALSE{num})', '@SP', 'A=M-1', 'M=D']
+        return ['D=M-D', f'@TRUE{labelnum}', 'D;J' + cmd.upper(), 'D=0', f'@FALSE{labelnum}', \
+                '0;JMP', f'(TRUE{labelnum})', 'D=-1', f'(FALSE{labelnum})', '@SP', 'A=M-1', 'M=D']
 
     def convert_memory_access(self, args):
         '''returns memory assembly commands'''
@@ -169,6 +174,14 @@ class CodeWriter:
         return commands +[f'@{i}', 'D=D+A', '@R13', 'M=D', '@SP', 'AM=M-1', \
                         'D=M', '@R13', 'A=M', 'M=D']
 
+def join_with_newline(lst):
+    '''converts list into string separated by newlines'''
+
+    out = ''
+    for i in lst:
+        out += i + NEWLINE
+    return out #.strip()
+
 def main():
     '''checks input, creates classes, iterates for each line'''
 
@@ -203,16 +216,21 @@ def main():
                 code_writer.write(parser.current_command)
 
     else: # directory
-        dirname = os.path.split(input_path)[1]
+        dirname = os.path.basename(os.path.normpath(input_path))
         output_file_path = os.path.join(input_path, dirname + '.asm')
 
         with open(output_file_path, 'w', encoding='utf8') as output_file:
-            ### TODO write bootstrap code
+            output_file.write(join_with_newline(['// bootstrap', '@256', 'D=A', '@SP', 'M=D', NEWLINE]))
+
+            c = CodeWriter(output_file, 'bootstrap')
+            c.write('call Sys.init 0')
 
             for i in os.listdir(input_path):
                 if i.endswith('.vm'):
                     filename = i.split('.')[0]
                     file_path = os.path.join(input_path, i)
+
+                    parser = Parser(file_path)
                     code_writer = CodeWriter(output_file, filename)
 
                     while parser.has_more_commands():
