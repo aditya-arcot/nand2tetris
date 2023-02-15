@@ -1,0 +1,62 @@
+== function overview ==
+program typically consists of many functions
+
+calling chain
+- foo > bar > sqrt > ...
+- LIFO (same as stack)
+- must maintain state for each
+
+state
+- working stack + memory segments
+- created when function starts running
+- maintained while function is running
+- recycled when function returns
+==========
+
+
+== call and return ==
+caller runs, pushes args, calls callee with n_args
+
+VM
+- sets ARG pointer to start of args
+- saves caller's state
+  - working stack untouched
+  - frame pushed onto stack
+    - return address
+    - saved LCL, ARG, THIS, THAT
+      - constant, temp, pointer, static segments do not need to be saved
+- jumps to execute callee
+
+callee is entered
+
+VM
+- pushes, initialize local segment (length n_vars)
+
+callee runs, pushes values
+callee pushes return value, returns
+
+VM
+- copies top value of stack to argument 0
+- restores segment pointers of caller
+- clears stack of callee starting at local
+- sets SP after argument 0
+- jumps to return address within caller's code
+
+caller resumes execution
+- overall result - function args replaced by return value
+==========
+
+
+block
+- currently-running function's segment of stack
+- parts
+  - argument segment
+  - saved frame from caller
+  - local segment
+  - working stack
+
+global stack
+- contains all runtime info
+- many blocks - 1 for each function in calling chain
+
+
