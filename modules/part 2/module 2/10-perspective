@@ -1,0 +1,10 @@
+2-tier compilation vs direct compilation (ex: C++)
+- ends up being more machine code
+  - less efficient
+- easier to implement for different hosts
+- more secure
+  - easier to look for security breaches in VM code
+
+VM code treats memory segments as abstractions 
+- developers of compilers don't have to worry about host platform
+
