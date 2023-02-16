@@ -1,0 +1,19 @@
+// inputs some numbers, computes average
+class Main {
+	function void main() {
+		var Array a;
+		var int length;
+		var int i, sum;
+		let length = Keyboard.readInt("How many? ");
+		let a = Array.new(length); // constructs array
+		let i = 0;
+		while (i < length) {
+			let a[i] = Keyboard.readInt("Enter number: ");
+			let sum = sum + a[i];
+			let i = i + 1;
+		}
+		do Output.printString("Average: ");
+		do Output.printInt(sum / length);
+		return;
+	}
+}

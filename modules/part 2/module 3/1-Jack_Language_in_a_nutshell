@@ -1,0 +1,69 @@
+module 3 - learning Jack
+module 4,5 - developing compiler
+module 6 - developing OS
+
+
+== Jack overview ==
+simple, Java-like language
+object-based, no inheritance
+multi-purpose
+good for simple interactive apps
+==========
+
+
+== module take home lessons ==
+inside view of how high-level OO languages
+- are designed
+- handle primitive types and class types
+- create, represent, and dispose objects
+- deal with strings, arrays, and lists
+- interact with host OS
+- ...
+
+additional experience with
+- abstraction / implementation
+- OO programming
+- application design, implementation
+==========
+
+
+== Jack features ==
+comments
+- /** API block comment */
+- /* block comment */
+- //in-line comment
+
+white space ignored
+
+application is 1+ classes
+- each has 1+ functions
+1 class must be Main
+- must contain main function
+  - program entry point
+
+control structures
+- if / if ... else
+- while
+- do
+
+array
+- instance of Array class - part of standard class library
+- not typed
+
+OS services
+- Keyboard.readInt
+- Output.printString
+- Output.printInt
+- more...
+
+Data types
+- primitive
+  - int
+  - char
+  - boolean
+- class types
+  - OS - Array, String, ...
+  - program extensions as needed
+==========
+
+
