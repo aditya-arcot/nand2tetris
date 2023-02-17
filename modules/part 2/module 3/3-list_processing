@@ -1,0 +1,38 @@
+pevious example - atomic object
+can also create objects that are collections of atomic objects
+
+
+== (linked) list ==
+most generic collection of atomic objects
+
+definition
+- atom null, or
+- atom followed by list (recursive)
+  - atom can be of any type
+
+examples
+- null - abbreviation is ()
+- (5, (3, null)) - abbreviation is (5, 3)
+
+creation
+- create pointer
+  - ex: var List v
+- assign pointer to new instance of List
+  - ex: let v = List.new(5, null)
+- add more values as needed
+  - ex: let v = List.new(3, v))
+
+access
+- sequential
+- recursive
+
+memory representation
+- first pointer stored in stack
+- each element + next pointer stored in heap
+
+address allocation
+- high level - constructor
+- low level
+  - when compiling constructor, compiler plants calls to OS routines that find and allocate available memory space for next object
+==========
+
