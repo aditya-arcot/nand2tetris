@@ -1,0 +1,17 @@
+class Fraction {
+	/** constructs reduced fraction */
+	constructor Fraction new(int x, int y)
+
+	/** accessors */
+	method int getNumerator()
+	method int getDenominator()
+
+	/** returns sum of this fraction and other one */
+	method Fraction plus(Fraction other)
+
+	/** disposes this fraction */
+	method void dispose()
+
+	/** prints this fraction in format x/y */
+	method void print()
+}

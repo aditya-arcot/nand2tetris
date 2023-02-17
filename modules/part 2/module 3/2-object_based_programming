@@ -1,0 +1,42 @@
+using a class
+- need to know nothing about implementation
+- only need class interface (API)
+
+
+building a class
+- fields / properties / member vars
+- constructor
+  - create new instance of class (object) from parameters
+  - returns this (base addr of new object)
+- methods
+  - operate on current object
+  - syntax: method return_type name(parameters) { ... }
+- functions
+  - don't operate on any particular object
+  - equivalent to static methods in Java
+  - syntax: function return_type name(parameters) { ... }
+- accessors
+  - required to access data from outside class (no public vars in Jack)
+
+
+subroutines must always return
+- if return type is void, syntax is just return;
+
+
+dispose of object's memory
+- necessary in Jack
+  - should be included in every class with a constructor
+  - no garbage collection
+  - objects must be disposed explicitly
+- syntax: do Memory.deAlloc(this)
+
+
+object representation
+- object fields stored as memory block in heap
+- pointers to objects stored in stack
+- process - compiled constructor's code includes OS calles that store new object in memory
+- future issues
+  - allocating memory
+  - de-allocating memory
+
+
