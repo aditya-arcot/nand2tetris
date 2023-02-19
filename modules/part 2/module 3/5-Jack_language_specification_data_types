@@ -1,0 +1,42 @@
+weakly-typed language
+
+
+== primitive types ==
+int
+- 0-32767
+- non-negative 2's complement 16-bit integer
+boolean
+char
+==========
+
+
+== class types ==
+OS types - String, Array, ...
+user-defined types - Fraction, List, ...
+==========
+
+
+== type conversions ==
+characters and integers can be converted easily using ASCII codes
+- examples
+	var char c; let c = 65; // 'A'
+	var String s; let s = "A"; let c = s.charAt(0); // c = "A" not supported
+
+integer can be assigned to reference variables
+- treated as memory address
+- example
+	var Array arr;
+	let arr = 5000;
+	let arr[100] = 17;
+
+objects can be converted into Array and vice versa
+- example
+	var Fraction x;	// 2 int fields - numerator, denominator
+	var Array arr;
+	let arr = Array.new();
+	let arr[0] = Array.new(2); let arr[1] = 5;
+	let x = arr; 	// sets x to base addr of memory block for array [2,5]
+	do x.print() 	// prints 2/5
+==========
+
+
