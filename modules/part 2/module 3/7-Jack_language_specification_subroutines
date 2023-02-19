@@ -86,12 +86,50 @@ examples
 			let i = w(b.s(), Foo.t())
 		}
 	}
-
-8:16
-
-			
+==========
 
 
+== strings ==
+var String s;	// creates pointer, initialized to null
+var char c;	// creates primitive var
+
+// setting s to refer to "Hello World!"
+let s = String.new(12);	// 12 is desired length
+// followed by loop that uses appendChar methods
+
+// syntactic sugar - to make process easier by Jack compiler
+let s = "Hello World!"
+
+// accessing some char within a string
+let c = s.charAt(6);	// set c to Unicode value representing W
+==========
 
 
+== arrays ==
+instances of OS class Array
+not typed
+uni-dimensional
+- multi-dimensional arrays can be made using an array of arrays
 
+example
+	var Array arr;
+	var String helloWorld;
+	let helloWorld = "Hello World!"
+
+	let arr = Array.new(4);
+	let arr[0] = 12;
+	let arr[1] = false;
+	let arr[2] = Fraction.new(314/100);
+	let arr[3] = helloWorld;
+==========
+
+
+== features of Jack language ==
+keyword let - must be used in assignments
+keyword do - must be used for calling method or function outside expression
+body of statement must be within curly brackets, even if only 1 statement
+all subroutines must end with return
+no operator priority
+- explicitly group to get predictable values
+weakly typed
+==========
