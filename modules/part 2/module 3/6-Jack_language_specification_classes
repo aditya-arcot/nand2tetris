@@ -1,0 +1,54 @@
+== classes ==
+basic compilation unit
+
+each class Foo stored in separate Foo.jack file
+
+name of class must start with capital letter
+
+skeleton
+	class Foo {
+		field variable declarations
+		static variable declarations
+		subroutine declarations (constructors, methods, functions)
+	}
+
+2 categories
+- provide functionality
+  - libraries of services
+  - only functions
+  - no fields, constructors, methods
+  - ex: Math class - provides various mathematical operations
+- represent objects
+  - used to represent object type and operations on this object
+  - typically contains fields
+  - contains at least 1 method
+  - can also contain functions
+    - recommended for helper purpose only
+  - ex: Fraction, List, String, ...
+
+best practice - don't mix libary, object representation in same class
+==========
+
+
+== standard class library / OS ==
+purpose
+- close gaps between high-level programs and host hardware
+- provide efficient implementations of commonly-used functions
+- provide efficient implementations of commonly-used ADTs
+
+implementation
+- collection of classes
+- similar to Java's standard class library 
+
+classes
+- Math
+- String
+- Array
+- Output
+- Screen
+- Keyboard
+- Memory
+- Sys
+
+==========
+
