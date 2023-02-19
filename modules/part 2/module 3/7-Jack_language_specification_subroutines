@@ -1,0 +1,97 @@
+== subroutines ==
+declaration
+	constructor | method | function	 type  subroutineName  (parameter-list) {
+		local variable declarations
+		statements
+	}
+
+each subroutine must return a value
+
+constructors
+- create new objects
+- 0+ in a class
+- common name - new
+- type must be name of class
+- must return reference to object of class type (ex: type)
+
+methods
+- operate on current object
+- return type - void, primitive, or class name
+
+functions
+- static methods
+- return type - void, primitive, or class name
+==========
+
+
+== variables ==
+static
+- class level
+- can be manipulated by subroutines
+field
+- object properties
+- can be manipulated by constructors, methods
+local
+- for local computations
+- used by subroutines
+parameter
+- used to pass values to subroutines
+- behave like local vars
+
+must be declared before being used
+typed
+==========
+
+
+== statements ==
+let
+if
+while
+do
+return
+==========
+
+
+== expressions ==
+one of the following
+- constant
+- variable name in scope
+- this keyword
+- array element using syntax Arr[expression]
+- subroutines call that returns non-void type
+- expression prefixed by unary operator (-, ~)
+- expression of form expression op expression
+  - op can be + - * / & | < > =
+- expression in parenthesis
+==========
+
+
+== subroutine calls ==
+syntax - subroutineName(argument-list)
+
+number and type of args must agree with subroutine parameters
+each argument can be an expression
+
+examples
+	class Foo {
+		...
+		method void f() {
+			var Bar b;
+			var int i;
+			do g();		// method g of current class on this object
+			do Foo.p(3);	// function p of current class
+			do Bar.h();	// function h of class Bar
+			let b = Bar.r()	// function / constructor r of class Bar
+			do b.q()	// method q of class Bar on b object
+			let i = w(b.s(), Foo.t())
+		}
+	}
+
+8:16
+
+			
+
+
+
+
+
