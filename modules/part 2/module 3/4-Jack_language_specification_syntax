@@ -1,0 +1,56 @@
+syntax elements
+- white space / comments
+- keywords
+- symbols
+- constants
+- indentifiers
+
+
+== keywords ==
+some nonstandard keywords introduced to make compiler easier to write
+- ex: let, do, var
+
+program components
+- class, constructor, method, function
+primitive types
+- int, boolean, char, void
+variable declarations
+- var, static, field
+statements
+- let, do, if, else, while, return
+constant values
+- true, false, null
+object reference
+- this
+==========
+
+
+== symbols ==
+()
+[]
+{}
+,
+;
+=
+.
++ - * / & ! ~ > <
+==========
+
+
+== constants ==
+integer
+- positive only (negative integers are expressions)
+string
+- within double quote
+- cannot contain newline or double quote
+boolean
+null
+==========
+
+
+== identifiers ==
+first character must be letter or _
+following characters can be letters, digits, or _
+case sensitive
+==========
+
