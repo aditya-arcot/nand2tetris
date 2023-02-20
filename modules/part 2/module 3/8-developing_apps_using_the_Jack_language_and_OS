@@ -1,0 +1,111 @@
+== developing Jack application ==
+put all app files in 1 directory, whose name is app name
+
+write / edit Jack class files using text editor
+
+compile Jack files / directory using JackCompiler
+
+execute app by loading app directory into supplied VM emulator and running code
+==========
+
+
+== handling output - text ==
+screen - 23 rows of 64 characters, b&w
+font - featured by Jack OS
+output - Jack OS Output class
+
+Class Output {
+	function void moveCursor(int i, int j)
+	function void printChar(char c)
+	function void printString(String s)
+	function void printInt(int i)
+	function void println()
+	function void backSpace()
+}
+==========
+
+
+== handling output - graphics ==
+screen - 256 rows of 512 pixels, b&w
+output - Jack OS Screen class or your own
+
+Class Screen {
+	function void clearScreen()
+	function void setColor(boolean b)
+	function void drawPixel(int x, int y)
+	function void drawLine(int x1, int y1, int x2, int y2)
+	function void drawRectangle(int x1, int y1, int x2, int y2)
+	function void drawCircle(int x, int y, int r)
+==========
+
+
+== handling inputs ==
+standard keyboard
+input proramming - use OS Keyboard class
+
+Class Keyboard {
+	function char keyPressed()
+	function char readChar()
+	function String readLine(String message)
+	function int readInt(String message)
+}
+==========
+
+
+== Jack OS Math ==
+Class Math {
+	function void init()
+	function int abs(int x)
+	function int multiply(int x, int y)
+	function int divide(int x, int y)
+	function int min(int x, int y)
+	function int max(int x, int y)
+	function int sqrt(int x)
+}
+==========
+
+
+== Jack OS String ==
+Class String {
+	constructor String new(int maxLength)
+	method void dispose()
+	method int length()
+	method char charAt(int j)
+	method void setCharAt(int j, char c)
+	method String appendChar(char c)
+	method void eraseLastChar()
+	method int intValue()
+	method void setInt(int j)
+	function char backSpace()
+	function char doubleQuote()
+	function char newLine()
+}
+==========
+
+
+== Jack OS Array ==
+Class Array {
+	function Array new(int size)
+	method void dispose()
+}
+==========
+
+
+== Jack OS Memory ==
+Class Memory {
+	function int peek(int address)
+	function void poke(int address, int value)
+	function Array alloc(int size)
+	function void deAlloc(Array o)
+}
+==========
+
+
+== Jack OS Sys ==
+Class Sys {
+	function void halt()
+	function void error(int errorCode)
+	function void wait(int duration)
+}
+==========
+
