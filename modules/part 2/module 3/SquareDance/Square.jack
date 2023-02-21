@@ -1,0 +1,115 @@
+class Square {
+	field int x, y;		// top left corner
+	field int x2, y2;	// bottom right corner
+
+	constructor Square new (int Ax, int Ay, int size) {
+		if (Ax < 0) { let Ax = 0; }
+		if (Ax > 511) { let Ax = 511; }
+		if (Ax < 0) { let Ay = 0; }
+		if (Ax > 255) { let Ay = 255; }
+		if (size < 1) { let size = 1; }
+		if (Ax + (size - 1) > 511) { let size = 512 - Ax; }
+		if (Ay + (size - 1) > 255) { let size = 256 - Ay; }
+
+		let x = Ax;
+		let y = Ay;
+		let x2 = x + (size - 1);
+		let y2 = y + (size - 1);
+		do draw();
+
+		return this;
+	}
+
+	method void dispose() {
+		do Memory.deAlloc(this);
+		return;
+	}
+
+	method void draw() {
+		do Screen.setColor(true);
+		do Screen.drawRectangle(x, y, x2, y2);
+		return;
+	}
+
+	method void erase() {
+		do Screen.setColor(false);
+		do Screen.drawRectangle(x, y, x2, y2);
+		return;
+	}
+
+	method void incSize() {
+		if ((y2 < 254) & (x2 < 510)) {
+			do erase();
+			let x2 = x2 + 2;
+			let y2 = y2 + 2;
+			do draw();
+		}
+		return;
+	}
+
+	method void decSize() {
+		if (((x2 - x) > 1) & ((y2 - y) > 1)) {
+			do erase();
+			let x2 = x2 - 2;
+			let y2 = y2 - 2;
+			do draw();
+		}
+		return;
+	}
+
+	method void moveUp() {
+		if (y > 1) {
+			do Screen.setColor(false);
+			if (y2 = y) { do Screen.drawRectangle(x, y, x2, y2); } // 1 pixel
+			else { do Screen.drawRectangle(x, y2-1, x2, y2); }
+			let y = y - 2;
+			let y2 = y2 - 2;
+			do Screen.setColor(true);
+			if (y2 = y) { do Screen.drawRectangle(x, y, x2, y2); }
+			else { do Screen.drawRectangle(x, y, x2, y+1); }
+		}
+		return;
+	}
+
+	method void moveDown() {
+		if (y2 < 254) {
+			do Screen.setColor(false);
+			if (y2 = y) { do Screen.drawRectangle(x, y, x2, y2); }
+			else { do Screen.drawRectangle(x, y, x2, y+1); }
+			let y = y + 2;
+			let y2 = y2 + 2;
+			do Screen.setColor(true);
+			if (y2 = y) { do Screen.drawRectangle(x, y, x2, y2); }
+			else { do Screen.drawRectangle(x, y2-1, x2, y2); }
+		}
+		return;
+	}
+
+	method void moveLeft() {
+		if (x > 1){
+			do Screen.setColor(false);
+			if (y2 = y) { do Screen.drawRectangle(x, y, x2, y2); }
+			else { do Screen.drawRectangle(x2-1, y, x2, y2); }
+			let x = x - 2;
+			let x2 = x2 - 2;
+			do Screen.setColor(true);
+			if (y2 = y) { do Screen.drawRectangle(x, y, x2, y2); }
+			else { do Screen.drawRectangle(x, y, x+1, y2); }
+		}
+		return;
+	}
+
+	method void moveRight() {
+		if (x2 < 510) {
+			do Screen.setColor(false);
+			if (y2 = y) { do Screen.drawRectangle(x, y, x2, y2); }
+			else { do Screen.drawRectangle(x, y, x+1, y2); }
+			let x = x + 2;
+			let x2 = x2 + 2;
+			do Screen.setColor(true);
+			if (y2 = y) { do Screen.drawRectangle(x, y, x2, y2); }
+			else { do Screen.drawRectangle(x2-1, y, x2, y2); }
+		}
+		return;
+	}
+}
