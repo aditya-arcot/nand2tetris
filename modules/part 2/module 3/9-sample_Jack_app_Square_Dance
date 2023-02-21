@@ -1,0 +1,23 @@
+== functionality ==
+up arrow - square moves up until another keypress
+down arrow - square moves down until another keypress
+left arrow - square moves left until another keypress
+right arrow - square moves right until another keypress
+x key - square size increases by 2 pixels
+z key - square size decreases by 2 pixels
+q key - quit game
+==========
+
+
+== overall design ==
+3 classes
+- Square - represents graphical square
+- SquareGame - captures user's inputs, moves square accordingly (in loop)
+- Main - starts app, initializes game, launches it
+
+MVC model
+- model
+- view
+- controller
+- user
+==========
