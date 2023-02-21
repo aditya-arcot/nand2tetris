@@ -1,0 +1,22 @@
+class PongGame {
+  field Ball ball;
+
+  constructor PongGame new() {
+    let ball = Ball.new(256, 128, 10, 10, 2, 1, 1);
+    return this;
+  }
+
+  method void dispose() {
+    do ball.dispose();
+    do Memory.deAlloc(this);
+    return;
+  }
+
+  method void run() {
+    while (true) {
+      do ball.move();
+      do Sys.wait(100);
+    }
+    return;
+  }
+}

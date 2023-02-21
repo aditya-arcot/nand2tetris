@@ -1,0 +1,74 @@
+class Ball {
+  field int x, y;   // center
+  field int old_x, old_y;
+  field int r;
+  field int x_speed, y_speed;
+  field int x_dir, y_dir;
+
+  constructor Ball new(int X, int Y, int R,
+      int X_speed, int Y_speed, int X_dir, int Y_dir) {
+    let x = X;
+    let y = Y;
+    let r = R;
+    let x_speed = X_speed;
+    let y_speed = Y_speed;
+    let x_dir = X_dir;
+    let y_dir = Y_dir;
+    return this;
+  }
+
+  method void dispose() {
+    do Memory.deAlloc(this);
+    return;
+  }
+
+  method void draw() {
+    do Screen.setColor(true);
+    do Screen.drawCircle(x, y, r);
+    return;
+  }
+
+  method void eraseOld() {
+    do Screen.setColor(false);
+    do Screen.drawCircle(old_x, old_y, r);
+    return;
+  }
+
+  method void move() {
+    let old_x = x;
+    let old_y = y;
+    let x = x + (x_dir * x_speed);
+    let y = y + (y_dir * y_speed);
+    do checkCollisions();
+    do eraseOld();
+    do draw();
+    return;
+  }
+
+  method void checkCollisions() {
+    // check x
+    if ((x - r) < 0) {
+      let x = r;
+      let x_speed = -x_speed;
+    }
+    if ((x + r) > 511) {
+      let x = 511 - r;
+      let x_speed = -x_speed;
+    }
+
+    // check y
+    if ((y - r) < 0) {
+      let y = r;
+      let y_speed = -y_speed;
+    }
+    if ((y + r) > 255) {
+      let y = 255 - r;
+      let y_speed = -y_speed;
+    }
+
+    return;
+  }
+
+
+
+}

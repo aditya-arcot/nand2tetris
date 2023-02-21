@@ -1,0 +1,34 @@
+Classes
+- Main
+- Ball
+- Paddle
+- PongGame
+
+To do
+- draw ball - done
+- ball movement - done
+- bounce on wall collisions - done
+- smoother movement
+- add paddles
+- collisions with paddles
+- points counters
+- points loss conditions
+- game over condition
+
+== API ==
+Main
+  function void main()
+
+Ball
+  constructor Ball new(int X, int Y, int R, int X_speed, int Y_speed, int X_dir, int Y_dir)
+  method void dispose()
+  method void draw()
+  method void eraseOld()
+  method void move()
+  method void checkCollisions()
+
+PongGame
+  constructor PongGame new()
+  method void dispose()
+  method void run()
+==========
