@@ -1,0 +1,43 @@
+== sprite ==
+2-D bitmap
+typically integrated into larger scene
+
+challenges
+- drawing quickly
+- creating smooth animations
+
+solutions
+- use standard OS graphics library
+- use your own graphics functions
+==========
+
+
+== Hack screen ==
+256 x 512 pixels
+memory map - 16 bits x 8192 rows
+
+each screen row represented by 32 memory rows
+==========
+
+
+== accessing memory ==
+OS Memory class API
+- function int peek(int address)
+- function void poke(int address, int value)
+
+ex: do Memory.poke(19003, -1)
+==========
+
+
+== custom drawing ==
+drawing pixels 1 at a time is very inefficient
+- each takes 40 machine operations
+
+instead, write 16 pixels at a time using poke
+- only 4 machine operations
+
+bitmap editor
+- use to generate Jack code for sprite at relative location
+==========
+
+
