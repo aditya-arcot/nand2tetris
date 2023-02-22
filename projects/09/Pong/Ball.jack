@@ -3,19 +3,26 @@ class Ball {
   field int old_x, old_y;
   field int r;
   field int x_speed, y_speed;
-  field int x_dir, y_dir;
 
   constructor Ball new(int X, int Y, int R,
-      int X_speed, int Y_speed, int X_dir, int Y_dir) {
+                      int X_speed, int Y_speed) {
     let x = X;
     let y = Y;
     let r = R;
     let x_speed = X_speed;
     let y_speed = Y_speed;
-    let x_dir = X_dir;
-    let y_dir = Y_dir;
+    do draw();
     return this;
   }
+
+  method int getX() { return x; }
+  method int getY() { return y; }
+  method int getX_speed() { return x_speed; }
+  method int getY_speed() { return y_speed; }
+  method void setX(int X) { let x = X; return; }
+  method void setY(int Y) { let y = Y; return; }
+  method void setX_speed(int X_speed) { let x_speed = X_speed; return; }
+  method void setY_speed(int Y_speed) { let y_speed = Y_speed; return; }
 
   method void dispose() {
     do Memory.deAlloc(this);
@@ -37,38 +44,14 @@ class Ball {
   method void move() {
     let old_x = x;
     let old_y = y;
-    let x = x + (x_dir * x_speed);
-    let y = y + (y_dir * y_speed);
-    do checkCollisions();
-    do eraseOld();
-    do draw();
+    let x = x + x_speed;
+    let y = y + y_speed;
     return;
   }
 
-  method void checkCollisions() {
-    // check x
-    if ((x - r) < 0) {
-      let x = r;
-      let x_speed = -x_speed;
-    }
-    if ((x + r) > 511) {
-      let x = 511 - r;
-      let x_speed = -x_speed;
-    }
-
-    // check y
-    if ((y - r) < 0) {
-      let y = r;
-      let y_speed = -y_speed;
-    }
-    if ((y + r) > 255) {
-      let y = 255 - r;
-      let y_speed = -y_speed;
-    }
-
-    return;
+  method boolean movingRight(){
+    if (x_speed > 0){ return true; }
+    return false;
   }
-
-
 
 }

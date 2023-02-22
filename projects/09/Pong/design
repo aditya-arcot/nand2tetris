@@ -1,34 +1,70 @@
-Classes
-- Main
-- Ball
-- Paddle
-- PongGame
-
 To do
-- draw ball - done
-- ball movement - done
-- bounce on wall collisions - done
-- smoother movement
-- add paddles
-- collisions with paddles
-- points counters
-- points loss conditions
-- game over condition
+- pause / unpause functionality
+- increment speeds upon paddle hit
+- randomize starting speeds, direction
+- UI improvement
+- comments / documentation
+
 
 == API ==
+
 Main
   function void main()
 
 Ball
-  constructor Ball new(int X, int Y, int R, int X_speed, int Y_speed, int X_dir, int Y_dir)
+  field int x, y, old_x, old_y, r;
+  field int x_speed, y_speed;
+
+  constructor Ball new(int X, int Y, int R, int X_speed, int Y_speed)
+  method int getX()
+  method int getY()
+  method int getX_speed()
+  method int getY_speed()
+  method void setX(int X)
+  method void setY(int Y)
+  method void setX_speed(int X_speed)
+  method void setY_speed(int Y_speed)
   method void dispose()
   method void draw()
   method void eraseOld()
   method void move()
-  method void checkCollisions()
+  method void movingRight()
+
+Paddle
+  field int x, y, x2, y2, y_diff;
+  field int shift_pixels, min_pixel_y, max_pixel_y;
+
+  constructor Paddle new(int X, int Y, int X2, int Y2, int Shift_pixels,
+                          int Min_pixel_y, int Max_pixel_y)
+  method int getX()
+  method int getY()
+  method int getX2()
+  method int getY2()
+  method void dispose()
+  method void draw()
+  method void erase()
+  method void moveDown()
+  method void moveUp()
 
 PongGame
+  field int border_size, max_screen_x, max_screen_y;
+  field int min_pixel_x, max_pixel_x, min_pixel_y, max_pixel_y;
+  field int center_x, center_y;
+  field Ball ball;
+  field int ball_size, ball_speed_x, ball_speed_y;
+  field Paddle paddle1, paddle2;
+  field int paddle_h, paddle_w, shift_paddle_pixels;
+  field int lives1, lives2;
+
   constructor PongGame new()
+  method void drawBorder()
+  method void createObjects()
+  method void restart()
   method void dispose()
   method void run()
+  method boolean checkCollisions()
+  method boolean sideCollisions()
+  method void ceilingFloorCollisions()
+  method boolean paddleCollisions()
+
 ==========

@@ -1,22 +1,236 @@
 class PongGame {
+  field int border_size;
+
+  field int max_screen_x, max_screen_y;
+
+  field int min_pixel_x, max_pixel_x;
+  field int min_pixel_y, max_pixel_y;
+  field int center_x, center_y;
+
   field Ball ball;
+  field int ball_size;
+  field int ball_speed_x, ball_speed_y;
+
+  field Paddle paddle1, paddle2;
+  field int paddle_h, paddle_w;
+  field int shift_paddle_pixels;
+
+  field int lives1, lives2;
 
   constructor PongGame new() {
-    let ball = Ball.new(256, 128, 10, 10, 2, 1, 1);
+    // hardcoded values
+    let border_size = 10;
+
+    let max_screen_x = 511;
+    let max_screen_y = 255;
+
+    let ball_size = 3;
+    let ball_speed_x = 5;
+    let ball_speed_y = 3;
+
+    let paddle_h = 50;
+    let paddle_w = 10;
+
+    let shift_paddle_pixels = 5;
+
+    let lives1 = 10;
+    let lives2 = 10;
+
+
+    // derivations
+    let min_pixel_x = border_size;
+    let max_pixel_x = max_screen_x - border_size;
+    let min_pixel_y = border_size;
+    let max_pixel_y = max_screen_y - border_size;
+
+    let center_x = (min_pixel_x + max_pixel_x) / 2;
+    let center_y = (min_pixel_y + max_pixel_y) / 2;
+
+
+    do drawBorder();
+    do createObjects();
+
     return this;
+  }
+
+  method void drawBorder() {
+    do Screen.setColor(true);
+    do Screen.drawRectangle(0, 0, max_screen_x, max_screen_y);
+    do Screen.setColor(false);
+    do Screen.drawRectangle(border_size, border_size,
+                            max_screen_x - border_size, max_screen_y - border_size);
+    return;
+  }
+
+  method void createObjects() {
+    let ball = Ball.new(center_x, center_y, ball_size, ball_speed_x, ball_speed_y);
+    let paddle1 = Paddle.new(min_pixel_x, center_y-(paddle_h/2),
+                    min_pixel_x+(paddle_w-1), center_y+(paddle_h/2),
+                    shift_paddle_pixels, min_pixel_y, max_pixel_y);
+    let paddle2 = Paddle.new(max_pixel_x-(paddle_w-1), center_y-(paddle_h/2),
+                    max_pixel_x, center_y+(paddle_h/2),
+                    shift_paddle_pixels, min_pixel_y, max_pixel_y);
+    return;
+  }
+
+  method void restart() {
+    do ball.eraseOld();
+    do ball.dispose();
+    do paddle1.erase();
+    do paddle1.dispose();
+    do paddle2.erase();
+    do paddle2.dispose();
+
+    do drawBorder();
+    do createObjects();
+
+    do Sys.wait(1000);
+
+    return;
   }
 
   method void dispose() {
     do ball.dispose();
+    do paddle1.dispose();
+    do paddle2.dispose();
     do Memory.deAlloc(this);
     return;
   }
 
   method void run() {
-    while (true) {
+    var char key;
+    var boolean game_over;
+    var int move_outcome;
+
+    while (~game_over) {
+      let move_outcome = 0;
+      let key = Keyboard.keyPressed();
+
+      // TODO decide whether to keep this
+      // purpose - attempt to prevent interference
+      if (ball.movingRight()){}
+      else {}
+
+      if (key = 131) { do paddle2.moveUp(); }
+      if (key = 133) { do paddle2.moveDown(); }
+      if (key = 87) { do paddle1.moveUp(); }
+      if (key = 83) { do paddle1.moveDown(); }
+
+      if (key = 81) { let game_over = true; }
+
       do ball.move();
-      do Sys.wait(100);
+      if (~checkCollisions()) {
+        do restart();
+      }
+      else {
+        do ball.eraseOld();
+        do ball.draw();
+      }
+
+      do print_lives();
+      if (~game_over) { let game_over = checkGameOver(); }
+
+      do Sys.wait(25);
+    }
+
+    do Output.moveCursor(15, 10);
+    do Output.printString("Game over!");
+
+    return;
+  }
+
+
+  method boolean checkCollisions() {
+    if (~sideCollisions()) { return false; }
+    do ceilingFloorCollisions();
+    if (~paddleCollisions()) { return false; }
+    return true;
+  }
+
+  method boolean sideCollisions() {
+    var int x;
+    let x = ball.getX();
+    if ((x - ball_size) < min_pixel_x) {
+      do decrementPlayer(1);
+      return false;
+    }
+    if ((x + ball_size) > max_pixel_x) {
+      do decrementPlayer(2);
+      return false;
+    }
+    return true;
+  }
+
+  method void ceilingFloorCollisions() {
+    var int y, y_speed;
+    let y = ball.getY();
+    let y_speed = ball.getY_speed();
+
+    if ((y - ball_size) < min_pixel_y) {
+      do ball.setY(min_pixel_y + ball_size);
+      do ball.setY_speed(-y_speed);
+      return;
+    }
+    if ((y + ball_size) > max_pixel_y) {
+      do ball.setY(max_pixel_y - ball_size);
+      do ball.setY_speed(-y_speed);
     }
     return;
+  }
+
+  method boolean paddleCollisions() {
+    var int x, y, paddle_x;
+    var boolean left_side;
+
+    let x = ball.getX();
+    let y = ball.getY();
+    let left_side = (x < center_x);
+
+    if (left_side) {
+      let paddle_x = paddle1.getX2();
+      if ((x - ball_size) < paddle_x){
+        if ((y < paddle1.getY()) | (y > paddle1.getY2())){
+          do decrementPlayer(1);
+          return false;
+        }
+        do ball.setX(paddle_x + ball_size);
+        do ball.setX_speed(-ball.getX_speed());
+      }
+      return true;
+    }
+
+    let paddle_x = paddle2.getX();
+    if ((x + ball_size) > paddle_x) {
+      if ((y < paddle2.getY()) | (y > paddle2.getY2())){
+        do decrementPlayer(2);
+        return false;
+      }
+      do ball.setX(paddle_x - ball_size);
+      do ball.setX_speed(-ball.getX_speed());
+    }
+    return true;
+  }
+
+  method void decrementPlayer(int player) {
+    if (player = 1){
+      let lives1 = lives1 - 1;
+      return;
+    }
+    let lives2 = lives2 - 1;
+    return;
+  }
+
+  method void print_lives() {
+    do Output.moveCursor(10, 10);
+    do Output.printInt(lives1);
+    do Output.moveCursor(20, 10);
+    do Output.printInt(lives2);
+    return;
+  }
+
+  method boolean checkGameOver() {
+    if (lives1 = 0) { return true; }
+    if (lives2 = 0) { return true; }
+    return false;
   }
 }
