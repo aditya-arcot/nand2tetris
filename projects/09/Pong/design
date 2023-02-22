@@ -1,6 +1,4 @@
 To do
-- restart game (r)
-- UI improvement
 - comments / documentation
 
 == API ==
@@ -49,11 +47,11 @@ PongGame
   field int max_screen_x, max_screen_y, border
   field int title_panel_height, name_panel_height
   field int msg_row, p1_msg_col, p2_msg_col, paused_col
-  field int name_row, name_col, lives_row, lives_1_col, lives_2_col
+  field int name_row, name_col, points_row, points_1_col, points_2_col
   field int letters_mem_addr
-  field int lives1, lives2
+  field int points1, points2
   field int ball_size
-  field int ball_speed_x, ball_speed_y
+  field int ball_speed_x, ball_speed_y, speed_sign
   field int paddle_h, paddle_w
   field int shift_paddle_pixels
   field int min_pixel_x, max_pixel_x
@@ -71,7 +69,7 @@ PongGame
   method void drawG(int memAddress)
   method void drawBoard()
   method void drawCenterLines()
-  method void drawLives()
+  method void drawPoints()
   method void createObjects()
   method void restart()
   method void dispose()
@@ -85,7 +83,7 @@ PongGame
   method boolean sideCollisions()
   method void ceilingFloorCollisions()
   method void paddleCollisions()
-  method void decrementPlayer(int player)
+  method void incrementPlayer(int player)
   method boolean checkGameOver()
 
 ==========
