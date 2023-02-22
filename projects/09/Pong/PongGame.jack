@@ -181,6 +181,9 @@ class PongGame {
     let y = ball.getY();
     let left_side = (x < center_x);
 
+    do paddle1.draw();
+    do paddle2.draw();
+
     if (left_side) {
       let paddle_x = paddle1.getX2();
       if ((x - ball_size) < paddle_x){

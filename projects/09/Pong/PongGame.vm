@@ -449,6 +449,12 @@ push local 0
 push this 7
 lt
 pop local 3
+push this 13
+call Paddle.draw 1
+pop temp 0
+push this 14
+call Paddle.draw 1
+pop temp 0
 push local 3
 if-goto IF_TRUE0
 goto IF_FALSE0
