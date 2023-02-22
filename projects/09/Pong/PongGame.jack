@@ -266,12 +266,11 @@ class PongGame {
     var char key;
     let key = Keyboard.keyPressed();
 
-    // TODO remove
     // for debugging
-    do Screen.setColor(false);
-    do Screen.drawRectangle(0, 0, 25, 15);
-    do Output.moveCursor(0, 0);
-    do Output.printInt(key);
+    //do Screen.setColor(false);
+    //do Screen.drawRectangle(0, 0, 25, 15);
+    //do Output.moveCursor(0, 0);
+    //do Output.printInt(key);
 
     if (key = 131) {do paddle2.moveUp(); return false; }
     if (key = 133) { do paddle2.moveDown(); return false; }
@@ -280,9 +279,6 @@ class PongGame {
 
     if (key = 80) { do pause(); return false; }
     if (key = 81) { return true; }
-    if (key = 82) { 
-      // TODO restart 
-    }
 
     return false;
   }
