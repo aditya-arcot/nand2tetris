@@ -106,11 +106,6 @@ class PongGame {
       let move_outcome = 0;
       let key = Keyboard.keyPressed();
 
-      // TODO decide whether to keep this
-      // purpose - attempt to prevent interference
-      if (ball.movingRight()){}
-      else {}
-
       if (key = 131) { do paddle2.moveUp(); }
       if (key = 133) { do paddle2.moveDown(); }
       if (key = 87) { do paddle1.moveUp(); }

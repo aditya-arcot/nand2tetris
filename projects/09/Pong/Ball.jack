@@ -49,9 +49,4 @@ class Ball {
     return;
   }
 
-  method boolean movingRight(){
-    if (x_speed > 0){ return true; }
-    return false;
-  }
-
 }
