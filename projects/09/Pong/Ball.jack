@@ -29,6 +29,30 @@ class Ball {
     return;
   }
 
+  method void incrementSpeeds() {
+    do incrementX_speed();
+    do incrementY_speed();
+    return;
+  }
+
+  method void incrementX_speed() {
+    if (x_speed > 0) {
+      let x_speed = x_speed + 1;
+      return;
+    }
+    let x_speed = x_speed - 1;
+    return;
+  }
+
+  method void incrementY_speed() {
+    if (y_speed > 0) {
+      let y_speed = y_speed + 1;
+      return;
+    }
+    let y_speed = y_speed - 1;
+    return;
+  }
+
   method void draw() {
     do Screen.setColor(true);
     do Screen.drawCircle(x, y, r);

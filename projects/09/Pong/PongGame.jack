@@ -31,7 +31,7 @@ class PongGame {
     let paddle_h = 50;
     let paddle_w = 10;
 
-    let shift_paddle_pixels = 5;
+    let shift_paddle_pixels = 10;
 
     let lives1 = 10;
     let lives2 = 10;
@@ -193,6 +193,7 @@ class PongGame {
         }
         do ball.setX(paddle_x + ball_size);
         do ball.setX_speed(-ball.getX_speed());
+        do ball.incrementSpeeds();
       }
       return true;
     }
@@ -205,6 +206,7 @@ class PongGame {
       }
       do ball.setX(paddle_x - ball_size);
       do ball.setX_speed(-ball.getX_speed());
+      do ball.incrementSpeeds();
     }
     return true;
   }

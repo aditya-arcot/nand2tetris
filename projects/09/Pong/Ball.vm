@@ -73,6 +73,61 @@ call Memory.deAlloc 1
 pop temp 0
 push constant 0
 return
+function Ball.incrementSpeeds 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Ball.incrementX_speed 1
+pop temp 0
+push pointer 0
+call Ball.incrementY_speed 1
+pop temp 0
+push constant 0
+return
+function Ball.incrementX_speed 0
+push argument 0
+pop pointer 0
+push this 5
+push constant 0
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 5
+push constant 1
+add
+pop this 5
+push constant 0
+return
+label IF_FALSE0
+push this 5
+push constant 1
+sub
+pop this 5
+push constant 0
+return
+function Ball.incrementY_speed 0
+push argument 0
+pop pointer 0
+push this 6
+push constant 0
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 6
+push constant 1
+add
+pop this 6
+push constant 0
+return
+label IF_FALSE0
+push this 6
+push constant 1
+sub
+pop this 6
+push constant 0
+return
 function Ball.draw 0
 push argument 0
 pop pointer 0
