@@ -1,7 +1,7 @@
 class PongGame {
   field int max_screen_x, max_screen_y, border;
   field int title_panel_height, name_panel_height;
-  field int msg_row, p1_msg_col, p2_msg_col;
+  field int msg_row, p1_msg_col, p2_msg_col, paused_col;
   field int name_row, name_col, lives_row, lives_1_col, lives_2_col;
   field int letters_mem_addr;
   field int lives1, lives2;
@@ -26,6 +26,7 @@ class PongGame {
     let msg_row = 12;
     let p1_msg_col = (32-8)-10;
     let p2_msg_col = 32+10;
+    let paused_col = 29;
     let name_row = 22;
     let name_col = 26;
     let lives_row = 1;
@@ -225,25 +226,13 @@ class PongGame {
   }
 
   method void run() {
-    var char key;
     var boolean game_over;
-    var int move_outcome;
 
     while (~game_over) {
-      let move_outcome = 0;
-      let key = Keyboard.keyPressed();
-
-      if (key = 131) { do paddle2.moveUp(); }
-      if (key = 133) { do paddle2.moveDown(); }
-      if (key = 87) { do paddle1.moveUp(); }
-      if (key = 83) { do paddle1.moveDown(); }
-
-      if (key = 81) { let game_over = true; }
+      let game_over = checkKey();
 
       do ball.move();
-      if (~checkCollisions()) {
-        do restart();
-      }
+      if (~checkCollisions()) { do restart(); }
       else {
         do ball.eraseOld();
         do ball.draw();
@@ -257,8 +246,67 @@ class PongGame {
       do Sys.wait(25);
     }
 
-    if (lives2 = 0) { do player1Win(); }
-    else { do player2Win(); }
+    if (lives1 = lives2) {
+      do tie();
+      return;
+    }
+    if (lives2 = 0) {
+      do player1Win();
+    }
+    do player2Win();
+
+    return;
+  }
+
+  method boolean checkKey() {
+    var char key;
+    let key = Keyboard.keyPressed();
+
+    // TODO remove
+    // for debugging
+    do Screen.setColor(false);
+    do Screen.drawRectangle(0, 0, 25, 15);
+    do Output.moveCursor(0, 0);
+    do Output.printInt(key);
+
+    if (key = 131) {do paddle2.moveUp(); return false; }
+    if (key = 133) { do paddle2.moveDown(); return false; }
+    if (key = 87) { do paddle1.moveUp(); return false; }
+    if (key = 83) { do paddle1.moveDown(); return false; }
+
+    if (key = 80) { do pause(); return false; }
+    if (key = 81) { return true; }
+    if (key = 82) { 
+      // TODO restart 
+    }
+
+    return false;
+  }
+
+  method void pause() {
+    var char key;
+    let key = Keyboard.keyPressed();
+
+    while (key = 80){
+      do Sys.wait(100);
+      let key = Keyboard.keyPressed();
+    }
+
+    do Output.moveCursor(msg_row, paused_col);
+    do Output.printString("Paused");
+
+    while (~(key = 80)){
+      do Sys.wait(10);
+      let key = Keyboard.keyPressed();
+    }
+
+    while (key = 80){
+      do Sys.wait(10);
+      let key = Keyboard.keyPressed();
+    }
+
+    do drawBoard();
+    do drawInfo();
 
     return;
   }
@@ -279,7 +327,13 @@ class PongGame {
     return;
   }
 
-
+  method void tie() {
+    do Output.moveCursor(msg_row, p1_msg_col);
+    do Output.printString("You tied");
+    do Output.moveCursor(msg_row, p2_msg_col);
+    do Output.printString("You tied");
+    return;
+  }
 
   method boolean checkCollisions() {
     if (~sideCollisions()) { return false; }
