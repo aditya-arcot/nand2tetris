@@ -2,9 +2,9 @@ class PongGame {
   field int max_screen_x, max_screen_y, border;
   field int title_panel_height, name_panel_height;
   field int msg_row, p1_msg_col, p2_msg_col, paused_col;
-  field int name_row, name_col, lives_row, lives_1_col, lives_2_col;
+  field int name_row, name_col, points_row, points_1_col, points_2_col;
   field int letters_mem_addr;
-  field int lives1, lives2;
+  field int points1, points2;
   field int ball_size;
   field int ball_speed_x, ball_speed_y, speed_sign;
   field int paddle_h, paddle_w;
@@ -29,13 +29,13 @@ class PongGame {
     let paused_col = 29;
     let name_row = 22;
     let name_col = 26;
-    let lives_row = 1;
-    let lives_1_col = 10;
-    let lives_2_col = 53;
+    let points_row = 1;
+    let points_1_col = 10;
+    let points_2_col = 53;
     let letters_mem_addr = 16384 + 142; // 4 pixel rows blanks
 
-    let lives1 = 3;
-    let lives2 = 3;
+    let points1 = 0;
+    let points2 = 0;
 
     let ball_size = 3;
     let ball_speed_x = 3;
@@ -182,11 +182,11 @@ class PongGame {
     return;
   }
 
-  method void drawLives() {
-    do Output.moveCursor(lives_row, lives_1_col);
-    do Output.printInt(lives1);
-    do Output.moveCursor(lives_row, lives_2_col);
-    do Output.printInt(lives2);
+  method void drawPoints() {
+    do Output.moveCursor(points_row, points_1_col);
+    do Output.printInt(points1);
+    do Output.moveCursor(points_row, points_2_col);
+    do Output.printInt(points2);
     return;
   }
 
@@ -242,18 +242,18 @@ class PongGame {
       }
 
       do drawCenterLines();
-      do drawLives();
+      do drawPoints();
 
       if (~game_over) { let game_over = checkGameOver(); }
 
       do Sys.wait(25);
     }
 
-    if (lives1 = lives2) {
+    if (points1 = points2) {
       do tie();
       return;
     }
-    if (lives2 = 0) {
+    if (points1 = 11) {
       do player1Win();
     }
     do player2Win();
@@ -349,11 +349,11 @@ class PongGame {
     var int x;
     let x = ball.getX();
     if ((x - ball_size) < min_pixel_x) {
-      do decrementPlayer(1);
+      do incrementPlayer(2);
       return false;
     }
     if ((x + ball_size) > max_pixel_x) {
-      do decrementPlayer(2);
+      do incrementPlayer(1);
       return false;
     }
     return true;
@@ -412,18 +412,17 @@ class PongGame {
     return;
   }
 
-  method void decrementPlayer(int player) {
+  method void incrementPlayer(int player) {
     if (player = 1){
-      let lives1 = lives1 - 1;
+      let points1 = points1 + 1;
       return;
     }
-    let lives2 = lives2 - 1;
+    let points2 = points2 + 1;
     return;
   }
 
   method boolean checkGameOver() {
-    if (lives1 = 0) { return true; }
-    if (lives2 = 0) { return true; }
+    if ((points1 = 11) | (points2 = 11)) { return true; }
     return false;
   }
 }

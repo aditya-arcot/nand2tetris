@@ -40,9 +40,9 @@ push constant 16384
 push constant 142
 add
 pop this 14
-push constant 3
+push constant 0
 pop this 15
-push constant 3
+push constant 0
 pop this 16
 push constant 3
 pop this 17
@@ -701,7 +701,7 @@ call Screen.drawLine 4
 pop temp 0
 push constant 0
 return
-function PongGame.drawLives 0
+function PongGame.drawPoints 0
 push argument 0
 pop pointer 0
 push this 11
@@ -871,7 +871,7 @@ push pointer 0
 call PongGame.drawCenterLines 1
 pop temp 0
 push pointer 0
-call PongGame.drawLives 1
+call PongGame.drawPoints 1
 pop temp 0
 push local 0
 not
@@ -899,8 +899,8 @@ pop temp 0
 push constant 0
 return
 label IF_FALSE2
-push this 16
-push constant 0
+push this 15
+push constant 11
 eq
 if-goto IF_TRUE3
 goto IF_FALSE3
@@ -1282,8 +1282,8 @@ if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
 push pointer 0
-push constant 1
-call PongGame.decrementPlayer 2
+push constant 2
+call PongGame.incrementPlayer 2
 pop temp 0
 push constant 0
 return
@@ -1297,8 +1297,8 @@ if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
 push pointer 0
-push constant 2
-call PongGame.decrementPlayer 2
+push constant 1
+call PongGame.incrementPlayer 2
 pop temp 0
 push constant 0
 return
@@ -1471,7 +1471,7 @@ pop temp 0
 label IF_FALSE3
 push constant 0
 return
-function PongGame.decrementPlayer 0
+function PongGame.incrementPlayer 0
 push argument 0
 pop pointer 0
 push argument 1
@@ -1482,14 +1482,14 @@ goto IF_FALSE0
 label IF_TRUE0
 push this 15
 push constant 1
-sub
+add
 pop this 15
 push constant 0
 return
 label IF_FALSE0
 push this 16
 push constant 1
-sub
+add
 pop this 16
 push constant 0
 return
@@ -1497,8 +1497,12 @@ function PongGame.checkGameOver 0
 push argument 0
 pop pointer 0
 push this 15
-push constant 0
+push constant 11
 eq
+push this 16
+push constant 11
+eq
+or
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
@@ -1506,15 +1510,5 @@ push constant 0
 not
 return
 label IF_FALSE0
-push this 16
-push constant 0
-eq
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
-push constant 0
-not
-return
-label IF_FALSE1
 push constant 0
 return
