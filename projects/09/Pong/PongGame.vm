@@ -908,6 +908,8 @@ label IF_TRUE3
 push pointer 0
 call PongGame.player1Win 1
 pop temp 0
+push constant 0
+return
 label IF_FALSE3
 push pointer 0
 call PongGame.player2Win 1

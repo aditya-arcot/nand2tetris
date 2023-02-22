@@ -255,6 +255,7 @@ class PongGame {
     }
     if (points1 = 11) {
       do player1Win();
+      return;
     }
     do player2Win();
 
