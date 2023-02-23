@@ -1,6 +1,7 @@
 Main
   function void main()
 
+
 Ball
   field int x, y
   field int old_x, old_y
@@ -16,13 +17,14 @@ Ball
   method void setY(int Y)
   method void setX_speed(int X_speed)
   method void setY_speed(int Y_speed)
-  method void dispose()
-  method void incrementSpeeds()
-  method void incrementX_speed()
-  method void incrementY_speed()
   method void draw()
   method void eraseOld()
   method void move()
+  method void incrementSpeeds()
+  method void incrementX_speed()
+  method void incrementY_speed()
+  method void dispose()
+
 
 Paddle
   field int x, y
@@ -37,11 +39,12 @@ Paddle
   method int getY()
   method int getX2()
   method int getY2()
-  method void dispose()
   method void draw()
   method void erase()
-  method void moveDown()
   method void moveUp()
+  method void moveDown()
+  method void dispose()
+
 
 PongGame
   field int max_screen_x, max_screen_y
@@ -68,27 +71,28 @@ PongGame
   field int points1, points2
 
   constructor PongGame new()
+  method void createObjects()
+  method void drawBoard()
+  method void drawCenterLines()
   method void drawInfo()
   method void drawLetters()
   method void drawP(int memAddress)
   method void drawO(int memAddress)
   method void drawN(int memAddress)
   method void drawG(int memAddress)
-  method void drawBoard()
-  method void drawCenterLines()
   method void drawPoints()
-  method void createObjects()
-  method void reset()
-  method void dispose()
   method void run()
-  method boolean checkKey()
   method void pause()
-  method void player1Win()
-  method void player2Win()
-  method void tie()
+  method void reset()
+  method boolean checkGameOver()
+  method boolean checkKey()
   method boolean checkCollisions()
   method boolean sideCollisions()
   method void ceilingFloorCollisions()
   method void paddleCollisions()
   method void incrementPlayer(int player)
-  method boolean checkGameOver()
+  method void tie()
+  method void player1Win()
+  method void player2Win()
+  method void dispose()
+

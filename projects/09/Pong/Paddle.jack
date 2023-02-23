@@ -33,12 +33,6 @@ class Paddle {
   /** returns bottom pixel location */
   method int getY2() { return y2; }
 
-  /** disposes this Paddle */
-  method void dispose() {
-    do Memory.deAlloc(this);
-    return;
-  }
-
   /** draws this Paddle on the screen */
   method void draw() {
     do Screen.setColor(true);
@@ -50,6 +44,32 @@ class Paddle {
   method void erase() {
     do Screen.setColor(false);
     do Screen.drawRectangle(x, y, x2, y2);
+    return;
+  }
+
+  /** moves this Paddle up once */
+  method void moveUp() {
+    if (y = min_pixel_y) { return; } // already at top of screen
+    if ((y - shift_pixels) < min_pixel_y) { // full shift will result in Paddle off screen
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y2-((y-min_pixel_y)-1), x2, y2); // erase necessary section from bottom
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, min_pixel_y, x2, y-1); // draw extra section at top
+      
+      // redefine top and bottom pixel locations
+      let y = min_pixel_y;
+      let y2 = y + y_diff;
+    }
+    else { // able to do full shift
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y2-(shift_pixels-1), x2, y2); // erase necessary section from bottom
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, y - shift_pixels, x2, y-1); // draw extra section at top
+      
+      // redefine top and bottom pixel locations
+      let y = y - shift_pixels;
+      let y2 = y2 - shift_pixels;
+    }
     return;
   }
 
@@ -79,29 +99,9 @@ class Paddle {
     return;
   }
 
-  /** moves this Paddle up once */
-  method void moveUp() {
-    if (y = min_pixel_y) { return; } // already at top of screen
-    if ((y - shift_pixels) < min_pixel_y) { // full shift will result in Paddle off screen
-      do Screen.setColor(false);
-      do Screen.drawRectangle(x, y2-((y-min_pixel_y)-1), x2, y2); // erase necessary section from bottom
-      do Screen.setColor(true);
-      do Screen.drawRectangle(x, min_pixel_y, x2, y-1); // draw extra section at top
-      
-      // redefine top and bottom pixel locations
-      let y = min_pixel_y;
-      let y2 = y + y_diff;
-    }
-    else { // able to do full shift
-      do Screen.setColor(false);
-      do Screen.drawRectangle(x, y2-(shift_pixels-1), x2, y2); // erase necessary section from bottom
-      do Screen.setColor(true);
-      do Screen.drawRectangle(x, y - shift_pixels, x2, y-1); // draw extra section at top
-      
-      // redefine top and bottom pixel locations
-      let y = y - shift_pixels;
-      let y2 = y2 - shift_pixels;
-    }
+  /** disposes this Paddle */
+  method void dispose() {
+    do Memory.deAlloc(this);
     return;
   }
 }

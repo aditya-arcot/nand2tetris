@@ -45,14 +45,6 @@ push argument 0
 pop pointer 0
 push this 3
 return
-function Paddle.dispose 0
-push argument 0
-pop pointer 0
-push pointer 0
-call Memory.deAlloc 1
-pop temp 0
-push constant 0
-return
 function Paddle.draw 0
 push argument 0
 pop pointer 0
@@ -80,6 +72,99 @@ push this 2
 push this 3
 call Screen.drawRectangle 4
 pop temp 0
+push constant 0
+return
+function Paddle.moveUp 0
+push argument 0
+pop pointer 0
+push this 1
+push this 6
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push this 1
+push this 5
+sub
+push this 6
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 3
+push this 1
+push this 6
+sub
+push constant 1
+sub
+sub
+push this 2
+push this 3
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 6
+push this 2
+push this 1
+push constant 1
+sub
+call Screen.drawRectangle 4
+pop temp 0
+push this 6
+pop this 1
+push this 1
+push this 4
+add
+pop this 3
+goto IF_END1
+label IF_FALSE1
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 3
+push this 5
+push constant 1
+sub
+sub
+push this 2
+push this 3
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 5
+sub
+push this 2
+push this 1
+push constant 1
+sub
+call Screen.drawRectangle 4
+pop temp 0
+push this 1
+push this 5
+sub
+pop this 1
+push this 3
+push this 5
+sub
+pop this 3
+label IF_END1
 push constant 0
 return
 function Paddle.moveDown 0
@@ -175,96 +260,11 @@ pop this 3
 label IF_END1
 push constant 0
 return
-function Paddle.moveUp 0
+function Paddle.dispose 0
 push argument 0
 pop pointer 0
-push this 1
-push this 6
-eq
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-push constant 0
-return
-label IF_FALSE0
-push this 1
-push this 5
-sub
-push this 6
-lt
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
-push constant 0
-call Screen.setColor 1
+push pointer 0
+call Memory.deAlloc 1
 pop temp 0
-push this 0
-push this 3
-push this 1
-push this 6
-sub
-push constant 1
-sub
-sub
-push this 2
-push this 3
-call Screen.drawRectangle 4
-pop temp 0
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-push this 0
-push this 6
-push this 2
-push this 1
-push constant 1
-sub
-call Screen.drawRectangle 4
-pop temp 0
-push this 6
-pop this 1
-push this 1
-push this 4
-add
-pop this 3
-goto IF_END1
-label IF_FALSE1
-push constant 0
-call Screen.setColor 1
-pop temp 0
-push this 0
-push this 3
-push this 5
-push constant 1
-sub
-sub
-push this 2
-push this 3
-call Screen.drawRectangle 4
-pop temp 0
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-push this 0
-push this 1
-push this 5
-sub
-push this 2
-push this 1
-push constant 1
-sub
-call Screen.drawRectangle 4
-pop temp 0
-push this 1
-push this 5
-sub
-pop this 1
-push this 3
-push this 5
-sub
-pop this 3
-label IF_END1
 push constant 0
 return

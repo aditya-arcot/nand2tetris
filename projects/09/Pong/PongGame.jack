@@ -82,6 +82,59 @@ class PongGame {
     return this;
   }
 
+  /** creates Ball, Paddle for both players */
+  method void createObjects() {
+    let ball = Ball.new(center_x, center_y, ball_size, 
+                        speed_sign * ball_speed_x, speed_sign * ball_speed_y);
+    let paddle1 = Paddle.new(min_game_x, center_y-(paddle_h/2),
+                    min_game_x+(paddle_w-1), center_y+(paddle_h/2),
+                    shift_paddle_pixels, min_game_y, max_game_y);
+    let paddle2 = Paddle.new(max_game_x-(paddle_w-1), center_y-(paddle_h/2),
+                    max_game_x, center_y+(paddle_h/2),
+                    shift_paddle_pixels, min_game_y, max_game_y);
+    
+    // switch multiplier sign for next run
+    let speed_sign = -1 * speed_sign;
+
+    return;
+  }
+
+  /** draw initial screen elements */
+  method void drawBoard() {
+    // clear existing drawing
+    do Screen.clearScreen();
+
+    // make entire screen black
+    do Screen.setColor(true);
+    do Screen.drawRectangle(0, 0, max_screen_x, max_screen_y);  
+
+    do Screen.setColor(false);
+    // draw white rectangle for game board
+    do Screen.drawRectangle(min_game_x, min_game_y, max_game_x, max_game_y);  
+    // draw white rectangle for top panel
+    do Screen.drawRectangle(0, 0, max_screen_x, title_panel_height - 1);  
+    // draw white rectangle for bottom panel
+    do Screen.drawRectangle(0, max_game_y + border + 1, max_screen_x, max_screen_y);  
+    
+    // draw white lines around game board
+    do Screen.drawLine(min_game_x - 1, min_game_y - 1, min_game_x - 1, max_game_y + 1);
+    do Screen.drawLine(max_game_x + 1, min_game_y - 1, max_game_x + 1, max_game_y + 1);
+    do Screen.drawLine(min_game_x - 1, min_game_y - 1, max_game_x + 1, min_game_y - 1);
+    do Screen.drawLine(min_game_x - 1, max_game_y + 1, max_game_x + 1, max_game_y + 1);
+    
+    do drawCenterLines();
+
+    return;
+  }
+
+  /** draws 2 vertical black lines to separate 2 halves of game board */
+  method void drawCenterLines() {
+    do Screen.setColor(true);
+    do Screen.drawLine(center_x-1, min_game_y, center_x-1, max_game_y);
+    do Screen.drawLine(center_x+1, min_game_y, center_x+1, max_game_y);
+    return;
+  }
+
   /** draw game name, author name */
   method void drawInfo() {
     do drawLetters();
@@ -184,93 +237,12 @@ class PongGame {
     return;
   }
 
-  /** draw initial screen elements */
-  method void drawBoard() {
-    // clear existing drawing
-    do Screen.clearScreen();
-
-    // make entire screen black
-    do Screen.setColor(true);
-    do Screen.drawRectangle(0, 0, max_screen_x, max_screen_y);  
-
-    do Screen.setColor(false);
-    // draw white rectangle for game board
-    do Screen.drawRectangle(min_game_x, min_game_y, max_game_x, max_game_y);  
-    // draw white rectangle for top panel
-    do Screen.drawRectangle(0, 0, max_screen_x, title_panel_height - 1);  
-    // draw white rectangle for bottom panel
-    do Screen.drawRectangle(0, max_game_y + border + 1, max_screen_x, max_screen_y);  
-    
-    // draw white lines around game board
-    do Screen.drawLine(min_game_x - 1, min_game_y - 1, min_game_x - 1, max_game_y + 1);
-    do Screen.drawLine(max_game_x + 1, min_game_y - 1, max_game_x + 1, max_game_y + 1);
-    do Screen.drawLine(min_game_x - 1, min_game_y - 1, max_game_x + 1, min_game_y - 1);
-    do Screen.drawLine(min_game_x - 1, max_game_y + 1, max_game_x + 1, max_game_y + 1);
-    
-    do drawCenterLines();
-
-    return;
-  }
-
-  /** draws 2 vertical black lines to separate 2 halves of game board */
-  method void drawCenterLines() {
-    do Screen.setColor(true);
-    do Screen.drawLine(center_x-1, min_game_y, center_x-1, max_game_y);
-    do Screen.drawLine(center_x+1, min_game_y, center_x+1, max_game_y);
-    return;
-  }
-
   /** draws player points in top panel */
   method void drawPoints() {
     do Output.moveCursor(points_row, points_1_col);
     do Output.printInt(points1);
     do Output.moveCursor(points_row, points_2_col);
     do Output.printInt(points2);
-    return;
-  }
-
-  /** creates Ball, Paddle for both players */
-  method void createObjects() {
-    let ball = Ball.new(center_x, center_y, ball_size, 
-                        speed_sign * ball_speed_x, speed_sign * ball_speed_y);
-    let paddle1 = Paddle.new(min_game_x, center_y-(paddle_h/2),
-                    min_game_x+(paddle_w-1), center_y+(paddle_h/2),
-                    shift_paddle_pixels, min_game_y, max_game_y);
-    let paddle2 = Paddle.new(max_game_x-(paddle_w-1), center_y-(paddle_h/2),
-                    max_game_x, center_y+(paddle_h/2),
-                    shift_paddle_pixels, min_game_y, max_game_y);
-    
-    // switch multiplier sign for next run
-    let speed_sign = -1 * speed_sign;
-
-    return;
-  }
-
-  /** erases / disposes old objects, creates new objects, redraws board */
-  method void reset() {
-    do ball.eraseOld();
-    do ball.dispose();
-    do paddle1.erase();
-    do paddle1.dispose();
-    do paddle2.erase();
-    do paddle2.dispose();
-
-    do drawBoard();
-    do createObjects();
-    do drawInfo();
-
-    // give player time to react
-    do Sys.wait(1000);
-
-    return;
-  }
-
-  /** disposes this PongGame and all created objects */
-  method void dispose() {
-    do ball.dispose();
-    do paddle1.dispose();
-    do paddle2.dispose();
-    do Memory.deAlloc(this);
     return;
   }
 
@@ -312,34 +284,6 @@ class PongGame {
     return;
   }
 
-  /** handles keypress by either player */
-  method boolean checkKey() {
-    var char key;
-    let key = Keyboard.keyPressed(); // get keypress
-
-    // for debugging - outputs currently pressed key
-    //do Screen.setColor(false);
-    //do Screen.drawRectangle(0, 0, 25, 15);
-    //do Output.moveCursor(0, 0);
-    //do Output.printInt(key);
-
-    // up arrow
-    if (key = 131) {do paddle2.moveUp(); return false; }
-    // down arrow
-    if (key = 133) { do paddle2.moveDown(); return false; }
-    // w key
-    if (key = 87) { do paddle1.moveUp(); return false; }
-    // s key
-    if (key = 83) { do paddle1.moveDown(); return false; }
-
-    // p
-    if (key = 80) { do pause(); return false; }
-    // q (returns true to quit)
-    if (key = 81) { return true; }
-
-    return false;
-  }
-
   /** pauses game and waits for player to unpause */
   method void pause() {
     var char key;
@@ -373,31 +317,57 @@ class PongGame {
     return;
   }
 
-  /** displays messages for player 1 win */
-  method void player1Win() {
-    do Output.moveCursor(msg_row, p1_msg_col);
-    do Output.printString("You win!");
-    do Output.moveCursor(msg_row, p2_msg_col);
-    do Output.printString("You lose");
+  /** erases / disposes old objects, creates new objects, redraws board */
+  method void reset() {
+    do ball.eraseOld();
+    do ball.dispose();
+    do paddle1.erase();
+    do paddle1.dispose();
+    do paddle2.erase();
+    do paddle2.dispose();
+
+    do drawBoard();
+    do createObjects();
+    do drawInfo();
+
+    // give player time to react
+    do Sys.wait(1000);
+
     return;
   }
 
-  /** displays messages for player 2 win */
-  method void player2Win() {
-    do Output.moveCursor(msg_row, p1_msg_col);
-    do Output.printString("You lose");
-    do Output.moveCursor(msg_row, p2_msg_col);
-    do Output.printString("You win!");
-    return;
+  /** checks if a player has reached 11 points */
+  method boolean checkGameOver() {
+    if ((points1 = 11) | (points2 = 11)) { return true; }
+    return false;
   }
 
-  /** displays messages for tie */
-  method void tie() {
-    do Output.moveCursor(msg_row, p1_msg_col);
-    do Output.printString("You tied");
-    do Output.moveCursor(msg_row, p2_msg_col);
-    do Output.printString("You tied");
-    return;
+  /** handles keypress by either player */
+  method boolean checkKey() {
+    var char key;
+    let key = Keyboard.keyPressed(); // get keypress
+
+    // for debugging - outputs currently pressed key
+    //do Screen.setColor(false);
+    //do Screen.drawRectangle(0, 0, 25, 15);
+    //do Output.moveCursor(0, 0);
+    //do Output.printInt(key);
+
+    // up arrow
+    if (key = 131) {do paddle2.moveUp(); return false; }
+    // down arrow
+    if (key = 133) { do paddle2.moveDown(); return false; }
+    // w key
+    if (key = 87) { do paddle1.moveUp(); return false; }
+    // s key
+    if (key = 83) { do paddle1.moveDown(); return false; }
+
+    // p
+    if (key = 80) { do pause(); return false; }
+    // q (returns true to quit)
+    if (key = 81) { return true; }
+
+    return false;
   }
 
   /** check ball collisions with sides, ceiling/floor, paddles */
@@ -497,9 +467,39 @@ class PongGame {
     return;
   }
 
-  /** checks if a player has reached 11 points */
-  method boolean checkGameOver() {
-    if ((points1 = 11) | (points2 = 11)) { return true; }
-    return false;
+  /** displays messages for tie */
+  method void tie() {
+    do Output.moveCursor(msg_row, p1_msg_col);
+    do Output.printString("You tied");
+    do Output.moveCursor(msg_row, p2_msg_col);
+    do Output.printString("You tied");
+    return;
+  }
+
+  /** displays messages for player 1 win */
+  method void player1Win() {
+    do Output.moveCursor(msg_row, p1_msg_col);
+    do Output.printString("You win!");
+    do Output.moveCursor(msg_row, p2_msg_col);
+    do Output.printString("You lose");
+    return;
+  }
+
+  /** displays messages for player 2 win */
+  method void player2Win() {
+    do Output.moveCursor(msg_row, p1_msg_col);
+    do Output.printString("You lose");
+    do Output.moveCursor(msg_row, p2_msg_col);
+    do Output.printString("You win!");
+    return;
+  }
+
+  /** disposes this PongGame and all created objects */
+  method void dispose() {
+    do ball.dispose();
+    do paddle1.dispose();
+    do paddle2.dispose();
+    do Memory.deAlloc(this);
+    return;
   }
 }

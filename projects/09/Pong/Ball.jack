@@ -41,12 +41,28 @@ class Ball {
   /** sets vertical speed */
   method void setY_speed(int Y_speed) { let y_speed = Y_speed; return; }
 
-  /** disposes this Ball */
-  method void dispose() {
-    do Memory.deAlloc(this);
+  //* draws this Ball on the screen */
+  method void draw() {
+    do Screen.setColor(true);
+    do Screen.drawCircle(x, y, r);
     return;
   }
 
+  /** erases Ball's last location from the screen */
+  method void eraseOld() {
+    do Screen.setColor(false);
+    do Screen.drawCircle(old_x, old_y, r);
+    return;
+  }
+
+  /** changes position based on speeds */
+  method void move() {
+    let old_x = x;
+    let old_y = y;
+    let x = x + x_speed;
+    let y = y + y_speed;
+    return;
+  }
   /** increments horizontal and vertical speeds */
   method void incrementSpeeds() {
     do incrementX_speed();
@@ -74,26 +90,9 @@ class Ball {
     return;
   }
 
-  //* draws this Ball on the screen */
-  method void draw() {
-    do Screen.setColor(true);
-    do Screen.drawCircle(x, y, r);
-    return;
-  }
-
-  /** erases Ball's last location from the screen */
-  method void eraseOld() {
-    do Screen.setColor(false);
-    do Screen.drawCircle(old_x, old_y, r);
-    return;
-  }
-
-  /** changes position based on speeds */
-  method void move() {
-    let old_x = x;
-    let old_y = y;
-    let x = x + x_speed;
-    let y = y + y_speed;
+  /** disposes this Ball */
+  method void dispose() {
+    do Memory.deAlloc(this);
     return;
   }
 }
