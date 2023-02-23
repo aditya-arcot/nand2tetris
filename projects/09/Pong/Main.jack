@@ -1,3 +1,4 @@
+/** initializes new Pong game, runs it, and disposes it */ 
 class Main {
   function void main() {
     var PongGame game;

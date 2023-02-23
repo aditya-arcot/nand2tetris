@@ -1,13 +1,10 @@
-To do
-- comments / documentation
-
-== API ==
-
 Main
   function void main()
 
 Ball
-  field int x, y, old_x, old_y, r
+  field int x, y
+  field int old_x, old_y
+  field int r
   field int x_speed, y_speed
 
   constructor Ball new(int X, int Y, int R, int X_speed, int Y_speed)
@@ -28,8 +25,11 @@ Ball
   method void move()
 
 Paddle
-  field int x, y, x2, y2, y_diff
-  field int shift_pixels, min_pixel_y, max_pixel_y
+  field int x, y
+  field int x2, y2
+  field int y_diff
+  field int shift_pixels
+  field int min_pixel_y, max_pixel_y
 
   constructor Paddle new(int X, int Y, int X2, int Y2, int Shift_pixels,
                           int Min_pixel_y, int Max_pixel_y)
@@ -44,21 +44,28 @@ Paddle
   method void moveUp()
 
 PongGame
-  field int max_screen_x, max_screen_y, border
-  field int title_panel_height, name_panel_height
-  field int msg_row, p1_msg_col, p2_msg_col, paused_col
-  field int name_row, name_col, points_row, points_1_col, points_2_col
+  field int max_screen_x, max_screen_y
+  field int min_game_x, max_game_x
+  field int min_game_y, max_game_y
+  field int center_x, center_y
+  field int border
+  field int title_panel_height
+  field int name_panel_height
+  field int msg_row
+  field int p1_msg_col, p2_msg_col
+  field int paused_col
+  field int name_row, name_col
+  field int points_row
+  field int points_1_col, points_2_col
   field int letters_mem_addr
-  field int points1, points2
+  field Ball ball
   field int ball_size
-  field int ball_speed_x, ball_speed_y, speed_sign
+  field int ball_speed_x, ball_speed_y
+  field int speed_sign
+  field Paddle paddle1, paddle2
   field int paddle_h, paddle_w
   field int shift_paddle_pixels
-  field int min_pixel_x, max_pixel_x
-  field int min_pixel_y, max_pixel_y
-  field int center_x, center_y
-  field Ball ball
-  field Paddle paddle1, paddle2
+  field int points1, points2
 
   constructor PongGame new()
   method void drawInfo()
@@ -71,7 +78,7 @@ PongGame
   method void drawCenterLines()
   method void drawPoints()
   method void createObjects()
-  method void restart()
+  method void reset()
   method void dispose()
   method void run()
   method boolean checkKey()
@@ -85,5 +92,3 @@ PongGame
   method void paddleCollisions()
   method void incrementPlayer(int player)
   method boolean checkGameOver()
-
-==========

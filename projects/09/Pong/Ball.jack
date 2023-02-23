@@ -1,9 +1,11 @@
+/** implements a Pong ball */
 class Ball {
-  field int x, y;   // center
-  field int old_x, old_y;
-  field int r;
-  field int x_speed, y_speed;
+  field int x, y;             // current center
+  field int old_x, old_y;     // previous center
+  field int r;                // radius
+  field int x_speed, y_speed; // speeds
 
+  /** constructs a new Ball with given parameters */
   constructor Ball new(int X, int Y, int R,
                       int X_speed, int Y_speed) {
     let x = X;
@@ -11,60 +13,82 @@ class Ball {
     let r = R;
     let x_speed = X_speed;
     let y_speed = Y_speed;
-    do draw();
+    do draw();  // draw Ball on screen
     return this;
   }
 
+  /** returns current x coordinate */
   method int getX() { return x; }
+
+  /** returns current y coordinate */
   method int getY() { return y; }
+
+  /** returns horizontal speed */
   method int getX_speed() { return x_speed; }
+
+  /** returns vertical speed */
   method int getY_speed() { return y_speed; }
+
+  /** sets x coordinate */
   method void setX(int X) { let x = X; return; }
+
+  /** sets y coordinate */
   method void setY(int Y) { let y = Y; return; }
+
+  /** sets horizontal speed */
   method void setX_speed(int X_speed) { let x_speed = X_speed; return; }
+
+  /** sets vertical speed */
   method void setY_speed(int Y_speed) { let y_speed = Y_speed; return; }
 
+  /** disposes this Ball */
   method void dispose() {
     do Memory.deAlloc(this);
     return;
   }
 
+  /** increments horizontal and vertical speeds */
   method void incrementSpeeds() {
     do incrementX_speed();
     do incrementY_speed();
     return;
   }
 
+  /** increments horizontal speed */
   method void incrementX_speed() {
     if (x_speed > 0) {
-      let x_speed = x_speed + 1;
+      let x_speed = x_speed + 1; // add 1 if positive
       return;
     }
-    let x_speed = x_speed - 1;
+    let x_speed = x_speed - 1; // subtract 1 if negative
     return;
   }
 
+  /** increments vertical speed */
   method void incrementY_speed() {
     if (y_speed > 0) {
-      let y_speed = y_speed + 1;
+      let y_speed = y_speed + 1; // add 1 if positive
       return;
     }
-    let y_speed = y_speed - 1;
+    let y_speed = y_speed - 1; // subtract 1 if negative
     return;
   }
 
+  //* draws this Ball on the screen */
   method void draw() {
     do Screen.setColor(true);
     do Screen.drawCircle(x, y, r);
     return;
   }
 
+  /** erases Ball's last location from the screen */
   method void eraseOld() {
     do Screen.setColor(false);
     do Screen.drawCircle(old_x, old_y, r);
     return;
   }
 
+  /** changes position based on speeds */
   method void move() {
     let old_x = x;
     let old_y = y;
@@ -72,5 +96,4 @@ class Ball {
     let y = y + y_speed;
     return;
   }
-
 }

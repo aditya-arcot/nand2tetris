@@ -1,20 +1,38 @@
+/** implements a Pong Game */
 class PongGame {
-  field int max_screen_x, max_screen_y, border;
-  field int title_panel_height, name_panel_height;
-  field int msg_row, p1_msg_col, p2_msg_col, paused_col;
-  field int name_row, name_col, points_row, points_1_col, points_2_col;
-  field int letters_mem_addr;
-  field int points1, points2;
-  field int ball_size;
-  field int ball_speed_x, ball_speed_y, speed_sign;
-  field int paddle_h, paddle_w;
-  field int shift_paddle_pixels;
-  field int min_pixel_x, max_pixel_x;
-  field int min_pixel_y, max_pixel_y;
-  field int center_x, center_y;
-  field Ball ball;
-  field Paddle paddle1, paddle2;
+  // pixel info
+  field int max_screen_x, max_screen_y; // max horizontal, vertical pixel index  (min assumed to be 0)
+  field int min_game_x, max_game_x;     // game min, max horizontal pixel index
+  field int min_game_y, max_game_y;     // game min, max vertical pixel index
+  field int center_x, center_y;         // game horizontal, vertical center pixel index
+  field int border;                     // pixels allocated for border
+  field int title_panel_height;         // pixels allocated for top title panel
+  field int name_panel_height;          // pixels allocated for bottom name panel
+  
+  // text location info
+  field int msg_row;                    // win/lose, tie, paused message row
+  field int p1_msg_col, p2_msg_col;     // win/lose, tie message col for player 1 and 2
+  field int paused_col;                 // paused message col
+  field int name_row, name_col;         // author name row, col
+  field int points_row;                 // point counters row
+  field int points_1_col, points_2_col; // point counters col for player 1 and 2
+  
+  field int letters_mem_addr;           // starting memory address for PONG sprites
+  
+  // Ball info
+  field Ball ball;                      // refers to current Ball
+  field int ball_size;                  // Ball radius
+  field int ball_speed_x, ball_speed_y; // starting Ball speeds
+  field int speed_sign;                 // Ball speeds sign multiplier
+  
+  // Paddle info
+  field Paddle paddle1, paddle2;        // refers to player Paddles
+  field int paddle_h, paddle_w;         // Paddle height, width
+  field int shift_paddle_pixels;        // Paddle move num pixels
+  
+  field int points1, points2;           // point values for player 1 and 2
 
+  /** constructs a new PongGame */
   constructor PongGame new() {
     // hardcoded values
     let max_screen_x = 511;
@@ -32,10 +50,8 @@ class PongGame {
     let points_row = 1;
     let points_1_col = 10;
     let points_2_col = 53;
+    
     let letters_mem_addr = 16384 + 142; // 4 pixel rows blanks
-
-    let points1 = 0;
-    let points2 = 0;
 
     let ball_size = 3;
     let ball_speed_x = 3;
@@ -46,14 +62,17 @@ class PongGame {
     let paddle_w = 10;
     let shift_paddle_pixels = 10;
 
-    // derivations
-    let min_pixel_x = border;
-    let max_pixel_x = max_screen_x - border;
-    let min_pixel_y = title_panel_height + border;
-    let max_pixel_y = (max_screen_y - border) - name_panel_height;
+    let points1 = 0;
+    let points2 = 0;
 
-    let center_x = (min_pixel_x + max_pixel_x) / 2;
-    let center_y = (min_pixel_y + max_pixel_y) / 2;
+    // derivations
+    let min_game_x = border;
+    let max_game_x = max_screen_x - border;
+    let min_game_y = title_panel_height + border;
+    let max_game_y = (max_screen_y - border) - name_panel_height;
+
+    let center_x = (min_game_x + max_game_x) / 2;
+    let center_y = (min_game_y + max_game_y) / 2;
 
     // objects, drawing
     do drawBoard();
@@ -63,6 +82,7 @@ class PongGame {
     return this;
   }
 
+  /** draw game name, author name */
   method void drawInfo() {
     do drawLetters();
     do Output.moveCursor(name_row, name_col);
@@ -70,6 +90,7 @@ class PongGame {
     return;
   }
 
+  /** graw game name */
   method void drawLetters() {
     do drawP(letters_mem_addr);
     do drawO(letters_mem_addr + 1);
@@ -78,6 +99,7 @@ class PongGame {
     return;
   }
 
+  /** draw P of PONG */
   method void drawP(int memAddress) {
     do Memory.poke(memAddress+0, 8188);
     do Memory.poke(memAddress+32, 8188);
@@ -99,6 +121,7 @@ class PongGame {
     return;
   }
 
+  /** draw O of PONG */
   method void drawO(int memAddress) {
     do Memory.poke(memAddress+0, 8188);
     do Memory.poke(memAddress+32, 8188);
@@ -119,6 +142,7 @@ class PongGame {
     return;
   }
 
+  /** draw N of PONG */
   method void drawN(int memAddress) {
     do Memory.poke(memAddress+0, 6204);
     do Memory.poke(memAddress+32, 6268);
@@ -139,6 +163,7 @@ class PongGame {
     return;
   }
 
+  /** draw G of PONG */
   method void drawG(int memAddress) {
     do Memory.poke(memAddress+0, 8188);
     do Memory.poke(memAddress+32, 8188);
@@ -159,29 +184,43 @@ class PongGame {
     return;
   }
 
+  /** draw initial screen elements */
   method void drawBoard() {
+    // clear existing drawing
     do Screen.clearScreen();
+
+    // make entire screen black
     do Screen.setColor(true);
-    do Screen.drawRectangle(0, 0, max_screen_x, max_screen_y);
+    do Screen.drawRectangle(0, 0, max_screen_x, max_screen_y);  
+
     do Screen.setColor(false);
-    do Screen.drawRectangle(min_pixel_x, min_pixel_y, max_pixel_x, max_pixel_y);
-    do Screen.drawRectangle(0, 0, max_screen_x, title_panel_height - 1);
-    do Screen.drawRectangle(0, max_pixel_y + border + 1, max_screen_x, max_screen_y);
-    do Screen.drawLine(min_pixel_x - 1, min_pixel_y - 1, min_pixel_x - 1, max_pixel_y + 1);
-    do Screen.drawLine(max_pixel_x + 1, min_pixel_y - 1, max_pixel_x + 1, max_pixel_y + 1);
-    do Screen.drawLine(min_pixel_x - 1, min_pixel_y - 1, max_pixel_x + 1, min_pixel_y - 1);
-    do Screen.drawLine(min_pixel_x - 1, max_pixel_y + 1, max_pixel_x + 1, max_pixel_y + 1);
+    // draw white rectangle for game board
+    do Screen.drawRectangle(min_game_x, min_game_y, max_game_x, max_game_y);  
+    // draw white rectangle for top panel
+    do Screen.drawRectangle(0, 0, max_screen_x, title_panel_height - 1);  
+    // draw white rectangle for bottom panel
+    do Screen.drawRectangle(0, max_game_y + border + 1, max_screen_x, max_screen_y);  
+    
+    // draw white lines around game board
+    do Screen.drawLine(min_game_x - 1, min_game_y - 1, min_game_x - 1, max_game_y + 1);
+    do Screen.drawLine(max_game_x + 1, min_game_y - 1, max_game_x + 1, max_game_y + 1);
+    do Screen.drawLine(min_game_x - 1, min_game_y - 1, max_game_x + 1, min_game_y - 1);
+    do Screen.drawLine(min_game_x - 1, max_game_y + 1, max_game_x + 1, max_game_y + 1);
+    
     do drawCenterLines();
+
     return;
   }
 
+  /** draws 2 vertical black lines to separate 2 halves of game board */
   method void drawCenterLines() {
     do Screen.setColor(true);
-    do Screen.drawLine(center_x-1, min_pixel_y, center_x-1, max_pixel_y);
-    do Screen.drawLine(center_x+1, min_pixel_y, center_x+1, max_pixel_y);
+    do Screen.drawLine(center_x-1, min_game_y, center_x-1, max_game_y);
+    do Screen.drawLine(center_x+1, min_game_y, center_x+1, max_game_y);
     return;
   }
 
+  /** draws player points in top panel */
   method void drawPoints() {
     do Output.moveCursor(points_row, points_1_col);
     do Output.printInt(points1);
@@ -190,20 +229,25 @@ class PongGame {
     return;
   }
 
+  /** creates Ball, Paddle for both players */
   method void createObjects() {
     let ball = Ball.new(center_x, center_y, ball_size, 
                         speed_sign * ball_speed_x, speed_sign * ball_speed_y);
-    let paddle1 = Paddle.new(min_pixel_x, center_y-(paddle_h/2),
-                    min_pixel_x+(paddle_w-1), center_y+(paddle_h/2),
-                    shift_paddle_pixels, min_pixel_y, max_pixel_y);
-    let paddle2 = Paddle.new(max_pixel_x-(paddle_w-1), center_y-(paddle_h/2),
-                    max_pixel_x, center_y+(paddle_h/2),
-                    shift_paddle_pixels, min_pixel_y, max_pixel_y);
+    let paddle1 = Paddle.new(min_game_x, center_y-(paddle_h/2),
+                    min_game_x+(paddle_w-1), center_y+(paddle_h/2),
+                    shift_paddle_pixels, min_game_y, max_game_y);
+    let paddle2 = Paddle.new(max_game_x-(paddle_w-1), center_y-(paddle_h/2),
+                    max_game_x, center_y+(paddle_h/2),
+                    shift_paddle_pixels, min_game_y, max_game_y);
+    
+    // switch multiplier sign for next run
     let speed_sign = -1 * speed_sign;
+
     return;
   }
 
-  method void restart() {
+  /** erases / disposes old objects, creates new objects, redraws board */
+  method void reset() {
     do ball.eraseOld();
     do ball.dispose();
     do paddle1.erase();
@@ -215,11 +259,13 @@ class PongGame {
     do createObjects();
     do drawInfo();
 
+    // give player time to react
     do Sys.wait(1000);
 
     return;
   }
 
+  /** disposes this PongGame and all created objects */
   method void dispose() {
     do ball.dispose();
     do paddle1.dispose();
@@ -228,27 +274,31 @@ class PongGame {
     return;
   }
 
+  /** runs a game of Pong */
   method void run() {
     var boolean game_over;
 
     while (~game_over) {
-      let game_over = checkKey();
+      let game_over = checkKey(); // check if player manually quits
 
+      // advance ball to next position
       do ball.move();
-      if (~checkCollisions()) { do restart(); }
-      else {
+
+      if (~checkCollisions()) { do reset(); } // reset if side collision
+      else {  // erase old position, draw new position
         do ball.eraseOld();
         do ball.draw();
       }
 
-      do drawCenterLines();
-      do drawPoints();
+      do drawCenterLines(); // redraw to fix possible erase
+      do drawPoints(); // redraw to update score
 
-      if (~game_over) { let game_over = checkGameOver(); }
+      if (~game_over) { let game_over = checkGameOver(); }  // check if player has won
 
-      do Sys.wait(25);
+      do Sys.wait(25); // slow down movement
     }
 
+    // check winner / tie after game ends
     if (points1 = points2) {
       do tie();
       return;
@@ -262,55 +312,68 @@ class PongGame {
     return;
   }
 
+  /** handles keypress by either player */
   method boolean checkKey() {
     var char key;
-    let key = Keyboard.keyPressed();
+    let key = Keyboard.keyPressed(); // get keypress
 
-    // for debugging
+    // for debugging - outputs currently pressed key
     //do Screen.setColor(false);
     //do Screen.drawRectangle(0, 0, 25, 15);
     //do Output.moveCursor(0, 0);
     //do Output.printInt(key);
 
+    // up arrow
     if (key = 131) {do paddle2.moveUp(); return false; }
+    // down arrow
     if (key = 133) { do paddle2.moveDown(); return false; }
+    // w key
     if (key = 87) { do paddle1.moveUp(); return false; }
+    // s key
     if (key = 83) { do paddle1.moveDown(); return false; }
 
+    // p
     if (key = 80) { do pause(); return false; }
+    // q (returns true to quit)
     if (key = 81) { return true; }
 
     return false;
   }
 
+  /** pauses game and waits for player to unpause */
   method void pause() {
     var char key;
-    let key = Keyboard.keyPressed();
+    let key = Keyboard.keyPressed(); // get keypress
 
-    while (key = 80){
+    // display paused message
+    do Output.moveCursor(msg_row, paused_col);
+    do Output.printString("Paused");
+
+    while (key = 80){ // wait until player unpresses p
       do Sys.wait(100);
       let key = Keyboard.keyPressed();
     }
 
-    do Output.moveCursor(msg_row, paused_col);
-    do Output.printString("Paused");
-
+    // pause game until p is pressed
     while (~(key = 80)){
       do Sys.wait(10);
       let key = Keyboard.keyPressed();
     }
 
+    // wait until p is unpressed to avoid pausing again
     while (key = 80){
       do Sys.wait(10);
       let key = Keyboard.keyPressed();
     }
 
+    // redraw to remove paused message
     do drawBoard();
     do drawInfo();
 
     return;
   }
 
+  /** displays messages for player 1 win */
   method void player1Win() {
     do Output.moveCursor(msg_row, p1_msg_col);
     do Output.printString("You win!");
@@ -319,6 +382,7 @@ class PongGame {
     return;
   }
 
+  /** displays messages for player 2 win */
   method void player2Win() {
     do Output.moveCursor(msg_row, p1_msg_col);
     do Output.printString("You lose");
@@ -327,6 +391,7 @@ class PongGame {
     return;
   }
 
+  /** displays messages for tie */
   method void tie() {
     do Output.moveCursor(msg_row, p1_msg_col);
     do Output.printString("You tied");
@@ -335,6 +400,7 @@ class PongGame {
     return;
   }
 
+  /** check ball collisions with sides, ceiling/floor, paddles */
   method boolean checkCollisions() {
     if (~sideCollisions()) { return false; }
     do ceilingFloorCollisions();
@@ -342,54 +408,63 @@ class PongGame {
     return true;
   }
 
+  /** check ball collisions with sides */
   method boolean sideCollisions() {
     var int x;
     let x = ball.getX();
-    if ((x - ball_size) < min_pixel_x) {
+    if ((x - ball_size) < min_game_x) { // ball hits left side
       do incrementPlayer(2);
       return false;
     }
-    if ((x + ball_size) > max_pixel_x) {
+    if ((x + ball_size) > max_game_x) { // ball hits right side
       do incrementPlayer(1);
       return false;
     }
-    return true;
+    return true; // ball does not hit a side
   }
 
+  /** check ball collisions with ceiling/floor */ 
   method void ceilingFloorCollisions() {
     var int y, y_speed;
     let y = ball.getY();
     let y_speed = ball.getY_speed();
 
-    if ((y - ball_size) < min_pixel_y) {
-      do ball.setY(min_pixel_y + ball_size);
+    if ((y - ball_size) < min_game_y) { // next position is higher than ceiling
+      // bounce off ceiling
+      do ball.setY(min_game_y + ball_size);
       do ball.setY_speed(-y_speed);
       return;
     }
-    if ((y + ball_size) > max_pixel_y) {
-      do ball.setY(max_pixel_y - ball_size);
+    if ((y + ball_size) > max_game_y) { // next position is lower than floor
+      // bounce off floor
+      do ball.setY(max_game_y - ball_size);
       do ball.setY_speed(-y_speed);
     }
     return;
   }
 
+  /** checks ball collisions with paddle on current side */
   method void paddleCollisions() {
     var int x, y, paddle_x;
     var boolean left_side;
 
     let x = ball.getX();
     let y = ball.getY();
-    let left_side = (x < center_x);
+    let left_side = (x < center_x); // true if ball is on left side of board
 
+    // redraw paddles to avoid possible erase by previous ball position
     do paddle1.draw();
     do paddle2.draw();
 
+    // ball on left side of board
     if (left_side) {
       let paddle_x = paddle1.getX2();
-      if ((x - ball_size) < paddle_x){
-        if ((y < paddle1.getY()) | (y > paddle1.getY2())){
+      if ((x - ball_size) < paddle_x){ // ball further left than paddle
+        if ((y < paddle1.getY()) | (y > paddle1.getY2())){ // ball outside of paddle range
           return;
         }
+        // ball in paddle range
+        // bounce off paddle
         do ball.setX(paddle_x + ball_size);
         do ball.setX_speed(-ball.getX_speed());
         do ball.incrementSpeeds();
@@ -397,11 +472,14 @@ class PongGame {
       return;
     }
 
+    // ball on right side of board
     let paddle_x = paddle2.getX();
-    if ((x + ball_size) > paddle_x) {
-      if ((y < paddle2.getY()) | (y > paddle2.getY2())){
+    if ((x + ball_size) > paddle_x) { // ball further right than padle
+      if ((y < paddle2.getY()) | (y > paddle2.getY2())){ // ball outside of paddle range
         return;
       }
+      // ball in paddle range
+      // bounce off paddle
       do ball.setX(paddle_x - ball_size);
       do ball.setX_speed(-ball.getX_speed());
       do ball.incrementSpeeds();
@@ -409,6 +487,7 @@ class PongGame {
     return;
   }
 
+  /** increments player points */
   method void incrementPlayer(int player) {
     if (player = 1){
       let points1 = points1 + 1;
@@ -418,6 +497,7 @@ class PongGame {
     return;
   }
 
+  /** checks if a player has reached 11 points */
   method boolean checkGameOver() {
     if ((points1 = 11) | (points2 = 11)) { return true; }
     return false;

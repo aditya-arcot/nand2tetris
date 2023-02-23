@@ -7,86 +7,86 @@ pop this 0
 push constant 255
 pop this 1
 push constant 15
-pop this 2
+pop this 8
 push constant 24
-pop this 3
+pop this 9
 push constant 15
-pop this 4
+pop this 10
 push constant 12
-pop this 5
+pop this 11
 push constant 32
 push constant 8
 sub
 push constant 10
 sub
-pop this 6
+pop this 12
 push constant 32
 push constant 10
 add
-pop this 7
-push constant 29
-pop this 8
-push constant 22
-pop this 9
-push constant 26
-pop this 10
-push constant 1
-pop this 11
-push constant 10
-pop this 12
-push constant 53
 pop this 13
+push constant 29
+pop this 14
+push constant 22
+pop this 15
+push constant 26
+pop this 16
+push constant 1
+pop this 17
+push constant 10
+pop this 18
+push constant 53
+pop this 19
 push constant 16384
 push constant 142
 add
-pop this 14
-push constant 0
-pop this 15
-push constant 0
-pop this 16
+pop this 20
 push constant 3
-pop this 17
+pop this 22
 push constant 3
-pop this 18
+pop this 23
 push constant 2
 neg
-pop this 19
-push constant 1
-pop this 20
-push constant 50
-pop this 21
-push constant 10
-pop this 22
-push constant 10
-pop this 23
-push this 2
 pop this 24
-push this 0
-push this 2
-sub
+push constant 1
 pop this 25
-push this 3
-push this 2
-add
-pop this 26
-push this 1
-push this 2
-sub
-push this 4
-sub
-pop this 27
-push this 24
-push this 25
-add
-push constant 2
-call Math.divide 2
+push constant 50
 pop this 28
-push this 26
-push this 27
+push constant 10
+pop this 29
+push constant 10
+pop this 30
+push constant 0
+pop this 31
+push constant 0
+pop this 32
+push this 8
+pop this 2
+push this 0
+push this 8
+sub
+pop this 3
+push this 9
+push this 8
+add
+pop this 4
+push this 1
+push this 8
+sub
+push this 10
+sub
+pop this 5
+push this 2
+push this 3
 add
 push constant 2
 call Math.divide 2
-pop this 29
+pop this 6
+push this 4
+push this 5
+add
+push constant 2
+call Math.divide 2
+pop this 7
 push pointer 0
 call PongGame.drawBoard 1
 pop temp 0
@@ -104,8 +104,8 @@ pop pointer 0
 push pointer 0
 call PongGame.drawLetters 1
 pop temp 0
-push this 9
-push this 10
+push this 15
+push this 16
 call Output.moveCursor 2
 pop temp 0
 push constant 12
@@ -142,23 +142,23 @@ function PongGame.drawLetters 0
 push argument 0
 pop pointer 0
 push pointer 0
-push this 14
+push this 20
 call PongGame.drawP 2
 pop temp 0
 push pointer 0
-push this 14
+push this 20
 push constant 1
 add
 call PongGame.drawO 2
 pop temp 0
 push pointer 0
-push this 14
+push this 20
 push constant 2
 add
 call PongGame.drawN 2
 pop temp 0
 push pointer 0
-push this 14
+push this 20
 push constant 3
 add
 call PongGame.drawG 2
@@ -587,23 +587,23 @@ pop temp 0
 push constant 0
 call Screen.setColor 1
 pop temp 0
-push this 24
-push this 26
-push this 25
-push this 27
+push this 2
+push this 4
+push this 3
+push this 5
 call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 push constant 0
 push this 0
-push this 3
+push this 9
 push constant 1
 sub
 call Screen.drawRectangle 4
 pop temp 0
 push constant 0
-push this 27
-push this 2
+push this 5
+push this 8
 add
 push constant 1
 add
@@ -611,58 +611,58 @@ push this 0
 push this 1
 call Screen.drawRectangle 4
 pop temp 0
-push this 24
+push this 2
 push constant 1
 sub
-push this 26
+push this 4
 push constant 1
 sub
-push this 24
+push this 2
 push constant 1
 sub
-push this 27
+push this 5
 push constant 1
 add
 call Screen.drawLine 4
 pop temp 0
-push this 25
+push this 3
 push constant 1
 add
-push this 26
+push this 4
 push constant 1
 sub
-push this 25
+push this 3
 push constant 1
 add
-push this 27
+push this 5
 push constant 1
 add
 call Screen.drawLine 4
 pop temp 0
-push this 24
+push this 2
 push constant 1
 sub
-push this 26
+push this 4
 push constant 1
 sub
-push this 25
+push this 3
 push constant 1
 add
-push this 26
+push this 4
 push constant 1
 sub
 call Screen.drawLine 4
 pop temp 0
-push this 24
+push this 2
 push constant 1
 sub
-push this 27
+push this 5
 push constant 1
 add
-push this 25
+push this 3
 push constant 1
 add
-push this 27
+push this 5
 push constant 1
 add
 call Screen.drawLine 4
@@ -679,24 +679,24 @@ push constant 0
 not
 call Screen.setColor 1
 pop temp 0
-push this 28
+push this 6
 push constant 1
 sub
-push this 26
-push this 28
+push this 4
+push this 6
 push constant 1
 sub
-push this 27
+push this 5
 call Screen.drawLine 4
 pop temp 0
-push this 28
+push this 6
 push constant 1
 add
-push this 26
-push this 28
+push this 4
+push this 6
 push constant 1
 add
-push this 27
+push this 5
 call Screen.drawLine 4
 pop temp 0
 push constant 0
@@ -704,18 +704,18 @@ return
 function PongGame.drawPoints 0
 push argument 0
 pop pointer 0
-push this 11
-push this 12
+push this 17
+push this 18
 call Output.moveCursor 2
 pop temp 0
-push this 15
+push this 31
 call Output.printInt 1
 pop temp 0
-push this 11
-push this 13
+push this 17
+push this 19
 call Output.moveCursor 2
 pop temp 0
-push this 16
+push this 32
 call Output.printInt 1
 pop temp 0
 push constant 0
@@ -723,85 +723,85 @@ return
 function PongGame.createObjects 0
 push argument 0
 pop pointer 0
-push this 28
-push this 29
-push this 17
-push this 20
-push this 18
+push this 6
+push this 7
+push this 22
+push this 25
+push this 23
 call Math.multiply 2
-push this 20
-push this 19
+push this 25
+push this 24
 call Math.multiply 2
 call Ball.new 5
-pop this 30
-push this 24
-push this 29
-push this 21
+pop this 21
+push this 2
+push this 7
+push this 28
 push constant 2
 call Math.divide 2
 sub
-push this 24
-push this 22
+push this 2
+push this 29
 push constant 1
 sub
 add
-push this 29
-push this 21
+push this 7
+push this 28
 push constant 2
 call Math.divide 2
 add
-push this 23
-push this 26
-push this 27
+push this 30
+push this 4
+push this 5
 call Paddle.new 7
-pop this 31
-push this 25
-push this 22
+pop this 26
+push this 3
+push this 29
 push constant 1
 sub
 sub
-push this 29
-push this 21
+push this 7
+push this 28
 push constant 2
 call Math.divide 2
 sub
-push this 25
-push this 29
-push this 21
+push this 3
+push this 7
+push this 28
 push constant 2
 call Math.divide 2
 add
-push this 23
-push this 26
-push this 27
+push this 30
+push this 4
+push this 5
 call Paddle.new 7
-pop this 32
+pop this 27
 push constant 1
 neg
-push this 20
+push this 25
 call Math.multiply 2
-pop this 20
+pop this 25
 push constant 0
 return
-function PongGame.restart 0
+function PongGame.reset 0
 push argument 0
 pop pointer 0
-push this 30
+push this 21
 call Ball.eraseOld 1
 pop temp 0
-push this 30
+push this 21
 call Ball.dispose 1
 pop temp 0
-push this 31
+push this 26
 call Paddle.erase 1
 pop temp 0
-push this 31
+push this 26
 call Paddle.dispose 1
 pop temp 0
-push this 32
+push this 27
 call Paddle.erase 1
 pop temp 0
-push this 32
+push this 27
 call Paddle.dispose 1
 pop temp 0
 push pointer 0
@@ -821,13 +821,13 @@ return
 function PongGame.dispose 0
 push argument 0
 pop pointer 0
-push this 30
+push this 21
 call Ball.dispose 1
 pop temp 0
-push this 31
+push this 26
 call Paddle.dispose 1
 pop temp 0
-push this 32
+push this 27
 call Paddle.dispose 1
 pop temp 0
 push pointer 0
@@ -846,7 +846,7 @@ if-goto WHILE_END0
 push pointer 0
 call PongGame.checkKey 1
 pop local 0
-push this 30
+push this 21
 call Ball.move 1
 pop temp 0
 push pointer 0
@@ -856,14 +856,14 @@ if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
 push pointer 0
-call PongGame.restart 1
+call PongGame.reset 1
 pop temp 0
 goto IF_END0
 label IF_FALSE0
-push this 30
+push this 21
 call Ball.eraseOld 1
 pop temp 0
-push this 30
+push this 21
 call Ball.draw 1
 pop temp 0
 label IF_END0
@@ -887,8 +887,8 @@ call Sys.wait 1
 pop temp 0
 goto WHILE_EXP0
 label WHILE_END0
-push this 15
-push this 16
+push this 31
+push this 32
 eq
 if-goto IF_TRUE2
 goto IF_FALSE2
@@ -899,7 +899,7 @@ pop temp 0
 push constant 0
 return
 label IF_FALSE2
-push this 15
+push this 31
 push constant 11
 eq
 if-goto IF_TRUE3
@@ -927,7 +927,7 @@ eq
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
-push this 32
+push this 27
 call Paddle.moveUp 1
 pop temp 0
 push constant 0
@@ -939,7 +939,7 @@ eq
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
-push this 32
+push this 27
 call Paddle.moveDown 1
 pop temp 0
 push constant 0
@@ -951,7 +951,7 @@ eq
 if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
-push this 31
+push this 26
 call Paddle.moveUp 1
 pop temp 0
 push constant 0
@@ -963,7 +963,7 @@ eq
 if-goto IF_TRUE3
 goto IF_FALSE3
 label IF_TRUE3
-push this 31
+push this 26
 call Paddle.moveDown 1
 pop temp 0
 push constant 0
@@ -998,21 +998,8 @@ push argument 0
 pop pointer 0
 call Keyboard.keyPressed 0
 pop local 0
-label WHILE_EXP0
-push local 0
-push constant 80
-eq
-not
-if-goto WHILE_END0
-push constant 100
-call Sys.wait 1
-pop temp 0
-call Keyboard.keyPressed 0
-pop local 0
-goto WHILE_EXP0
-label WHILE_END0
-push this 5
-push this 8
+push this 11
+push this 14
 call Output.moveCursor 2
 pop temp 0
 push constant 6
@@ -1031,6 +1018,19 @@ push constant 100
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
+label WHILE_EXP0
+push local 0
+push constant 80
+eq
+not
+if-goto WHILE_END0
+push constant 100
+call Sys.wait 1
+pop temp 0
+call Keyboard.keyPressed 0
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
 label WHILE_EXP1
 push local 0
 push constant 80
@@ -1069,8 +1069,8 @@ return
 function PongGame.player1Win 0
 push argument 0
 pop pointer 0
-push this 5
-push this 6
+push this 11
+push this 12
 call Output.moveCursor 2
 pop temp 0
 push constant 8
@@ -1093,8 +1093,8 @@ push constant 33
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
-push this 5
-push this 7
+push this 11
+push this 13
 call Output.moveCursor 2
 pop temp 0
 push constant 8
@@ -1122,8 +1122,8 @@ return
 function PongGame.player2Win 0
 push argument 0
 pop pointer 0
-push this 5
-push this 6
+push this 11
+push this 12
 call Output.moveCursor 2
 pop temp 0
 push constant 8
@@ -1146,8 +1146,8 @@ push constant 101
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
-push this 5
-push this 7
+push this 11
+push this 13
 call Output.moveCursor 2
 pop temp 0
 push constant 8
@@ -1175,8 +1175,8 @@ return
 function PongGame.tie 0
 push argument 0
 pop pointer 0
-push this 5
-push this 6
+push this 11
+push this 12
 call Output.moveCursor 2
 pop temp 0
 push constant 8
@@ -1199,8 +1199,8 @@ push constant 100
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
-push this 5
-push this 7
+push this 11
+push this 13
 call Output.moveCursor 2
 pop temp 0
 push constant 8
@@ -1249,13 +1249,13 @@ return
 function PongGame.sideCollisions 1
 push argument 0
 pop pointer 0
-push this 30
+push this 21
 call Ball.getX 1
 pop local 0
 push local 0
-push this 17
+push this 22
 sub
-push this 24
+push this 2
 lt
 if-goto IF_TRUE0
 goto IF_FALSE0
@@ -1268,9 +1268,9 @@ push constant 0
 return
 label IF_FALSE0
 push local 0
-push this 17
+push this 22
 add
-push this 25
+push this 3
 gt
 if-goto IF_TRUE1
 goto IF_FALSE1
@@ -1288,27 +1288,27 @@ return
 function PongGame.ceilingFloorCollisions 2
 push argument 0
 pop pointer 0
-push this 30
+push this 21
 call Ball.getY 1
 pop local 0
-push this 30
+push this 21
 call Ball.getY_speed 1
 pop local 1
 push local 0
-push this 17
+push this 22
 sub
-push this 26
+push this 4
 lt
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
-push this 30
-push this 26
-push this 17
+push this 21
+push this 4
+push this 22
 add
 call Ball.setY 2
 pop temp 0
-push this 30
+push this 21
 push local 1
 neg
 call Ball.setY_speed 2
@@ -1317,20 +1317,20 @@ push constant 0
 return
 label IF_FALSE0
 push local 0
-push this 17
+push this 22
 add
-push this 27
+push this 5
 gt
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
-push this 30
-push this 27
-push this 17
+push this 21
+push this 5
+push this 22
 sub
 call Ball.setY 2
 pop temp 0
-push this 30
+push this 21
 push local 1
 neg
 call Ball.setY_speed 2
@@ -1341,31 +1341,31 @@ return
 function PongGame.paddleCollisions 4
 push argument 0
 pop pointer 0
-push this 30
+push this 21
 call Ball.getX 1
 pop local 0
-push this 30
+push this 21
 call Ball.getY 1
 pop local 1
 push local 0
-push this 28
+push this 6
 lt
 pop local 3
-push this 31
+push this 26
 call Paddle.draw 1
 pop temp 0
-push this 32
+push this 27
 call Paddle.draw 1
 pop temp 0
 push local 3
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
-push this 31
+push this 26
 call Paddle.getX2 1
 pop local 2
 push local 0
-push this 17
+push this 22
 sub
 push local 2
 lt
@@ -1373,11 +1373,11 @@ if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
 push local 1
-push this 31
+push this 26
 call Paddle.getY 1
 lt
 push local 1
-push this 31
+push this 26
 call Paddle.getY2 1
 gt
 or
@@ -1387,30 +1387,30 @@ label IF_TRUE2
 push constant 0
 return
 label IF_FALSE2
-push this 30
+push this 21
 push local 2
-push this 17
+push this 22
 add
 call Ball.setX 2
 pop temp 0
-push this 30
-push this 30
+push this 21
+push this 21
 call Ball.getX_speed 1
 neg
 call Ball.setX_speed 2
 pop temp 0
-push this 30
+push this 21
 call Ball.incrementSpeeds 1
 pop temp 0
 label IF_FALSE1
 push constant 0
 return
 label IF_FALSE0
-push this 32
+push this 27
 call Paddle.getX 1
 pop local 2
 push local 0
-push this 17
+push this 22
 add
 push local 2
 gt
@@ -1418,11 +1418,11 @@ if-goto IF_TRUE3
 goto IF_FALSE3
 label IF_TRUE3
 push local 1
-push this 32
+push this 27
 call Paddle.getY 1
 lt
 push local 1
-push this 32
+push this 27
 call Paddle.getY2 1
 gt
 or
@@ -1432,19 +1432,19 @@ label IF_TRUE4
 push constant 0
 return
 label IF_FALSE4
-push this 30
+push this 21
 push local 2
-push this 17
+push this 22
 sub
 call Ball.setX 2
 pop temp 0
-push this 30
-push this 30
+push this 21
+push this 21
 call Ball.getX_speed 1
 neg
 call Ball.setX_speed 2
 pop temp 0
-push this 30
+push this 21
 call Ball.incrementSpeeds 1
 pop temp 0
 label IF_FALSE3
@@ -1459,26 +1459,26 @@ eq
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
-push this 15
+push this 31
 push constant 1
 add
-pop this 15
+pop this 31
 push constant 0
 return
 label IF_FALSE0
-push this 16
+push this 32
 push constant 1
 add
-pop this 16
+pop this 32
 push constant 0
 return
 function PongGame.checkGameOver 0
 push argument 0
 pop pointer 0
-push this 15
+push this 31
 push constant 11
 eq
-push this 16
+push this 32
 push constant 11
 eq
 or
