@@ -1,0 +1,53 @@
+sequence of legitimate tokens does not necessarily mean anything
+
+
+== grammar ==
+set of rules, describing how tokens can be combined to create valid language constructs
+
+parts of a rule
+- left-hand side
+  - template name
+- right-hand side
+  - description of how template is composed
+
+ex: English grammar
+sentence: nounPhrase verbPhrase
+nounPhrase: determiner? noun
+verbPhrase: verb nounPhrase
+noun: 'dog' | 'school' | 'he' | 'she' | ...
+verb: 'went' | 'ate' | 'said' | ...
+determiner: 'the' | 'to' | 'my' | ...
+...
+
+terminal rules
+- right-hand side includes constants only
+non-terminal rules
+- all other rules
+==========
+
+
+== Jack statement grammar ==
+statement: ifStatement | whileStatement | letStatement
+statements: statement* (0+ occurrences)
+ifStatement: 'if' '(' expression ')' '{' statements '}'
+whileStatement: 'while' '(' expression ')' '{' statements '}'
+letStatement: 'let' varName '=' expression ';'
+expression: term (op term)?
+term: varName | constant
+varName: string not beginning with a digit
+constant: decimal number
+op: '+' | '-' | '=' | '>' | '<'
+
+input examples:
+let x = 100;
+let x = x + 1;
+while (n < lim) { let n = n + 1; }
+if (x = 1) { let x = 100; let x = x + 1; }
+==========
+
+
+== parsing ==
+determining if a given input conforms to a grammar
+in the process, uncovering grammatical structure of given input
+==========
+
