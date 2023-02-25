@@ -1,0 +1,19 @@
+== 2 tier compilation ==
+compiler converts high-level code to VM code
+- creating in modules 4,5
+
+VM translator converts VM code to machine code
+- implemented in last 2 modules
+==========
+
+
+== compiler development roadmap ==
+step 1 - synax analyzer
+- 2 parts
+  - tokenizer
+  - parser
+- outputs XML file to allow for independent testing
+
+step 2 - code generator
+==========
+
