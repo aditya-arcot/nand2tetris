@@ -1,0 +1,16 @@
+parsing logic
+- follow right-hand side of rule and parse input accordingly
+- if right-hand side specifies non-terminal rule xxx, call compileXXX
+- do this recursively
+
+parser design
+- set of compileXXX methods, one for each (non-terminal) rule xxx
+- handling of some rules is embedded in other rules
+
+LL grammar
+- can be parsed by recursive descent parser without backtracker
+
+LL(k) parser
+- parser that needs to look ahead at most k tokens in order to determine which rule is applicable
+- grammar so far is LL(1)
+
