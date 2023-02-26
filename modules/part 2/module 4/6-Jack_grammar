@@ -1,0 +1,81 @@
+== parser design ==
+set of compileXXX methods, one for each non-terminal rule xxx
+each method outputs some of parse tree (XML), and advances input
+parsing logic of each method follows righ-hand side of rule it implements
+==========
+
+
+== grammar notation ==
+'xxx'	tokens that appear verbatim (terminals)
+xxx	names of non-terminals
+()	used for grouping
+x | y	either x or y appear
+x y	x appears then y appears
+x?	x appears 0 or 1 times
+x*	x appears 0 or more times
+==========
+
+
+== Jack grammar - lexical elements ==
+previously enumerated in lexical analysis notes
+
+5 categories
+- keyword
+- symbol
+- integerConstant
+- StringConstant
+- identifier
+==========
+
+
+== Jack grammar - program structure ==
+collection of 1+ classes
+each appears in separate file, compiled separately
+
+class: 			'class' className '{' classVarDec* subroutineDec* '}'
+classVarDec: 		('static' | 'field') type varName (',' varName)* ';'
+type: 			'int' | 'char' | 'boolean' | className
+subroutineDec: 		('constructor' | 'function' | 'method') ('void' | type) subroutineName
+				'(' parameterList ')' subroutineBody
+parameterList: 		((type varName) (',' type varName)*)?
+subroutineBody: 	'{' varDec* statements '}'
+varDec: 		'var' type varName (',' varName)* ';'
+className: 		identifier
+subroutineName: 	identifier
+varName: 		identifier
+==========
+
+
+== Jack grammar - statements ==
+statements:		statement*
+statement:		letStatement | ifStatement | whileStatement | doStatement | returnStatement
+letStatement:		'let' varName ('[' expression ']')? '=' expression ';'
+ifStatement:		'if' '(' expression ')' '{' statements '}' ('else' '{' statements '}')?
+whileStatement:		'while' '(' expression ')' '{' statements '}'
+doStatement:		'do' subroutineCall ';'
+returnStatement:	'return' expression? ';'
+==========
+
+
+== Jack grammar - expressions ==
+special case - identifier token
+- LL(2)
+- possibilities
+  - foo
+  - foo[expression]
+  - foo.bar(expressionList) - variable name
+  - foo.bar(expressionList) - class name
+  - foo(expressionList)
+
+expression:		term (op term)*
+term:			integerConstant | stringConstant | keywordConstant | varName | 
+				varName '[' expression ']' | subroutineCall | '(' expression ')' | unaryOp
+				term
+subroutineCall:		subroutineName '(' expressionList ')' | (className | varName) '.' subroutineName 
+				'(' expressionList ')'
+expressionList:		(expression (',' expression)*)?
+op:			'+' | '-' | '*' | '/' | '&' | '|' | '<' | '>' | '='
+unaryOp:		'-' | '~'
+KeywordConstant:	'true' | 'false' | 'null' | 'this'
+==========
+
