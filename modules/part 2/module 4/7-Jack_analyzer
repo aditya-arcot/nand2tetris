@@ -1,0 +1,56 @@
+parser generates marked-up XML output
+- <tag> name </tag>
+
+mark up creates textual parse tree
+- generated according to Jack grammar
+
+
+== terminal elements ==
+keyword, symbol, integerConstant, stringConstant, identifier
+
+<terminalElement>
+	xxx
+</terminalElement>
+
+ex: method
+<keyword> method </keyword>
+==========
+
+
+== non-terminal elements ==
+type 1
+	class, classVarDec, subroutineDec, parameterList, subroutineBody, varDec
+	statements, letStatement, ifStatement, whileStatement, doStatement, returnStatement
+	expression, term, expressionList
+	
+	<nonTerminal>
+		recursive output for non-terminal body
+	</nonTerminal>
+
+	ex: return x;
+	<returnStatement>
+		<keyword>
+			return
+		</keyword>
+		<expression>
+			<term>
+				<identifier> x </identifier>
+			</term>
+		</expression>
+		<symbol> ; </symbol>
+	</returnStatement>
+
+type 2
+	type, className, subroutineName, varName, statement, subroutineCall	
+
+	no XML markup
+
+	ex: let x = 17;
+	<letStatement>
+		<keyword> let </keyword>
+		<identifier> x </identifier>
+		<symbol> = </symbol>
+		<expression>
+			...
+==========
+
