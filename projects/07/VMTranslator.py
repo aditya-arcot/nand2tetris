@@ -243,10 +243,6 @@ def main():
             print('supply .vm file')
             return
 
-        if not os.path.isfile(input_path):
-            print('file not found')
-            return
-
         filename = os.path.split(input_path)[1].split('.')[0]
         output_file_path = '.'.join(input_path.split('.')[:-1]) + '.asm'
 
