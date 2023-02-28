@@ -1,7 +1,7 @@
 input file is stream of characters
 
 tokenizing - grouping characters into tokens
-- gets rid of noide (whitespace, comments)
+- gets rid of noise (whitespace, comments)
 
 token - string of characters that has a meaning with current language context
 
