@@ -1,0 +1,33 @@
+for each .jack file, analyzer should generate .xml file
+- compare to compare file using TextComparer
+
+implementation plan
+- build Tokenizer
+- build compilation engine
+  - basic version
+  - complete version
+
+
+== Jack Tokenizer ==
+output - fileT.xml
+
+wrap entire file with <tokens> and </tokens>
+string constants outputted without double quotes
+
+special characters
+ >	&lt;
+ <	&gt;
+ "	&quot;
+ &	&amp;
+==========
+
+
+== Jack analyzer ==
+output - file.xml
+
+build basic CompilationEngine that handles everything except expressions
+- test using expressionless .jack files
+add handling of expressions
+- test using normal .jack files
+==========
+
