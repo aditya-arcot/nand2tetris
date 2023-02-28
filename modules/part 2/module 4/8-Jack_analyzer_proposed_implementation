@@ -31,15 +31,15 @@ allows
 - getting value and type of current token
 
 API
-Constructor	
-hasMoreTokens()
-advance()
-tokenType()
-keyword()
-symbol()
-identifier()
-intVal()
-stringVal()
+constructor	
+hasMoreTokens
+advance
+tokenType
+keyword
+symbol
+identifier
+intVal
+stringVal
 ==========
 
 
@@ -61,21 +61,21 @@ following rules have no corresponding compilexxx methods
 - subroutineCall
 
 API
-Constructor
-CompileClass
-CompileClassVarDec
-CompileSubroutineDec
-CompileParameterList
-CompileSubroutineBody
-CompileVarDec
-CompileStatements
-CompileLet
+constructor
+compileClass
+compileClassVarDec
+compileSubroutineDec
+compileParameterList
+compileSubroutineBody
+compileVarDec
+compileStatements
+compileLet
 compileIf
-CompileWhile
-CompileDo
-CompileReturn
-CompileExpression
-CompileTerm
-CompileExpressionList
+compileWhile
+compileDo
+compileReturn
+compileExpression
+compileTerm
+compileExpressionList
 ==========
 
