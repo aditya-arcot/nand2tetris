@@ -62,44 +62,44 @@ class CodeWriter:
 
         if args[0] == 'push' or args[0] == 'pop':
             out = self.convert_memory_access(args)
-        
+
         elif args[0] == 'label':
             out = [f'({args[1]})']
-        
+
         elif args[0] == 'goto':
             out = [f'@{args[1]}', '0;JMP']
-        
+
         elif args[0] == 'if-goto':
             out = ['@SP', 'AM=M-1', 'D=M', f'@{args[1]}', 'D;JNE']
-        
+
         elif args[0] == 'function':
             name = args[1]
             n_local = int(args[2])
             out = [f'({name})']
             for _ in range(n_local):
                 out += ['@0', 'D=A', '@SP', 'M=M+1','A=M-1', 'M=D'] # initialize local as 0
-        
+
         elif args[0] == 'return':
             out = [
                 # store LCL as end_frame
                 '@LCL', 'D=M', '@end_frame', 'M=D',
                 # get return address
-                '@5', 'D=D-A', 'A=D', 'D=M', '@ret_addr', 'M=D', 
+                '@5', 'D=D-A', 'A=D', 'D=M', '@ret_addr', 'M=D',
                 # reposition return value
-                '@SP', 'M=M-1', 'A=M', 'D=M', '@ARG', 'A=M', 'M=D', 
+                '@SP', 'M=M-1', 'A=M', 'D=M', '@ARG', 'A=M', 'M=D',
                 # reposition SP
-                '@ARG', 'D=M', '@SP', 'M=D+1', 
+                '@ARG', 'D=M', '@SP', 'M=D+1',
                 # restore THAT, store end_frame-n in R13
-                '@end_frame', 'D=M', '@1', 'D=D-A', '@R13', 'M=D','A=D', 'D=M', '@THAT', 'M=D', 
+                '@end_frame', 'D=M', '@1', 'D=D-A', '@R13', 'M=D','A=D', 'D=M', '@THAT', 'M=D',
                 # restore THIS
-                '@R13', 'MD=M-1', 'A=D', 'D=M', '@THIS', 'M=D', 
+                '@R13', 'MD=M-1', 'A=D', 'D=M', '@THIS', 'M=D',
                 # restore ARG
                 '@R13', 'MD=M-1', 'A=D', 'D=M', '@ARG', 'M=D',
                 # restore LCL
-                '@R13', 'MD=M-1', 'A=D', 'D=M', '@LCL', 'M=D', 
+                '@R13', 'MD=M-1', 'A=D', 'D=M', '@LCL', 'M=D',
                 # go to return address
-                '@ret_addr', 'A=M', '0;JMP'] 
-        
+                '@ret_addr', 'A=M', '0;JMP']
+
         elif args[0] == 'call':
             function = args[1]
             n_args = args[2]
@@ -124,7 +124,7 @@ class CodeWriter:
                 f'@{function}', '0;JMP',
                 # declare return address label
                 f'({function}$ret.{labelnum})']
-        
+
         else:
             out = self.convert_arithmetic_logical(args)
 
@@ -147,25 +147,25 @@ class CodeWriter:
 
         if cmd == 'add':
             commands += ['M=D+M']
-        
+
         elif cmd == 'sub':
             commands += ['M=M-D']
-        
+
         elif cmd == 'and':
             commands += ['M=D&M']
-        
+
         elif cmd == 'or':
             commands += ['M=D|M']
-        
+
         elif cmd in ('eq', 'gt', 'lt'):
             commands += self.comp(cmd)
-        
+
         elif cmd == 'neg':
             return ['@SP', 'A=M-1', 'M=-M']
-        
+
         elif cmd == 'not':
             return ['@SP', 'A=M-1', 'M=!M']
-        
+
         else:
             print(f'unrecognized operation - {cmd}')
             sys.exit(0)
@@ -188,30 +188,30 @@ class CodeWriter:
 
         if segment == 'constant':
             commands = [f'@{i}', 'D=A']
-        
+
         elif segment == 'temp':
             commands = ['@5', 'D=A']
-        
+
         elif segment == 'local':
             commands = ['@LCL', 'D=M']
-        
+
         elif segment == 'argument':
             commands = ['@ARG', 'D=M']
-        
+
         elif segment == 'this':
             commands = ['@THIS', 'D=M']
-        
+
         elif segment == 'that':
             commands = ['@THAT', 'D=M']
-        
+
         elif segment == 'pointer':
             commands = ['@THIS', 'D=A']
-        
+
         elif segment == 'static':
             if cmd == 'pop':
                 return ['@SP', 'AM=M-1', 'D=M', f'@{self.filename}.{i}', 'M=D']
             commands = [f'@{self.filename}.{i}', 'D=M']
-        
+
         else:
             print('unrecognized segment')
             sys.exit(0)
@@ -277,6 +277,6 @@ def main():
                         code_writer.write(parser.current_command)
 
     else:
-        return 'enter either a file or folder'
+        print('enter either a file or folder')
 
 main()
