@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 
 NEWLINE = '\n'
 
@@ -15,6 +16,10 @@ keywords = ['class', 'constructor', 'function', 'method', 'field', 'static', 'va
             'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return']
 symbols = ['{', '}', '(', ')', '[', ']', '.', ',', ';', \
             '+', '-', '*', '/', '&', '|', '<', '>', '=', '~']
+
+operators = ['+', '-', '*', '/', '&', '|', '<', '>', '=']
+unary_operators = ['-', '~']
+keyword_constants = ['true', 'false', 'null', 'this']
 
 
 class JackTokenizer:
@@ -41,6 +46,12 @@ class JackTokenizer:
         '''advances to next token, returns it'''
         self.current_pos += 1
         return self.tokens[self.current_pos]
+
+
+    def peek(self):
+        if self.has_more_tokens():
+            return self.tokens[self.current_pos + 1]
+        return ('no more tokens', 0)
 
 
     def create_tokens(self, input_path, output_path):
@@ -210,7 +221,406 @@ class JackTokenizer:
 
 
 class CompilationEngine:
-    pass
+    def __init__(self, output_path, tokenizer: JackTokenizer):
+        self.output_path = output_path
+        self.tokenizer = tokenizer
+        self.indent = ''
+        self.output_lines = []
+        self.rule_stack = []
+
+    '''advance, append'''
+    def advance(self):
+        if self.tokenizer.has_more_tokens():
+            self.current_token = self.tokenizer.advance()
+            self.append_terminal_output()
+        else:
+            raise Exception('no more tokens')
+
+    def current_token_type(self):
+        return self.current_token[0]
+
+    def current_token_value(self):
+        return self.current_token[1]
+
+    def next_token(self):
+        return self.tokenizer.peek()
+
+    def next_token_type(self):
+        return self.next_token()[0]
+
+    def next_token_value(self):
+        return self.next_token()[1]
+
+    def increase_indent(self):
+        self.indent += '  '
+
+    def decrease_indent(self):
+        self.indent = ' ' * (len(self.indent) - 2)
+
+    def append_output(self, text):
+        self.output_lines.append(self.indent + text)
+        print(self.indent + text)
+        #time.sleep(0.1)
+
+    def append_terminal_output(self):
+        if self.current_token_type() == KEYWORD:
+            self.append_output('<keyword> ' + self.current_token_value() + ' </keyword>')
+        elif self.current_token_type() == SYMBOL:
+            self.append_output('<symbol> ' + self.current_token_value() + ' </symbol>')
+        elif self.current_token_type() == INTEGER_CONSTANT:
+            self.append_output('<integerConstant> ' + self.current_token_value() + ' </integerConstant>')
+        elif self.current_token_type() == STRING_CONSTANT:
+            self.append_output('<stringConstant> ' + self.current_token_value() + ' </stringConstant>')
+        else:
+            self.append_output('<identifier> ' + self.current_token_value() + ' </identifier>')
+    
+
+    def append_non_terminal_start(self, rule):
+        self.append_output(f'<{rule}>')
+        self.increase_indent()
+        self.rule_stack.append(rule)
+
+
+    def append_non_terminal_end(self):
+        self.decrease_indent()
+        rule = self.rule_stack.pop()
+        self.append_output(f'</{rule}>')
+
+
+    def write_xml(self):
+        with open(self.output_path, 'w', encoding='utf8') as outfile:
+            for line in self.output_lines:
+                outfile.write(line + NEWLINE)
+
+
+    def compile(self):
+        '''jack file begins with class, contains only 1'''
+        self.compile_class()
+        self.write_xml()
+
+
+    def compile_class(self):
+        # class: 'class' className '{' classVarDec* subroutineDec* '}'
+        self.append_non_terminal_start('class')
+    
+        # 'class' className '{'
+        for _ in range(3):
+            self.advance()
+
+        # classVarDec*
+        while self.next_token_value() in ('static', 'field'):
+            self.compile_class_var_dec()
+        
+        # subroutineDec*
+        while self.next_token_value() in ('constructor', 'function', 'method'):
+            self.compile_subroutine_dec()
+
+        # '}'
+        self.advance()
+
+        self.append_non_terminal_end()
+
+
+    def compile_class_var_dec(self):
+        # classVarDec: ('static' | 'field') type varName (',' varName)* ';'
+        
+        self.append_non_terminal_start('classVarDec')
+
+        # ('static' | 'field') type varName
+        for _ in range(3):
+            self.advance()
+
+        while self.next_token_value() == ',':
+            # (',' varName)*
+            for _ in range(2):
+                self.advance()
+
+        # ';'
+        self.advance()
+
+        self.append_non_terminal_end()
+
+
+    def compile_subroutine_dec(self):
+        # subroutineDec: ('constructor' | 'function' | 'method') ('void' | type) 
+        #                   subroutineName '(' parameterList ')' subroutineBody
+        
+        self.append_non_terminal_start('subroutineDec')
+
+        # ('constructor' | 'function' | 'method') ('void' | type) subroutineName '('
+        for _ in range(4):
+            self.advance()
+
+        # parameterList
+        self.compile_parameter_list()
+
+        # ')'
+        self.advance()
+
+        # subroutineBody
+        self.compile_subroutine_body()
+
+        self.append_non_terminal_end()
+
+
+    def compile_parameter_list(self):
+        # parameterList: ((type varName) (',' type varName)*)?
+
+        self.append_non_terminal_start('parameterList')
+
+        while self.next_token_value() != ')':
+            # type varName
+            for _ in range(2):
+                self.advance()
+
+            # ','
+            if self.next_token_value() == ',':
+                self.advance()
+
+        self.append_non_terminal_end()
+
+
+    def compile_subroutine_body(self):
+        # subroutineBody: '{' varDec* statements '}'
+
+        self.append_non_terminal_start('subroutineBody')
+
+        # '{'
+        self.advance()
+
+        # varDec*
+        while self.next_token_value() == 'var':
+            self.compile_var_dec()
+
+        # statements
+        self.compile_statements()
+
+        # '}'
+        self.advance()
+
+        self.append_non_terminal_end()
+
+
+    def compile_var_dec(self):
+        # varDec: 'var' type varName (',' varName)* ';'
+
+        self.append_non_terminal_start('varDec')
+
+        # 'var' type varName
+        for _ in range(3):
+            self.advance()
+        
+        while self.next_token_value() != ';':
+            # (',' varName)*
+            for _ in range(2):
+                self.advance()
+
+        # ';'
+        self.advance()
+
+        self.append_non_terminal_end()
+
+
+    def compile_statements(self):
+        # statements: statement*
+
+        self.append_non_terminal_start('statements')
+
+        next_val = self.next_token_value()
+        while next_val != '}':
+            # letStatement
+            if next_val == 'let':
+                self.compile_let_statement()
+            # ifStatement
+            elif next_val == 'if':
+                self.compile_if_statement()
+            # whileStatement
+            elif next_val == 'while':
+                self.compile_while_statement()
+            # doStatement
+            elif next_val == 'do':
+                self.compile_do_statement()
+            # returnStatement
+            else:
+                self.compile_return_statement()
+            
+            next_val = self.next_token_value()
+
+        self.append_non_terminal_end()
+
+
+    def compile_let_statement(self):
+        # letStatement: 'let' varName ('[' expression ']')? '=' expression ';'
+        
+        self.append_non_terminal_start('letStatement')
+
+        # 'let' varName
+        for _ in range(2):
+            self.advance()
+
+        if self.next_token_value() == '[':
+            # '['
+            self.advance()
+            self.compile_expression()
+            # ']'
+            self.advance()
+
+        # '='
+        self.advance()
+
+        self.compile_expression()
+
+        # ';'
+        self.advance()
+
+        self.append_non_terminal_end()
+    
+
+    def compile_if_statement(self):
+        # ifStatement: 'if' '(' expression ')' '{' statements '}' ('else' '{' statements '}')?
+
+        self.append_non_terminal_start('ifStatement')
+
+        # 'if' '('
+        for _ in range(2):
+            self.advance()
+
+        self.compile_expression()
+
+        # ')' '{'
+        for _ in range(2):
+            self.advance()
+
+        self.compile_statements()
+
+        # '}'
+        self.advance()
+
+        if self.next_token_value() == 'else':
+            # 'else' '{'
+            for _ in range(2):
+                self.advance()
+            # statements
+            self.compile_statements()
+            # '}'
+            self.advance()
+
+        self.append_non_terminal_end()
+    
+
+    def compile_while_statement(self):
+        # whileStatement: 'while' '(' expression ')' '{' statements '}'
+        
+        self.append_non_terminal_start('whileStatement')
+
+        # 'while' '('
+        for _ in range(2):
+            self.advance()
+
+        self.compile_expression()
+
+        # ')' '{'
+        for _ in range(2):
+            self.advance()
+
+        self.compile_statements()
+
+        # '}'
+        self.advance()
+
+        self.append_non_terminal_end()
+    
+
+    def compile_do_statement(self):
+        # doStatement: 'do' subroutineCall ';'
+
+        self.append_non_terminal_start('doStatement')
+
+        # 'do'
+        self.advance()
+
+        self.compile_subroutine_call()
+
+        # ';'
+        self.advance()
+
+        self.append_non_terminal_end()
+
+
+    def compile_subroutine_call(self):
+        # subroutineCall: subroutineName '(' expressionList ')' | (className | varName) '.' subroutineName 
+		#                   '(' expressionList ')'
+
+        # subroutineName | (className | varName)
+        self.advance()
+
+        if self.next_token_value() == '.':
+            # '.'
+            self.advance()
+            # subroutineName
+            self.advance()
+
+        # '('
+        self.advance()
+        # expressionList
+        self.compile_expression_list()
+        # ')'
+        self.advance()
+            
+
+    def compile_return_statement(self):
+        # returnStatement: 'return' expression? ';'
+
+        self.append_non_terminal_start('returnStatement')
+
+        # 'return'
+        self.advance()
+
+        if self.next_token_value() != ';':
+            self.compile_expression()
+
+        # ';'
+        self.advance()
+
+        self.append_non_terminal_end()
+    
+
+    def compile_expression(self):
+        # expression: term (op term)*
+
+        self.append_non_terminal_start('expression')
+
+        ## TODO implement
+        self.compile_term()
+
+        self.append_non_terminal_end()
+
+
+    def compile_term(self):
+        # term: integerConstant | stringConstant | keywordConstant | varName | 
+		#       varName '[' expression ']' | subroutineCall | '(' expression ')' | unaryOp
+		#       term
+
+        self.append_non_terminal_start('term')
+
+        ## TODO implement
+        self.advance()
+
+        self.append_non_terminal_end()
+
+
+    def compile_expression_list(self):
+        # expressionList: (expression (',' expression)*)?
+
+        self.append_non_terminal_start('expressionList')
+
+        while self.next_token_value() != ')':
+            # expression
+            self.compile_expression()
+            if self.next_token_value() == ',':
+                self.advance()
+
+        self.append_non_terminal_end()
 
 
 
@@ -222,6 +632,7 @@ def process_jack_file(path):
 
     compilation_output_path = '.'.join(path.split('.')[:-1]) + '.xml'
     compilation_engine = CompilationEngine(compilation_output_path, tokenizer)
+    compilation_engine.compile()
 
 
 def main():
