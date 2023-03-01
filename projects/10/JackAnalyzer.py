@@ -194,6 +194,8 @@ class JackTokenizer:
 
     def write_symbol(self, text, outfile):
         '''writes symbol to XML, stores in tokens list'''
+        self.tokens.append([SYMBOL, text])
+
         if text == '>':
             text = '&gt;'
         elif text == '<':
@@ -204,7 +206,6 @@ class JackTokenizer:
         outfile.write('<symbol> ')
         outfile.write(text)
         outfile.write(' </symbol>' + NEWLINE)
-        self.tokens.append([SYMBOL, text])
 
 
 
@@ -219,7 +220,8 @@ def process_jack_file(path):
     tokenizer_output_path = '.'.join(path.split('.')[:-1]) + 'T.xml'
     tokenizer = JackTokenizer(path, tokenizer_output_path)
 
-    #compilation_output_path = '.'.join(path.split('.')[:-1]) + '.xml'
+    compilation_output_path = '.'.join(path.split('.')[:-1]) + '.xml'
+    compilation_engine = CompilationEngine(compilation_output_path, tokenizer)
 
 
 def main():
