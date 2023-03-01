@@ -11,7 +11,7 @@ INTEGER_CONSTANT = 2
 STRING_CONSTANT = 3
 IDENTIFIER = 4
 
-keywords = ['class', 'constuctor', 'function', 'field', 'static', 'var', 'int', 'char', 'boolean', \
+keywords = ['class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char', 'boolean', \
             'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return']
 symbols = ['{', '}', '(', ')', '[', ']', '.', ',', ';', \
             '+', '-', '*', '/', '&', '|', '<', '>', '=', '~']
