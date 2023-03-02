@@ -1,0 +1,15 @@
+major limitation of our compiler
+- no error handling
+  - intricate process
+  - not discussed in this course
+
+top-down parsing is useful for languages with simple syntax
+bottom-up parsing used for more complex languages
+- first build terminal leaves
+- backtracking to make decisions
+
+Unix tools to automate compiler creation
+- lex - lexican analyzer
+  - generate tokens automatically
+- yacc - yet another compiler compiler
+  - generate parsing code automatically
