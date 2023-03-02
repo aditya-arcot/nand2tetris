@@ -1,0 +1,67 @@
+infix notation
+- operator between operands
+- ex: a * (b + c)
+
+prefix notation
+- operator before operands
+- ex: * a + b c
+
+postfix notation
+- operator after operands
+- ex: a b c + *
+- stack language is also postfix
+
+
+== generating code for expressions - 2 stage approach ==
+source code -> parse tree
+- previous module
+parse tree -> stack-machine code
+- depth-first traversal
+
+ex:
+source code: x + g(2, y - z) * 5
+stack machine code:
+  push x
+  push 2
+  push y
+  push z
+  sub
+  call g
+  push 5
+  mult
+  add
+==========
+
+
+== generating code for expressions - 1 stage approach ==
+source code -> stack-machine code
+
+pseudo code
+codeWrite(exp):
+  if exp is number n:
+    output "push n"
+  if exp is variable var:
+    output "push var"
+  if exp is "exp1 op exp2":
+    codeWrite(exp1)
+    codeWrite(exp2)
+    output "op"
+  if exp is "op exp":
+    codeWrite(exp)
+    output "op"
+  if exp is f(exp1, exp2, ...)":
+    codeWrite(exp1)
+    codeWrite(exp2)
+    ...
+    output "call f"
+==========
+
+
+previous module - XML code for expressions produced flat representation
+this code must be replaced to generate VM code instead
+
+
+our compiler can ignore operator priority
+- Jack language does not specify it
+parentheses can be used to enforce operator priority
+
