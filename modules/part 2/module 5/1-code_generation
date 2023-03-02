@@ -1,0 +1,19 @@
+this module
+- rewrite some elements of parser
+- write code generator
+- no need for XML output anymore
+- result - Jack program -> VM code
+
+simplifications
+- each class (file) compiled separately
+- each class consists of 2 modules
+  - class declaration, subroutines
+  - allows for 2 relatively separate compilation tasks
+
+compilation challenges
+- variables
+- expressions
+- flow of control
+- objects
+- arrays
+
