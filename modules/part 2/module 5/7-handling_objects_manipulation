@@ -1,0 +1,53 @@
+== compiling method calls ==
+target machine language is procedural
+compiler must rewrite OO method calls in procedural style
+object always treated as first, implicit argument
+
+
+// obj.foo(x1, x2, ...)
+push obj
+push x1
+push x2
+...
+call foo
+==========
+
+
+== compiling methods ==
+methods designed to operate on current object (this)
+need access to object's fields
+- ith field can be accessed using this i
+- first, need to use pointer to anchor this segment on object data
+
+
+// method int distance(Point other)
+// var int dx, dy
+	constructs method symbol table
+	no code
+push argument 0
+pop pointer 0		// THIS = argument 0
+	generates code that associates this segment with
+	object on which method is called to operate
+// let dx = x - other.getx()
+push this 0
+push argument 1
+call Point.getx 1	// 1 argument - other
+sub
+pop local 0
+
+... commands
+return			// result of method at top of stack
+			// can be stored by caller with push
+==========
+
+
+== compiling void methods ==
+- callee -
+push constant 0		// convention
+return
+
+- caller -
+call Point.print
+pop temp 0		// dump unnecessary value from stack
+==========
+
