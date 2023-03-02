@@ -1,0 +1,66 @@
+modules
+- JackCompiler - top most
+- JackTokenizer - done
+- SymbolTable - new
+- VMWriter - new, generates VM code
+- CompilationEngine
+
+
+== SymbolTable ==
+scope of static, field vars - class
+- kept in class-level symbol table
+
+scope of arg, local vars - subroutine
+- kept in subroutine-level symbol table
+
+only need 2 symbol tables at any time
+
+index (for scope and kind)
+- starts at 0
+- increments by 1 each time new symbol added with same scope and kind
+- reset to 0 when starting new scope
+
+subroutines
+- constructor
+- startSubroutine
+- define(name, type, kind)
+- varCount(kind) 
+- kindOf(name)
+- typeOf(name)
+- indexOf(name)
+
+implementation
+- 2 separate hash tables (class, subroutine scopes)
+- subroutine table can be reset for new subroutine
+- for error-free Jack code, symbols not found in tables can be assumed to be either subroutine name or class name
+==========
+
+
+== VMWriter ==
+emits VM code to output file
+
+subroutines
+- constructor(output_file)
+- writePush(segment, index)
+- writePop(segment, index)
+- writeArithmetic(command)
+- writeLabel(label)
+- writeGoto(label)
+- writeIf(label)
+- writeCall(name, nArgs)
+- writeFunction(name, nLocals)
+- writeReturn
+- close
+==========
+
+
+== CompilationEngine ==
+gets input from JackTokenizer
+writes output using VMWriter
+
+series of compilexxx routines
+if xxx is part of an expression (has a value), emitted VM code should compute it and leave at top of VM stack
+
+API identical to API from project 10
+==========
+
