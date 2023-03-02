@@ -1,0 +1,68 @@
+== array construction ==
+// var Array arr;
+	add to symbol table
+	no VM code
+// let arr = Array.new(n);
+	handled like object construction from caller's perspective
+==========
+
+
+== this and that ==
+2 "portable" VM segments that can be aligned to different RAM addresses
+
+this
+- represents value of current object
+- THIS
+- pop pointer 0
+
+that
+- represents value of current array
+- THAT
+- pop pointer 1
+==========
+
+
+== array access =
+// arr[2] = 17
+push arr 	// base addr
+push 2		// offset
+add
+pop pointer 1
+push 17
+pop that 0
+
+VM code known nothing about RAM or host platform
+- safe
+- allows for running on many platforms
+
+unlike object manipulation, only set that 0
+- works also for for variable offset (ex: arr[x] = y)
+
+// a[i] = b[j]
+push a
+push i
+add
+push b
+push j
+add		// stack contains a[i] addr, b[j] addr
+pop pointer 1	// pointer[1] has b[j] addr
+push that 0	// stack contains b[j]
+pop temp 0	// temp[0] has b[j]
+pop pointer 1	// pointer[1] has a[j] addr
+push temp 0	// stack contains b[j]
+pop that 0	// a[i] = b[j]
+
+// arr[exp1] = exp2
+push arr
+code to compute, push exp1 val
+add		// top stack val = arr[exp] addr
+code to compute, push exp2 val
+pop temp 0	// temp 0 = exp2 val
+		// top stack val = arr[exp1] addr
+pop pointer 1
+push temp 0
+pop that 0
+
+works for more complex cases
+==========
+
