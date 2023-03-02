@@ -2,7 +2,6 @@
 
 import os
 import sys
-import time
 
 NEWLINE = '\n'
 
@@ -207,11 +206,11 @@ class JackTokenizer:
         self._write_token('symbol', text, outfile)
 
 
-    def _write_token(self, type, token, outfile):
+    def _write_token(self, tag, token, outfile):
         '''writes token and tags to file'''
-        outfile.write(f'<{type}> ')
+        outfile.write(f'<{tag}> ')
         outfile.write(token)
-        outfile.write(f' </{type}>' + NEWLINE)
+        outfile.write(f' </{tag}>' + NEWLINE)
 
 
 
@@ -574,7 +573,7 @@ class CompilationEngine:
             self._advance()
             # subroutineName
             self._advance()
-        
+
         # '('
         self._advance()
         # expressionList
@@ -655,7 +654,7 @@ class CompilationEngine:
                 self._advance()
                 self._compile_expression_list()
                 self._advance()
-                
+
             # current -> (className | varName)
             # '.' subroutineName '(' expressionList ')'
             elif self._next_token_value() == '.':
@@ -694,16 +693,19 @@ class CompilationEngine:
 
 
 
-def process_jack_file(path):
+def parse_jack_file(path):
     '''parses input file'''
 
     tokenizer_output_path = '.'.join(path.split('.')[:-1]) + 'T.xml'
     tokenizer = JackTokenizer(path, tokenizer_output_path)
+    print(f'done writing to {tokenizer_output_path}')
 
     compilation_output_path = '.'.join(path.split('.')[:-1]) + '.xml'
     compilation_engine = CompilationEngine(compilation_output_path, tokenizer)
     compilation_engine.compile()
     compilation_engine.write_xml()
+    print(f'done writing to {compilation_output_path}')
+
 
 
 def main():
@@ -728,12 +730,12 @@ def main():
             print('file not found')
             return
 
-        process_jack_file(input_path)
+        parse_jack_file(input_path)
 
     elif os.path.isdir(input_path):
         for i in os.listdir(input_path):
             if i.endswith('.jack'):
-                process_jack_file(os.path.join(input_path, i))
+                parse_jack_file(os.path.join(input_path, i))
 
     else:
         print('enter either a file or folder')
