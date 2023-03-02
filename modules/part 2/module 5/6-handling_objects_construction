@@ -1,0 +1,71 @@
+== object construction - high level ==
+var Point p1;
+- p1 points to a stack address
+let p1 = Point.new(2,3);
+- base address chosen for object
+- object created, values stored following base address
+- base address stored in p1 address
+==========
+
+
+== caller's side - compiling new ==
+// var Point p1;
+	compiler updates subroutine symbol table
+	no code generated
+
+// let p1 = Point.new(2,3);
+push 2
+push 3
+call Point.new
+	caller assumes constructor arranges memory block
+	to store new object, returns base addr to caller
+pop p1
+	p1 points at base addr of new object
+
+impact
+- during compile-time, compiler maps p1 on local 0
+- during run-time, execution of constructor's code effects creation of objects themselves on heap
+==========
+
+
+== object construction - big picture ==
+constructor
+- arrange creation of new object
+- initialize new object to some initial state
+
+constructor needs to access object's fields
+- can use this segment
+- but first must anchor this segment on object's data using pointer
+==========
+
+
+== compiling constructors ==
+// field int x, y;
+// ...
+// constructor Point new(int ax, int ay)
+	compiler creates subroutine symbol table
+
+push 2			// 2 fields
+call Memory.alloc 1	// 1 arg
+pop pointer 0		// anchors this at base addr
+	compiler figures out size of object of this class using num 
+	field (n), writes code that calls Memory.alloc(n), which
+	returns base addr of free memory block of size n
+
+// let x = ax; let y = ay;
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+
+// let pointCount = pointCount + 1;
+push static 0
+push 1
+add
+pop static 0
+
+// return this
+push pointer 0
+return			// return base addr of new object
+==========
+
