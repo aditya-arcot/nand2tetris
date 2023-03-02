@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 
 NEWLINE = '\n'
 
@@ -277,7 +278,15 @@ class CompilationEngine:
         if self._current_token_type() == KEYWORD:
             self._append_output('<keyword> ' + self._current_token_value() + ' </keyword>')
         elif self._current_token_type() == SYMBOL:
-            self._append_output('<symbol> ' + self._current_token_value() + ' </symbol>')
+            val = self._current_token_value()
+            if val == '>':
+                self._append_output('<symbol> &gt; </symbol>')
+            elif val == '<':
+                self._append_output('<symbol> &lt; </symbol>')
+            elif val == '&':
+                self._append_output('<symbol> &amp; </symbol>')
+            else:
+                self._append_output('<symbol> ' + self._current_token_value() + ' </symbol>')
         elif self._current_token_type() == INTEGER_CONSTANT:
             self._append_output('<integerConstant> ' + self._current_token_value() +
                                 ' </integerConstant>')
@@ -555,33 +564,29 @@ class CompilationEngine:
         # 'do'
         self._advance()
 
-        self._compile_subroutine_call()
 
-        # ';'
-        self._advance()
-
-        self._append_non_terminal_end()
-
-
-    def _compile_subroutine_call(self):
         """ subroutineCall: subroutineName '(' expressionList ')' | (className | varName) '.'
                                 subroutineName '(' expressionList ')' """
-
         # subroutineName | (className | varName)
         self._advance()
-
         if self._next_token_value() == '.':
             # '.'
             self._advance()
             # subroutineName
             self._advance()
-
+        
         # '('
         self._advance()
         # expressionList
         self._compile_expression_list()
         # ')'
         self._advance()
+
+
+        # ';'
+        self._advance()
+
+        self._append_non_terminal_end()
 
 
     def _compile_return_statement(self):
@@ -606,8 +611,13 @@ class CompilationEngine:
 
         self._append_non_terminal_start('expression')
 
-        ## TODO implement
+        # term
         self._compile_term()
+
+        while self._next_token_value() in operators:
+            # op term
+            self._advance()
+            self._compile_term()
 
         self._append_non_terminal_end()
 
@@ -619,8 +629,51 @@ class CompilationEngine:
 
         self._append_non_terminal_start('term')
 
-        ## TODO implement
-        self._advance()
+        next_type = self._next_token_type()
+        next_val = self._next_token_value()
+
+        # integerConstant | stringConstant | keywordConstant
+        if next_type in (INTEGER_CONSTANT, STRING_CONSTANT) or \
+                next_val in keyword_constants:
+            self._advance()
+
+        # varName | varName '[' expression ']' | subroutineCall
+        elif next_type == IDENTIFIER:
+            # varName | subroutineName | className
+            self._advance()
+
+            # current -> varName
+            # '[' expression ']'
+            if self._next_token_value() == '[':
+                self._advance()
+                self._compile_expression()
+                self._advance()
+
+            # current -> subroutineName
+            # '(' expressionList ')'
+            elif self._next_token_value() == '(':
+                self._advance()
+                self._compile_expression_list()
+                self._advance()
+                
+            # current -> (className | varName)
+            # '.' subroutineName '(' expressionList ')'
+            elif self._next_token_value() == '.':
+                for _ in range(3):
+                    self._advance()
+                self._compile_expression_list()
+                self._advance()
+
+        # '(' expression ')'
+        elif next_val == '(':
+            self._advance()
+            self._compile_expression()
+            self._advance()
+
+        # unaryOp term
+        elif next_val in unary_operators:
+            self._advance()
+            self._compile_term()
 
         self._append_non_terminal_end()
 
@@ -633,6 +686,7 @@ class CompilationEngine:
         while self._next_token_value() != ')':
             # expression
             self._compile_expression()
+
             if self._next_token_value() == ',':
                 self._advance()
 
