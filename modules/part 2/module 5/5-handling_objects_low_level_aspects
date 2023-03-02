@@ -1,0 +1,46 @@
+challenge
+- high-level OO programs create, manupulate objects, arrays
+- mid-level VM programs operate on VM segments
+- low-level machine programs operate directly on RAM
+
+compilation challenge
+- bridging gaps
+
+
+== handling object, array data ==
+this, that
+- represent object, array data
+- located on heap (after stack)
+
+implementation
+- base addresses - THIS, THAT
+- set using pointer 0, 1
+- managed by VM code
+==========
+
+
+== accessing object data ==
+wish to access RAM words 8000, 8001, ...
+- located in heap
+- stand for particular object or array
+
+VM code			VM implementation (effect)
+--------------------------------------------------
+push 8000
+pop pointer 0		sets THIS to 8000
+--------------------------------------------------
+push/pop this 0		accessing RAM[8000]
+push/pop this 1		accessing RAM[8001]
+...			...
+push/pop this i		accessing RAM[8000+i]
+
+ex: set RAM[8000] to 17
+push 8000
+pop pointer 0
+push 17
+pop this 0
+==========
+
+
+accessing array data is similar, using that instead of this
+
