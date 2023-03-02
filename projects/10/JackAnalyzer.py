@@ -2,7 +2,6 @@
 
 import os
 import sys
-import time
 
 NEWLINE = '\n'
 
@@ -12,8 +11,9 @@ INTEGER_CONSTANT = 2
 STRING_CONSTANT = 3
 IDENTIFIER = 4
 
-keywords = ['class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char', 'boolean', \
-            'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return']
+keywords = ['class', 'constructor', 'function', 'method', 'field', 'static',
+            'var', 'int', 'char','boolean', 'void', 'true', 'false', 'null',
+            'this', 'let', 'do', 'if', 'else', 'while', 'return']
 symbols = ['{', '}', '(', ')', '[', ']', '.', ',', ';', \
             '+', '-', '*', '/', '&', '|', '<', '>', '=', '~']
 
@@ -32,7 +32,7 @@ class JackTokenizer:
         self.tokens = []
         self.current_pos = -1
 
-        self.create_tokens(input_path, output_path)
+        self._create_tokens(input_path, output_path)
 
 
     def has_more_tokens(self):
@@ -49,12 +49,13 @@ class JackTokenizer:
 
 
     def peek(self):
+        '''returns next token'''
         if self.has_more_tokens():
             return self.tokens[self.current_pos + 1]
         return ('no more tokens', 0)
 
 
-    def create_tokens(self, input_path, output_path):
+    def _create_tokens(self, input_path, output_path):
         '''
         splits input file into tokens
         outputs result to tokens list and XML
@@ -64,11 +65,11 @@ class JackTokenizer:
             lines = infile.readlines()
 
         filtered_lines = []
-        # remove // onwards
+        # remove comments after //
         for line in lines:
             filtered_lines.append(line.split('//')[0])
-        # remove block comments
-        filtered_lines = self.remove_block_comments(filtered_lines)
+        # remove block comments (including multi-line)
+        filtered_lines = self._remove_block_comments(filtered_lines)
         # remove empty lines
         filtered_lines = [i.strip() for i in filtered_lines if i.strip() != '']
 
@@ -76,12 +77,12 @@ class JackTokenizer:
             outfile.write('<tokens>' + NEWLINE)
 
             for i in filtered_lines:
-                self.tokenize(i, outfile)
+                self._write_tokens(i, outfile)
 
             outfile.write('</tokens>' + NEWLINE)
 
 
-    def remove_block_comments(self, lines):
+    def _remove_block_comments(self, lines):
         '''
         removes block comments starting with /* and ending with */
         returns remaining lines
@@ -119,9 +120,9 @@ class JackTokenizer:
         return filtered
 
 
-    def tokenize(self, line, outfile):
+    def _write_tokens(self, line, outfile):
         '''
-        generates tokens from line of input file
+        generates, writes tokens from line of input file
         '''
 
         quote = False
@@ -130,7 +131,7 @@ class JackTokenizer:
         for i in line:
             if quote:
                 if i == "\"":
-                    self.write_string_constant(text, outfile)
+                    self._write_string_constant(text, outfile)
                     quote = False
                     text = ''
                 else:
@@ -141,69 +142,57 @@ class JackTokenizer:
 
             elif i in symbols:
                 if len(text) > 0:
-                    self.write_uncertain(text, outfile)
+                    self._write_uncertain(text, outfile)
                     text = ''
-                self.write_symbol(i, outfile)
+                self._write_symbol(i, outfile)
 
             elif i == ' ':
                 if len(text) > 0:
-                    self.write_uncertain(text, outfile)
+                    self._write_uncertain(text, outfile)
                     text = ''
 
             else:
                 text += i
 
         if len(text) > 0:
-            self.write_uncertain(text, outfile)
+            self._write_uncertain(text, outfile)
 
 
-    def write_uncertain(self, text, outfile):
-        '''
-        determines token type
-        writes to XML, stores in tokens list
-        '''
-
+    def _write_uncertain(self, text, outfile):
+        '''determines token type, writes token'''
         if text in keywords:
-            self.write_keyword(text, outfile)
+            self._write_keyword(text, outfile)
         elif text.isnumeric():
-            self.write_integer_constant(text, outfile)
+            self._write_integer_constant(text, outfile)
         else:
-            self.write_identifier(text, outfile)
+            self._write_identifier(text, outfile)
 
 
-    def write_integer_constant(self, text, outfile):
+    def _write_integer_constant(self, text, outfile):
         '''writes integer constant to XML, stores in tokens list'''
-        outfile.write('<integerConstant> ')
-        outfile.write(text)
-        outfile.write(' </integerConstant>' + NEWLINE)
+        self._write_token('integerConstant', text, outfile)
         self.tokens.append([INTEGER_CONSTANT, text])
 
 
-    def write_string_constant(self, text, outfile):
+    def _write_string_constant(self, text, outfile):
         '''writes string constant to XML, stores in tokens list'''
-        outfile.write('<stringConstant> ')
-        outfile.write(text)
-        outfile.write(' </stringConstant>' + NEWLINE)
+        self._write_token('stringConstant', text, outfile)
         self.tokens.append([STRING_CONSTANT, text])
 
 
-    def write_keyword(self, text, outfile):
+    def _write_keyword(self, text, outfile):
         '''writes keyword to XML, stores in tokens list'''
-        outfile.write('<keyword> ')
-        outfile.write(text)
-        outfile.write(' </keyword>' + NEWLINE)
+        self._write_token('keyword', text, outfile)
         self.tokens.append([KEYWORD, text])
 
 
-    def write_identifier(self, text, outfile):
+    def _write_identifier(self, text, outfile):
         '''writes identifier to XML, stores in tokens list'''
-        outfile.write('<identifier> ')
-        outfile.write(text)
-        outfile.write(' </identifier>' + NEWLINE)
+        self._write_token('identifier', text, outfile)
         self.tokens.append([IDENTIFIER, text])
 
 
-    def write_symbol(self, text, outfile):
+    def _write_symbol(self, text, outfile):
         '''writes symbol to XML, stores in tokens list'''
         self.tokens.append([SYMBOL, text])
 
@@ -214,413 +203,440 @@ class JackTokenizer:
         elif text == '&':
             text = '&amp;'
 
-        outfile.write('<symbol> ')
-        outfile.write(text)
-        outfile.write(' </symbol>' + NEWLINE)
+        self._write_token('symbol', text, outfile)
+
+
+    def _write_token(self, type, token, outfile):
+        '''writes token and tags to file'''
+        outfile.write(f'<{type}> ')
+        outfile.write(token)
+        outfile.write(f' </{type}>' + NEWLINE)
 
 
 
 class CompilationEngine:
+    '''
+    parses tokens
+    generates XML parse tree
+    '''
     def __init__(self, output_path, tokenizer: JackTokenizer):
         self.output_path = output_path
+        self.current_token = ('none', -1)
         self.tokenizer = tokenizer
         self.indent = ''
         self.output_lines = []
         self.rule_stack = []
 
-    '''advance, append'''
-    def advance(self):
+
+    def _advance(self):
+        '''advances tokenizer, appends output'''
         if self.tokenizer.has_more_tokens():
             self.current_token = self.tokenizer.advance()
-            self.append_terminal_output()
+            self._append_terminal_output()
         else:
             raise Exception('no more tokens')
 
-    def current_token_type(self):
+
+    def _current_token_type(self):
+        '''get type of current token'''
         return self.current_token[0]
 
-    def current_token_value(self):
+
+    def _current_token_value(self):
+        '''gets value of current token'''
         return self.current_token[1]
 
-    def next_token(self):
-        return self.tokenizer.peek()
 
-    def next_token_type(self):
-        return self.next_token()[0]
+    def _next_token_type(self):
+        '''gets type of next token'''
+        return self.tokenizer.peek()[0]
 
-    def next_token_value(self):
-        return self.next_token()[1]
 
-    def increase_indent(self):
+    def _next_token_value(self):
+        '''gets value of next token'''
+        return self.tokenizer.peek()[1]
+
+
+    def _increase_indent(self):
+        '''increases indentation by 2 spaces'''
         self.indent += '  '
 
-    def decrease_indent(self):
+
+    def _decrease_indent(self):
+        '''decreases indentation by 2 spaces'''
         self.indent = ' ' * (len(self.indent) - 2)
 
-    def append_output(self, text):
+
+    def _append_output(self, text):
+        '''appends indentation and text to output'''
         self.output_lines.append(self.indent + text)
-        print(self.indent + text)
-        #time.sleep(0.1)
 
-    def append_terminal_output(self):
-        if self.current_token_type() == KEYWORD:
-            self.append_output('<keyword> ' + self.current_token_value() + ' </keyword>')
-        elif self.current_token_type() == SYMBOL:
-            self.append_output('<symbol> ' + self.current_token_value() + ' </symbol>')
-        elif self.current_token_type() == INTEGER_CONSTANT:
-            self.append_output('<integerConstant> ' + self.current_token_value() + ' </integerConstant>')
-        elif self.current_token_type() == STRING_CONSTANT:
-            self.append_output('<stringConstant> ' + self.current_token_value() + ' </stringConstant>')
+
+    def _append_terminal_output(self):
+        '''appends terminal tokens to output'''
+        if self._current_token_type() == KEYWORD:
+            self._append_output('<keyword> ' + self._current_token_value() + ' </keyword>')
+        elif self._current_token_type() == SYMBOL:
+            self._append_output('<symbol> ' + self._current_token_value() + ' </symbol>')
+        elif self._current_token_type() == INTEGER_CONSTANT:
+            self._append_output('<integerConstant> ' + self._current_token_value() +
+                                ' </integerConstant>')
+        elif self._current_token_type() == STRING_CONSTANT:
+            self._append_output('<stringConstant> ' + self._current_token_value() +
+                                ' </stringConstant>')
         else:
-            self.append_output('<identifier> ' + self.current_token_value() + ' </identifier>')
-    
+            self._append_output('<identifier> ' + self._current_token_value() + ' </identifier>')
 
-    def append_non_terminal_start(self, rule):
-        self.append_output(f'<{rule}>')
-        self.increase_indent()
+
+    def _append_non_terminal_start(self, rule):
+        '''appends non-terminal tokens start'''
+        self._append_output(f'<{rule}>')
+        self._increase_indent()
         self.rule_stack.append(rule)
 
 
-    def append_non_terminal_end(self):
-        self.decrease_indent()
+    def _append_non_terminal_end(self):
+        '''appends non-terminal tokens end'''
+        self._decrease_indent()
         rule = self.rule_stack.pop()
-        self.append_output(f'</{rule}>')
+        self._append_output(f'</{rule}>')
 
 
     def write_xml(self):
+        '''writes output lines to file'''
         with open(self.output_path, 'w', encoding='utf8') as outfile:
             for line in self.output_lines:
                 outfile.write(line + NEWLINE)
 
 
     def compile(self):
-        '''jack file begins with class, contains only 1'''
-        self.compile_class()
-        self.write_xml()
+        '''compiles jack file containing 1 class, writes to file'''
+        self._compile_class()
 
 
-    def compile_class(self):
-        # class: 'class' className '{' classVarDec* subroutineDec* '}'
-        self.append_non_terminal_start('class')
-    
+    def _compile_class(self):
+        """ class: 'class' className '{' classVarDec* subroutineDec* '}' """
+
+        self._append_non_terminal_start('class')
+
         # 'class' className '{'
         for _ in range(3):
-            self.advance()
+            self._advance()
 
         # classVarDec*
-        while self.next_token_value() in ('static', 'field'):
-            self.compile_class_var_dec()
-        
+        while self._next_token_value() in ('static', 'field'):
+            self._compile_class_var_dec()
+
         # subroutineDec*
-        while self.next_token_value() in ('constructor', 'function', 'method'):
-            self.compile_subroutine_dec()
+        while self._next_token_value() in ('constructor', 'function', 'method'):
+            self._compile_subroutine_dec()
 
         # '}'
-        self.advance()
+        self._advance()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_class_var_dec(self):
-        # classVarDec: ('static' | 'field') type varName (',' varName)* ';'
-        
-        self.append_non_terminal_start('classVarDec')
+    def _compile_class_var_dec(self):
+        """ classVarDec: ('static' | 'field') type varName (',' varName)* ';' """
+
+        self._append_non_terminal_start('classVarDec')
 
         # ('static' | 'field') type varName
         for _ in range(3):
-            self.advance()
+            self._advance()
 
-        while self.next_token_value() == ',':
+        while self._next_token_value() == ',':
             # (',' varName)*
             for _ in range(2):
-                self.advance()
+                self._advance()
 
         # ';'
-        self.advance()
+        self._advance()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_subroutine_dec(self):
-        # subroutineDec: ('constructor' | 'function' | 'method') ('void' | type) 
-        #                   subroutineName '(' parameterList ')' subroutineBody
-        
-        self.append_non_terminal_start('subroutineDec')
+    def _compile_subroutine_dec(self):
+        """ subroutineDec: ('constructor' | 'function' | 'method') ('void' | type)
+                            subroutineName '(' parameterList ')' subroutineBody """
+
+        self._append_non_terminal_start('subroutineDec')
 
         # ('constructor' | 'function' | 'method') ('void' | type) subroutineName '('
         for _ in range(4):
-            self.advance()
+            self._advance()
 
         # parameterList
-        self.compile_parameter_list()
+        self._compile_parameter_list()
 
         # ')'
-        self.advance()
+        self._advance()
 
         # subroutineBody
-        self.compile_subroutine_body()
+        self._compile_subroutine_body()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_parameter_list(self):
-        # parameterList: ((type varName) (',' type varName)*)?
+    def _compile_parameter_list(self):
+        """ parameterList: ((type varName) (',' type varName)*)? """
 
-        self.append_non_terminal_start('parameterList')
+        self._append_non_terminal_start('parameterList')
 
-        while self.next_token_value() != ')':
+        while self._next_token_value() != ')':
             # type varName
             for _ in range(2):
-                self.advance()
+                self._advance()
 
             # ','
-            if self.next_token_value() == ',':
-                self.advance()
+            if self._next_token_value() == ',':
+                self._advance()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_subroutine_body(self):
-        # subroutineBody: '{' varDec* statements '}'
+    def _compile_subroutine_body(self):
+        """ subroutineBody: '{' varDec* statements '}' """
 
-        self.append_non_terminal_start('subroutineBody')
+        self._append_non_terminal_start('subroutineBody')
 
         # '{'
-        self.advance()
+        self._advance()
 
         # varDec*
-        while self.next_token_value() == 'var':
-            self.compile_var_dec()
+        while self._next_token_value() == 'var':
+            self._compile_var_dec()
 
         # statements
-        self.compile_statements()
+        self._compile_statements()
 
         # '}'
-        self.advance()
+        self._advance()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_var_dec(self):
-        # varDec: 'var' type varName (',' varName)* ';'
+    def _compile_var_dec(self):
+        """ varDec: 'var' type varName (',' varName)* ';' """
 
-        self.append_non_terminal_start('varDec')
+        self._append_non_terminal_start('varDec')
 
         # 'var' type varName
         for _ in range(3):
-            self.advance()
-        
-        while self.next_token_value() != ';':
+            self._advance()
+
+        while self._next_token_value() != ';':
             # (',' varName)*
             for _ in range(2):
-                self.advance()
+                self._advance()
 
         # ';'
-        self.advance()
+        self._advance()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_statements(self):
-        # statements: statement*
+    def _compile_statements(self):
+        """ statements: statement* """
 
-        self.append_non_terminal_start('statements')
+        self._append_non_terminal_start('statements')
 
-        next_val = self.next_token_value()
+        next_val = self._next_token_value()
         while next_val != '}':
             # letStatement
             if next_val == 'let':
-                self.compile_let_statement()
+                self._compile_let_statement()
             # ifStatement
             elif next_val == 'if':
-                self.compile_if_statement()
+                self._compile_if_statement()
             # whileStatement
             elif next_val == 'while':
-                self.compile_while_statement()
+                self._compile_while_statement()
             # doStatement
             elif next_val == 'do':
-                self.compile_do_statement()
+                self._compile_do_statement()
             # returnStatement
             else:
-                self.compile_return_statement()
-            
-            next_val = self.next_token_value()
+                self._compile_return_statement()
 
-        self.append_non_terminal_end()
+            next_val = self._next_token_value()
+
+        self._append_non_terminal_end()
 
 
-    def compile_let_statement(self):
-        # letStatement: 'let' varName ('[' expression ']')? '=' expression ';'
-        
-        self.append_non_terminal_start('letStatement')
+    def _compile_let_statement(self):
+        """ letStatement: 'let' varName ('[' expression ']')? '=' expression ';' """
+
+        self._append_non_terminal_start('letStatement')
 
         # 'let' varName
         for _ in range(2):
-            self.advance()
+            self._advance()
 
-        if self.next_token_value() == '[':
+        if self._next_token_value() == '[':
             # '['
-            self.advance()
-            self.compile_expression()
+            self._advance()
+            self._compile_expression()
             # ']'
-            self.advance()
+            self._advance()
 
         # '='
-        self.advance()
+        self._advance()
 
-        self.compile_expression()
+        self._compile_expression()
 
         # ';'
-        self.advance()
+        self._advance()
 
-        self.append_non_terminal_end()
-    
+        self._append_non_terminal_end()
 
-    def compile_if_statement(self):
-        # ifStatement: 'if' '(' expression ')' '{' statements '}' ('else' '{' statements '}')?
 
-        self.append_non_terminal_start('ifStatement')
+    def _compile_if_statement(self):
+        """ ifStatement: 'if' '(' expression ')' '{' statements '}' ('else' '{' statements '}')? """
+
+        self._append_non_terminal_start('ifStatement')
 
         # 'if' '('
         for _ in range(2):
-            self.advance()
+            self._advance()
 
-        self.compile_expression()
+        self._compile_expression()
 
         # ')' '{'
         for _ in range(2):
-            self.advance()
+            self._advance()
 
-        self.compile_statements()
+        self._compile_statements()
 
         # '}'
-        self.advance()
+        self._advance()
 
-        if self.next_token_value() == 'else':
+        if self._next_token_value() == 'else':
             # 'else' '{'
             for _ in range(2):
-                self.advance()
+                self._advance()
             # statements
-            self.compile_statements()
+            self._compile_statements()
             # '}'
-            self.advance()
+            self._advance()
 
-        self.append_non_terminal_end()
-    
+        self._append_non_terminal_end()
 
-    def compile_while_statement(self):
-        # whileStatement: 'while' '(' expression ')' '{' statements '}'
-        
-        self.append_non_terminal_start('whileStatement')
+
+    def _compile_while_statement(self):
+        """ whileStatement: 'while' '(' expression ')' '{' statements '}' """
+
+        self._append_non_terminal_start('whileStatement')
 
         # 'while' '('
         for _ in range(2):
-            self.advance()
+            self._advance()
 
-        self.compile_expression()
+        self._compile_expression()
 
         # ')' '{'
         for _ in range(2):
-            self.advance()
+            self._advance()
 
-        self.compile_statements()
+        self._compile_statements()
 
         # '}'
-        self.advance()
+        self._advance()
 
-        self.append_non_terminal_end()
-    
+        self._append_non_terminal_end()
 
-    def compile_do_statement(self):
-        # doStatement: 'do' subroutineCall ';'
 
-        self.append_non_terminal_start('doStatement')
+    def _compile_do_statement(self):
+        """ doStatement: 'do' subroutineCall ';' """
+
+        self._append_non_terminal_start('doStatement')
 
         # 'do'
-        self.advance()
+        self._advance()
 
-        self.compile_subroutine_call()
+        self._compile_subroutine_call()
 
         # ';'
-        self.advance()
+        self._advance()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_subroutine_call(self):
-        # subroutineCall: subroutineName '(' expressionList ')' | (className | varName) '.' subroutineName 
-		#                   '(' expressionList ')'
+    def _compile_subroutine_call(self):
+        """ subroutineCall: subroutineName '(' expressionList ')' | (className | varName) '.'
+                                subroutineName '(' expressionList ')' """
 
         # subroutineName | (className | varName)
-        self.advance()
+        self._advance()
 
-        if self.next_token_value() == '.':
+        if self._next_token_value() == '.':
             # '.'
-            self.advance()
+            self._advance()
             # subroutineName
-            self.advance()
+            self._advance()
 
         # '('
-        self.advance()
+        self._advance()
         # expressionList
-        self.compile_expression_list()
+        self._compile_expression_list()
         # ')'
-        self.advance()
-            
+        self._advance()
 
-    def compile_return_statement(self):
-        # returnStatement: 'return' expression? ';'
 
-        self.append_non_terminal_start('returnStatement')
+    def _compile_return_statement(self):
+        """ returnStatement: 'return' expression? ';' """
+
+        self._append_non_terminal_start('returnStatement')
 
         # 'return'
-        self.advance()
+        self._advance()
 
-        if self.next_token_value() != ';':
-            self.compile_expression()
+        if self._next_token_value() != ';':
+            self._compile_expression()
 
         # ';'
-        self.advance()
+        self._advance()
 
-        self.append_non_terminal_end()
-    
-
-    def compile_expression(self):
-        # expression: term (op term)*
-
-        self.append_non_terminal_start('expression')
-
-        ## TODO implement
-        self.compile_term()
-
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_term(self):
-        # term: integerConstant | stringConstant | keywordConstant | varName | 
-		#       varName '[' expression ']' | subroutineCall | '(' expression ')' | unaryOp
-		#       term
+    def _compile_expression(self):
+        """ expression: term (op term)* """
 
-        self.append_non_terminal_start('term')
+        self._append_non_terminal_start('expression')
 
         ## TODO implement
-        self.advance()
+        self._compile_term()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
-    def compile_expression_list(self):
-        # expressionList: (expression (',' expression)*)?
+    def _compile_term(self):
+        """ term: integerConstant | stringConstant | keywordConstant | varName |
+		            varName '[' expression ']' | subroutineCall | '(' expression ')' | unaryOp
+		            term """
 
-        self.append_non_terminal_start('expressionList')
+        self._append_non_terminal_start('term')
 
-        while self.next_token_value() != ')':
+        ## TODO implement
+        self._advance()
+
+        self._append_non_terminal_end()
+
+
+    def _compile_expression_list(self):
+        """ expressionList: (expression (',' expression)*)? """
+
+        self._append_non_terminal_start('expressionList')
+
+        while self._next_token_value() != ')':
             # expression
-            self.compile_expression()
-            if self.next_token_value() == ',':
-                self.advance()
+            self._compile_expression()
+            if self._next_token_value() == ',':
+                self._advance()
 
-        self.append_non_terminal_end()
+        self._append_non_terminal_end()
 
 
 
@@ -633,6 +649,7 @@ def process_jack_file(path):
     compilation_output_path = '.'.join(path.split('.')[:-1]) + '.xml'
     compilation_engine = CompilationEngine(compilation_output_path, tokenizer)
     compilation_engine.compile()
+    compilation_engine.write_xml()
 
 
 def main():
@@ -666,5 +683,6 @@ def main():
 
     else:
         print('enter either a file or folder')
+
 
 main()
