@@ -1,0 +1,73 @@
+need to know
+- variable type 
+- which variable of its kind
+
+
+variable types
+- class-level variables
+  - field
+  - static
+- subroutine-level variables
+  - argument
+  - local
+
+
+variable properties in Jack
+- name (identifier)
+- type (int, char, boolean, class name)
+- kind (field, static, argument, local)
+- scope
+
+
+== symbol table ==
+used to manage variable properties
+
+need to always maintain 2 symbol tables
+- class-level symbol table can be reset for new class
+- subroutine-level symbol table can be reset for new subroutine
+
+'this' is always argument 0 for method
+
+handling variable declarations
+- field/static/var type varName, arguments
+- add variable, properties to symbol table
+
+using variables
+- look up in subroutine-level symbol table
+- if not found, look up in class-level symbol table
+- if still not found, error message
+==========
+
+
+== example - Point class ==
+name		type	kind	#
+x		int	field	0
+y		int	field	1
+pointCount	int	static	0
+
+name	type	kind		#
+this	Point	argument	0
+other	Point	argument	1
+dx	int	local		0
+dy	int	local		1
+==========
+
+
+== perspective ==
+programming languages vary in terms of 
+- variable types
+- variable kinds
+- nested scoping
+
+first 2 are easy to implement with some modifications of symbol table
+
+nested scoping can be managed using linked list of symbol tables
+- creation
+  - add class-level symbol table to linked list
+  - add method-level symbol table to linked list
+  - keep adding symbol tables for each new scope level
+- lookup
+  - start in 1st table
+  - if not found, look in next table, and so on
+==========
+
