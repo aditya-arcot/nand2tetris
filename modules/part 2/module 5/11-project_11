@@ -1,0 +1,31 @@
+compiler development roadmap
+- syntax analyzer - done
+- symbol table handling - test using XML
+- code generation
+
+
+== symbol table handling ==
+currently, all identifiers outputted same way in XML
+
+extend handling of identifiers
+- output category - var, argument, static, field, class, subroutine
+  - if var, argument, static, field, output also running index assigned to var in symbol table
+- output whether being defined or used
+
+extend syntax analyzer with identifier handling described above
+- using custom output/tags format
+- test on project 10 programs
+==========
+
+
+== plan ==
+extend syntax analyzer into full-scale compiler
+
+test evolving compiler on supplied test programs
+- order - Seven, ConvertToBin, Square, Average, Pong, ComplexArrays
+- use compiler to compile program directory
+- inspect generated code
+- load directory into VM emulator
+- run program, inspect results
+==========
+
