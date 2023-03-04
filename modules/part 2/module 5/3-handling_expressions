@@ -49,7 +49,7 @@ codeWrite(exp):
   if exp is "op exp":
     codeWrite(exp)
     output "op"
-  if exp is f(exp1, exp2, ...)":
+  if exp is "f(exp1, exp2, ...)":
     codeWrite(exp1)
     codeWrite(exp2)
     ...
