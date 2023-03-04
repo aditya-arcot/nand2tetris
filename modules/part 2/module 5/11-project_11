@@ -8,8 +8,8 @@ compiler development roadmap
 currently, all identifiers outputted same way in XML
 
 extend handling of identifiers
-- output category - var, argument, static, field, class, subroutine
-  - if var, argument, static, field, output also running index assigned to var in symbol table
+- output category - var/local, argument, static, field, class, subroutine
+  - if var/local, argument, static, field, output also running index assigned to var in symbol table
 - output whether being defined or used
 
 extend syntax analyzer with identifier handling described above
