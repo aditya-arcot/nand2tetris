@@ -1,0 +1,26 @@
+peek
+poke
+alloc
+deAlloc
+
+
+== peek, poke ==
+program requirements
+- access RAM via abstractions
+- access I/O devices via abstractions
+
+low-level services that facilitate direct RAM access
+
+function int peek(int address)
+- returns value of given RAM address
+
+function void poke(int address, int value)
+- sets value of given RAM address to given value
+
+implementation
+- static array ram
+- init - let ram = 0	allows for complete access to RAM
+- peek - return ram[addr]
+- poke - let ram[addr] = val
+==========
+
