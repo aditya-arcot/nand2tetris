@@ -44,7 +44,7 @@ and: x and y
 or: x or y
 not: not y
 
-any arithmetic or logical expression can be expressed and evaluated by some seuqence of above operations on a stack
+any arithmetic or logical expression can be expressed and evaluated by some sequence of above operations on a stack
 ==========
 
 

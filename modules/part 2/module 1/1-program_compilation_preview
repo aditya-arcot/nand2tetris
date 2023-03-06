@@ -6,7 +6,7 @@ options
 - 2-tier compilation
   - translate program to VM code 
     - designed to run on VM
-    - ex: bytecode for Java
+    - ex: byte-code for Java
   - translate VM code to specific assembly language
     - ex: JVM implementation for Java
 ==========
