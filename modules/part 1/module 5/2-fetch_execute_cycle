@@ -9,7 +9,7 @@ input location of next instruction to program counter (register)
 - usually old value + 1
 program counter outputs instruction address to program memory
 - address bus
-program memory ouputs instruction code
+program memory outputs instruction code
 - data bus
 ==========
 
@@ -31,7 +31,7 @@ solution - multiplexer
 
 simpler solution - Harvard architecture
 - keep program and data in 2 separate memory modules
-- variant of von Neumann achitecture
+- variant of von Neumann architecture
 ==========
 
 
