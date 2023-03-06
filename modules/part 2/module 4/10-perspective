@@ -9,7 +9,7 @@ bottom-up parsing used for more complex languages
 - backtracking to make decisions
 
 Unix tools to automate compiler creation
-- lex - lexican analyzer
+- lex - lexical analyzer
   - generate tokens automatically
 - yacc - yet another compiler compiler
   - generate parsing code automatically

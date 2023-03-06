@@ -43,7 +43,7 @@ type 1
 type 2
 	type, className, subroutineName, varName, statement, subroutineCall	
 
-	no XML markup
+	no XML mark-up
 
 	ex: let x = 17;
 	<letStatement>

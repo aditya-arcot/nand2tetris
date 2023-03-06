@@ -8,7 +8,7 @@ VM translator converts VM code to machine code
 
 
 == compiler development roadmap ==
-step 1 - synax analyzer
+step 1 - syntax analyzer
 - 2 parts
   - tokenizer
   - parser

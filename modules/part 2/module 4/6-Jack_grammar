@@ -1,7 +1,7 @@
 == parser design ==
 set of compileXXX methods, one for each non-terminal rule xxx
 each method outputs some of parse tree (XML), and advances input
-parsing logic of each method follows righ-hand side of rule it implements
+parsing logic of each method follows right-hand side of rule it implements
 ==========
 
 
