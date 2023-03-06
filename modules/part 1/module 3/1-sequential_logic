@@ -10,7 +10,7 @@ output was computed instantaneously
 
 == concerns ==
 use same hardware over time
-- inputs change and ouputs should follow
+- inputs change and outputs should follow
 
 remember state
 - memory

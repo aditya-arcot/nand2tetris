@@ -15,7 +15,7 @@ flip-flops - gates that can flip between 2 states
 out[t] = in[t-1]
 out[0] unknown
 
-triangle in diagram signifes sequential chip
+triangle in diagram signifies sequential chip
 
 all sequential logic provided in this course
 - treat as primitive, like Nand
@@ -30,7 +30,7 @@ physical implementation can be built from Nand gates
 
 
 == sequential logic implementation ==
-array of DDF's represents memory
+array of DFF's represents memory
 - output + new input fed into combinatorial logic
 - output of logic changes state of DFF's
 ==========
@@ -45,5 +45,4 @@ else out(t) = out(t-1)
 can be implemented using Mux
 - sel is load
 ==========
-
 
