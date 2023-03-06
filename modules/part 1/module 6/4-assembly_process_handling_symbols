@@ -20,7 +20,7 @@ symbol refers to memory location holding next instruction in program
 
 
 == variable symbols ==
-any sumbol which is not pre-defined and is not defined elsewhere using label declaration
+any symbol which is not pre-defined and is not defined elsewhere using label declaration
 
 each variable assigned unique memory address, starting at 16
 ==========
