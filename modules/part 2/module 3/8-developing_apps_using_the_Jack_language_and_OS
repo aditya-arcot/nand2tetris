@@ -41,7 +41,7 @@ Class Screen {
 
 == handling inputs ==
 standard keyboard
-input proramming - use OS Keyboard class
+input programming - use OS Keyboard class
 
 Class Keyboard {
 	function char keyPressed()

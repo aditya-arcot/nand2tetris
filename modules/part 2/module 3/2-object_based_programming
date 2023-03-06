@@ -34,7 +34,7 @@ dispose of object's memory
 object representation
 - object fields stored as memory block in heap
 - pointers to objects stored in stack
-- process - compiled constructor's code includes OS calles that store new object in memory
+- process - compiled constructor's code includes OS calls that store new object in memory
 - future issues
   - allocating memory
   - de-allocating memory

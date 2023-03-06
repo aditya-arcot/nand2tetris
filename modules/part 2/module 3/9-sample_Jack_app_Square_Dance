@@ -1,8 +1,8 @@
 == functionality ==
-up arrow - square moves up until another keypress
-down arrow - square moves down until another keypress
-left arrow - square moves left until another keypress
-right arrow - square moves right until another keypress
+up arrow - square moves up until another key press
+down arrow - square moves down until another key press
+left arrow - square moves left until another key press
+right arrow - square moves right until another key press
 x key - square size increases by 2 pixels
 z key - square size decreases by 2 pixels
 q key - quit game

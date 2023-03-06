@@ -26,7 +26,7 @@ skeleton
     - recommended for helper purpose only
   - ex: Fraction, List, String, ...
 
-best practice - don't mix libary, object representation in same class
+best practice - don't mix library, object representation in same class
 ==========
 
 
