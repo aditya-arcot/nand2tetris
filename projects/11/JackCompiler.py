@@ -1,12 +1,12 @@
 import os, sys
 
-from JackTokenizer import JackTokenizer
+from Tokenizer import Tokenizer
 from CompilationEngine import CompilationEngine
 
 def parse_jack_file(path):
     '''parses input file'''
 
-    tokenizer = JackTokenizer(path)
+    tokenizer = Tokenizer(path)
     #for i in tokenizer.tokens: print(i)
 
     output_path = '.'.join(path.split('.')[:-1]) + '.vm'

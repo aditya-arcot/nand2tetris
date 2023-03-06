@@ -1,6 +1,6 @@
 import Constants
 
-class JackTokenizer:
+class Tokenizer:
     '''
     generates tokens from input file
     allows sequential access to tokens

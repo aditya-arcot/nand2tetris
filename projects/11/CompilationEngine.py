@@ -1,4 +1,3 @@
-from JackTokenizer import JackTokenizer
 from SymbolTable import SymbolTable
 from VMWriter import VMWriter
 import Constants
