@@ -1,5 +1,5 @@
 challenge
-- high-level OO programs create, manupulate objects, arrays
+- high-level OO programs create, manipulate objects, arrays
 - mid-level VM programs operate on VM segments
 - low-level machine programs operate directly on RAM
 
