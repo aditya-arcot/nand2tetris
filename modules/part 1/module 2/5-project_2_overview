@@ -27,7 +27,7 @@ a b sum carry
 
 == Full Adder ==
 input - a, b, c
-output - sum, cary
+output - sum, carry
 
 can be built from 2 half-adders
 
