@@ -55,7 +55,6 @@ class Tokenizer:
             self._add_line_tokens(i)
 
 
-
     def _remove_block_comments(self, lines):
         '''
         removes block comments starting with /* and ending with */
@@ -95,9 +94,7 @@ class Tokenizer:
 
 
     def _add_line_tokens(self, line):
-        '''
-        generates, adds tokens from line of input file
-        '''
+        '''generates, adds tokens from line of input file'''
 
         quote = False
         text = ''

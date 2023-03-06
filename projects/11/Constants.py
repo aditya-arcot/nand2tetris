@@ -1,3 +1,5 @@
+'''constants to be used by other program files'''
+
 NEWLINE = '\n'
 
 KEYWORD = 0
@@ -11,7 +13,6 @@ keywords = ['class', 'constructor', 'function', 'method', 'field', 'static',
             'this', 'let', 'do', 'if', 'else', 'while', 'return']
 symbols = ['{', '}', '(', ')', '[', ']', '.', ',', ';', \
             '+', '-', '*', '/', '&', '|', '<', '>', '=', '~']
-
 
 operators = ['+', '-', '*', '/', '&', '|', '<', '>', '=']
 unary_operators = ['-', '~']

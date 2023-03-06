@@ -3,8 +3,34 @@ from VMWriter import VMWriter
 import Constants
 
 class CompilationEngine:
+    '''generates compiled VM code from Jack tokens'''
+
+    def __init__(self, tokenizer):
+        self.tokenizer = tokenizer
+        self.current_token = ('none', -1)
+
+        self.output_lines = []
+
+        self.class_name = ''
+        self.rule_stack = []
+        self.if_counter = 0
+        self.while_counter = 0
+
+        self.indent = ''
+
+        self.symbol_table = SymbolTable()
+        self.vm_writer = VMWriter(self.output_lines)
+
+
+    def compile(self, output_path):
+        '''compiles Jack file containing 1 class, writes to file'''
+
+        self._compile_class()
+        self._write(output_path)
+
+
     def _advance(self):
-        '''advances tokenizer, appends output'''
+        '''advances tokenizer'''
         if self.tokenizer.has_more_tokens():
             self.current_token = self.tokenizer.advance()
         else:
@@ -19,11 +45,6 @@ class CompilationEngine:
     def _current_token_value(self):
         '''gets value of current token'''
         return self.current_token[1]
-
-
-    def _next_token_type(self):
-        '''gets type of next token'''
-        return self.tokenizer.peek()[0]
 
 
     def _next_token_value(self):
@@ -41,36 +62,28 @@ class CompilationEngine:
         self.indent = ' ' * (len(self.indent) - 2)
 
 
-    def compile(self, tokenizer, output_path):
-        '''compiles jack file containing 1 class, writes to file'''
-        self.tokenizer = tokenizer
-        self.output_path = output_path
-        self.current_token = ('none', -1)
-        self.output_lines = []
-        self.indent = ''
-        self.rule_stack = []
-        self.class_name = ''
-        self.if_counter = 0
-        self.while_counter = 0
-        self.symbol_table = SymbolTable()
-        self.vm_writer = VMWriter(self.output_lines)
+    def _var_exists(self, name):
+        '''checks if variable exists in symbol table'''
+        if self.symbol_table.index_of(name) == -1:
+            return False
+        return True
 
-        self._compile_class()
-        self._write()
 
-    def _write(self):
-        with open(self.output_path, 'w') as file:
+    def _write(self, output_path):
+        '''writes VM code to output file'''
+        with open(output_path, 'w', encoding='utf-8') as file:
             for line in self.output_lines:
                 file.write(line + Constants.NEWLINE)
+
 
     def _compile_class(self):
         """ class: 'class' className '{' classVarDec* subroutineDec* '}' """
 
-        # 'class' 
+        # 'class'
         self._advance()
-        # className 
+        # className
         self._advance()
-        self._class_dec()
+        self.class_name = self.current_token[1]
         # '{'
         self._advance()
 
@@ -85,31 +98,31 @@ class CompilationEngine:
         # '}'
         self._advance()
 
-    
+
     def _compile_class_var_dec(self):
         """ classVarDec: ('static' | 'field') type varName (',' varName)* ';' """
 
-        # ('static' | 'field') 
+        # ('static' | 'field')
         self._advance()
         var_kind = self.current_token[1]
 
         # type
         self._advance()
         var_type = self.current_token[1]
-        
+
         # varName
         self._advance()
         var_name = self.current_token[1]
 
-        self._var_dec(var_name, var_type, var_kind)
+        self.symbol_table.define(var_name, var_type, var_kind)
 
         while self._next_token_value() == ',':
             # (',' varName)*
             for _ in range(2):
                 self._advance()
-            
+
             var_name = self.current_token[1]
-            self._var_dec(var_name, var_type, var_kind)
+            self.symbol_table.define(var_name, var_type, var_kind)
 
         # ';'
         self._advance()
@@ -120,16 +133,16 @@ class CompilationEngine:
                             subroutineName '(' parameterList ')' subroutineBody """
 
         # clear subroutine symbol table
-        self.symbol_table.start_subroutine() 
+        self.symbol_table.start_subroutine()
 
-        # ('constructor' | 'function' | 'method') 
+        # ('constructor' | 'function' | 'method')
         self._advance()
         subroutine_type = self.current_token[1]
-        
+
         # ('void' | type) subroutineName
         for _ in range(2):
             self._advance()
-        self._subroutine_dec(self.current_token[1])
+        subroutine_name = f'{self.class_name}.{self.current_token[1]}'
 
         # '('
         self._advance()
@@ -141,8 +154,8 @@ class CompilationEngine:
         self._advance()
 
         # subroutineBody
-        self._compile_subroutine_body(subroutine_type)
-        
+        self._compile_subroutine_body(subroutine_name, subroutine_type)
+
         #self.symbol_table.print_tables()
 
 
@@ -150,25 +163,25 @@ class CompilationEngine:
         """ parameterList: ((type varName) (',' type varName)*)? """
 
         if subroutine_type == 'method':
-            self._var_dec('this', self.class_name, 'argument')
+            self.symbol_table.define('this', self.class_name, 'argument')
 
         while self._next_token_value() != ')':
             # type
             self._advance()
             var_type = self.current_token[1]
-            
+
             # varName
             self._advance()
             var_name = self.current_token[1]
 
-            self._var_dec(var_name, var_type, 'argument')
+            self.symbol_table.define(var_name, var_type, 'argument')
 
             # ','
             if self._next_token_value() == ',':
                 self._advance()
 
 
-    def _compile_subroutine_body(self, subroutine_type):
+    def _compile_subroutine_body(self, subroutine_name, subroutine_type):
         """ subroutineBody: '{' varDec* statements '}' """
 
         # '{'
@@ -177,9 +190,9 @@ class CompilationEngine:
         # varDec*
         while self._next_token_value() == 'var':
             self._compile_var_dec()
-        
+
         n_local = self.symbol_table.next_local_ind
-        self.vm_writer.write_function(self.subroutine_name, n_local)
+        self.vm_writer.write_function(subroutine_name, n_local)
 
         if subroutine_type == 'constructor':
             n_fields = self.symbol_table.next_field_ind
@@ -202,24 +215,24 @@ class CompilationEngine:
 
         # 'var'
         self._advance()
-        
+
         # type
         self._advance()
         var_type = self.current_token[1]
-        
+
         # varName
         self._advance()
         var_name = self.current_token[1]
 
-        self._var_dec(var_name, var_type, 'local')
+        self.symbol_table.define(var_name, var_type, 'local')
 
         while self._next_token_value() != ';':
             # (',' varName)*
             for _ in range(2):
                 self._advance()
-            
+
             var_name = self.current_token[1]
-            self._var_dec(var_name, var_type, 'local')
+            self.symbol_table.define(var_name, var_type, 'local')
 
         # ';'
         self._advance()
@@ -255,13 +268,11 @@ class CompilationEngine:
         # 'let' varName
         for _ in range(2):
             self._advance()
-            
-        self._var_access()
-        
+
         var_name = self.current_token[1]
         var_kind = self.symbol_table.kind_of(var_name)
         var_ind = self.symbol_table.index_of(var_name)
-        
+
         if self._next_token_value() == '[':
             # '['
             self._advance()
@@ -373,13 +384,13 @@ class CompilationEngine:
         # subroutineCall
         self._advance()
         self._compile_subroutine_call()
-        
+
         self.vm_writer.write_pop('temp', 0) # discard void value
 
         # ';'
         self._advance()
 
-    
+
     def _compile_subroutine_call(self):
         """ subroutineCall: subroutineName '(' expressionList ')' | (className | varName) '.'
                                 subroutineName '(' expressionList ')' """
@@ -389,18 +400,13 @@ class CompilationEngine:
 
         n_args = 0
 
-        if self._next_token_value() == '.':         
-            if self.var_exists(self.current_token[1]):
-                self._var_access()
-            else:
-                self._class_access()
-            
+        if self._next_token_value() == '.':
             # '.'
             self._advance()
             # subroutineName
             self._advance()
 
-            if self.var_exists(start_token[1]): # instance
+            if self._var_exists(start_token[1]): # instance
                 var_name = start_token[1]
                 var_type = self.symbol_table.type_of(var_name)
                 var_kind = self.symbol_table.kind_of(var_name)
@@ -415,8 +421,6 @@ class CompilationEngine:
             self.vm_writer.write_push('pointer', 0)
             func_name = f'{self.class_name}.{start_token[1]}'
             n_args = 1
-
-        self._subroutine_access()
 
         # '('
         self._advance()
@@ -454,15 +458,15 @@ class CompilationEngine:
         while self._next_token_value() in Constants.operators:
             # op term
             self._advance()
-            op = self.current_token[1]
+            operator = self.current_token[1]
             self._compile_term()
 
-            if op == '*':
+            if operator == '*':
                 self.vm_writer.write_call('Math.multiply', 2)
-            elif op == '/':
+            elif operator == '/':
                 self.vm_writer.write_call('Math.divide', 2)
-            elif op in Constants.operator_conversion.keys():
-                self.vm_writer.write_arithmetic(Constants.operator_conversion[op])
+            elif operator in Constants.operator_conversion:
+                self.vm_writer.write_arithmetic(Constants.operator_conversion[operator])
 
 
     def _compile_term(self):
@@ -497,8 +501,6 @@ class CompilationEngine:
         elif cur_type == Constants.IDENTIFIER:
             # '[' expression ']'
             if self._next_token_value() == '[':
-                self._var_access()
-
                 self._advance()
                 self._compile_expression()
                 self._advance()
@@ -516,8 +518,6 @@ class CompilationEngine:
 
             # varName
             else:
-                self._var_access()
-
                 var_kind = self.symbol_table.kind_of(cur_val)
                 var_ind = self.symbol_table.index_of(cur_val)
                 self.vm_writer.write_push(var_kind, var_ind)
@@ -538,12 +538,13 @@ class CompilationEngine:
 
 
     def _compile_string(self):
-        st = self.current_token[1]
-        
-        self.vm_writer.write_push('constant', len(st))
+        '''compiles string 1 character at a time'''
+        string = self.current_token[1]
+
+        self.vm_writer.write_push('constant', len(string))
         self.vm_writer.write_call('String.new', 1)
 
-        for letter in st:
+        for letter in string:
             self.vm_writer.write_push('constant', ord(letter))
             self.vm_writer.write_call('String.appendChar', 2)
 
@@ -562,37 +563,3 @@ class CompilationEngine:
                 self._advance()
 
         return n_args
-
-
-    def var_exists(self, name):
-        if self.symbol_table.index_of(name) == -1:
-            return False
-        return True
-
-    def _var_access(self):
-        var_name = self.current_token[1]
-        var_type = self.symbol_table.type_of(var_name)
-        var_kind = self.symbol_table.kind_of(var_name)
-        var_ind = self.symbol_table.index_of(var_name)
-        #print(f'var acc\t{var_name}\t{var_type}\t{var_kind}\t{var_ind}')
-
-    def _subroutine_access(self):
-        #print(f'sub acc\t{self.current_token[1]}')
-        pass
-
-    def _class_access(self):
-        #print(f'cls acc\t{self.current_token[1]}')
-        pass
-
-    def _var_dec(self, var_name, var_type, var_kind):
-        self.symbol_table.define(var_name, var_type, var_kind)
-        #print(f'var dec\t{var_name}\t{var_type}\t{var_kind}\t{self.symbol_table.index_of(var_name)}')
-
-    def _subroutine_dec(self, subroutine_name):
-        self.subroutine_name = f'{self.class_name}.{subroutine_name}'
-        #print(f'sub dec - {self.current_token[1]}')
-
-    def _class_dec(self):
-        self.class_name = self.current_token[1]
-        #print(f'cls dec - {self.class_name}')
-
