@@ -1,0 +1,73 @@
+== division ==
+Math.divide(x,y)
+x >= 0, y > 0
+
+strategy - repetitive subtraction
+runtime - proportional to N
+divide(x,y):
+  div = 0
+  rem = 0
+  while rem <= x
+    rem = rem - y
+    div = div + 1
+  return div
+
+strategy - long division
+runtime - log_2(N)
+
+strategy - recursive division
+runtime - log_2(N)
+only addition operations
+divide(x,y):
+  if (y > x) return 0
+  q = divide(x, 2 * y)
+  if x - (2*x*y) < y:
+    return 2 * q
+  return 2*q + 1
+==========
+
+
+== sqrt ==
+Math.sqrt(x)
+
+inverse (x^2) can be easily computed
+monotonically increasing function
+
+can be computed using binary search (log runtime)
+
+sqrt(x):
+  y = 0
+  for j = n/2 - 1 ... 0 do
+    if (y + 2^j)^2 <= x then y = y + 2^j
+  return y
+==========
+
+
+== implementation notes - multiplication ==
+negative numbers - algorithm works with 2s complement numbers
+
+overflow - algorithm returns correct answer modulo 2^16
+
+implementing ith bit of y
+- create static array in Math constructed by init
+  - twoToThe[i]
+  - holds 16 values 2^i with i from 0 to 15
+- function boolean bit(int x, int i)
+  return ~((x & twoToThe[i]) = 0)
+==========
+
+
+== implementation notes - division ==
+negative numbers - divide absolute values, set result's sign
+
+y overflow
+- can be detected when y becomes negative
+- if (y > x) or (y < 0) return 0
+==========
+
+
+== implementation notes - sqrt ==
+(y + 2^j)^2 overflow
+- (y + 2^j)^2 <= x and (y + 2^j)^2 > 0
+==========
+
