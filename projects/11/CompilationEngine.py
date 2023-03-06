@@ -281,7 +281,6 @@ class CompilationEngine:
 
             self.vm_writer.write_push(var_kind, var_ind)
             self.vm_writer.write_arithmetic('add')
-            self.vm_writer.write_pop('temp', 0)
 
             # ']'
             self._advance()
@@ -290,8 +289,9 @@ class CompilationEngine:
             # expression
             self._compile_expression()
 
-            self.vm_writer.write_push('temp', 0)
+            self.vm_writer.write_pop('temp', 0)
             self.vm_writer.write_pop('pointer', 1)
+            self.vm_writer.write_push('temp', 0)
             self.vm_writer.write_pop('that', 0)
 
         else:
