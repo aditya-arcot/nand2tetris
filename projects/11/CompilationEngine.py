@@ -3,15 +3,10 @@ from SymbolTable import SymbolTable
 import Constants
 
 class CompilationEngine:
-    '''
-    parses tokens
-    generates XML parse tree
-    '''
     def _advance(self):
         '''advances tokenizer, appends output'''
         if self.tokenizer.has_more_tokens():
             self.current_token = self.tokenizer.advance()
-            self._append_terminal_output()
         else:
             raise Exception('no more tokens')
 
@@ -46,73 +41,24 @@ class CompilationEngine:
         self.indent = ' ' * (len(self.indent) - 2)
 
 
-    def _append_output(self, text):
-        '''appends indentation and text to output'''
-        self.output_lines.append(self.indent + text)
-
-
-    def _append_terminal_output(self):
-        '''appends terminal tokens to output'''
-        if self._current_token_type() == Constants.KEYWORD:
-            self._append_output('<keyword> ' + self._current_token_value() + ' </keyword>')
-        elif self._current_token_type() == Constants.SYMBOL:
-            val = self._current_token_value()
-            if val == '>':
-                self._append_output('<symbol> &gt; </symbol>')
-            elif val == '<':
-                self._append_output('<symbol> &lt; </symbol>')
-            elif val == '&':
-                self._append_output('<symbol> &amp; </symbol>')
-            else:
-                self._append_output('<symbol> ' + self._current_token_value() + ' </symbol>')
-        elif self._current_token_type() == Constants.INTEGER_CONSTANT:
-            self._append_output('<integerConstant> ' + self._current_token_value() +
-                                ' </integerConstant>')
-        elif self._current_token_type() == Constants.STRING_CONSTANT:
-            self._append_output('<stringConstant> ' + self._current_token_value() +
-                                ' </stringConstant>')
-        else:
-            self._append_output('<identifier> ' + self._current_token_value() + ' </identifier>')
-
-
-    def _append_non_terminal_start(self, rule):
-        '''appends non-terminal tokens start'''
-        self._append_output(f'<{rule}>')
-        self._increase_indent()
-        self.rule_stack.append(rule)
-
-
-    def _append_non_terminal_end(self):
-        '''appends non-terminal tokens end'''
-        self._decrease_indent()
-        rule = self.rule_stack.pop()
-        self._append_output(f'</{rule}>')
-
-
-    def print_lines(self):
-        '''print output lines'''
-        for line in self.output_lines:
-        #if 'identifier' in line: 
-            print(line)
-
-
     def compile(self, tokenizer):
         '''compiles jack file containing 1 class, writes to file'''
-        self.current_token = ('none', -1)
         self.tokenizer = tokenizer
-        self.indent = ''
+        self.current_token = ('none', -1)
         self.output_lines = []
+        self.indent = ''
         self.rule_stack = []
         self.class_name = ''
         self.symbol_table = SymbolTable()
 
         self._compile_class()
 
+        for i in self.output_lines:
+            print(i)
+
 
     def _compile_class(self):
         """ class: 'class' className '{' classVarDec* subroutineDec* '}' """
-
-        self._append_non_terminal_start('class')
 
         # 'class' 
         self._advance()
@@ -133,13 +79,9 @@ class CompilationEngine:
         # '}'
         self._advance()
 
-        self._append_non_terminal_end()
-
     
     def _compile_class_var_dec(self):
         """ classVarDec: ('static' | 'field') type varName (',' varName)* ';' """
-
-        self._append_non_terminal_start('classVarDec')
 
         # ('static' | 'field') 
         self._advance()
@@ -166,8 +108,6 @@ class CompilationEngine:
         # ';'
         self._advance()
 
-        self._append_non_terminal_end()
-
 
     def _compile_subroutine_dec(self):
         """ subroutineDec: ('constructor' | 'function' | 'method') ('void' | type)
@@ -176,8 +116,6 @@ class CompilationEngine:
         # clear subroutine symbol table
         self.symbol_table.start_subroutine() 
 
-        self._append_non_terminal_start('subroutineDec')
-
         # ('constructor' | 'function' | 'method') 
         self._advance()
         method = self.current_token[1] == 'method'
@@ -185,7 +123,7 @@ class CompilationEngine:
         # ('void' | type) subroutineName
         for _ in range(2):
             self._advance()
-        self._subroutine_dec(method)
+        self._subroutine_dec(method, self.current_token[1])
 
         # '('
         self._advance()
@@ -198,16 +136,12 @@ class CompilationEngine:
 
         # subroutineBody
         self._compile_subroutine_body()
-
-        self._append_non_terminal_end()
         
         self.symbol_table.print_tables()
 
 
     def _compile_parameter_list(self):
         """ parameterList: ((type varName) (',' type varName)*)? """
-
-        self._append_non_terminal_start('parameterList')
 
         while self._next_token_value() != ')':
             # type
@@ -224,13 +158,9 @@ class CompilationEngine:
             if self._next_token_value() == ',':
                 self._advance()
 
-        self._append_non_terminal_end()
-
 
     def _compile_subroutine_body(self):
         """ subroutineBody: '{' varDec* statements '}' """
-
-        self._append_non_terminal_start('subroutineBody')
 
         # '{'
         self._advance()
@@ -244,8 +174,6 @@ class CompilationEngine:
 
         # '}'
         self._advance()
-
-        self._append_non_terminal_end()
 
 
     def _compile_var_dec(self):
@@ -574,7 +502,8 @@ class CompilationEngine:
         self.symbol_table.define(var_name, var_type, var_kind)
         print(f'var dec\t{var_name}\t{var_type}\t{var_kind}\t{self.symbol_table.index_of(var_name)}')
 
-    def _subroutine_dec(self, method):
+    def _subroutine_dec(self, method, subroutine_name):
+        self.subroutine_name = f'{self.class_name}.{subroutine_name}'
         print(f'sub dec - {self.current_token[1]}')
         if method:
             self._var_dec('this', self.class_name, 'argument')
