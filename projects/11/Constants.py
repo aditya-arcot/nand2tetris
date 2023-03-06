@@ -16,3 +16,5 @@ symbols = ['{', '}', '(', ')', '[', ']', '.', ',', ';', \
 operators = ['+', '-', '*', '/', '&', '|', '<', '>', '=']
 unary_operators = ['-', '~']
 keyword_constants = ['true', 'false', 'null', 'this']
+
+operator_conversion = {'+':'add', '-':'sub', '&':'and', '|':'or', '<':'lt', '>':'gt', '=':'eq'}

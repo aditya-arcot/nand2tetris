@@ -8,12 +8,10 @@ def parse_jack_file(path):
 
     tokenizer = JackTokenizer(path)
     #for i in tokenizer.tokens: print(i)
-    print()
 
+    output_path = '.'.join(path.split('.')[:-1]) + '.vm'
     compilation_engine = CompilationEngine()
-    compilation_engine.compile(tokenizer)
-    #compilation_engine.print_lines()
-
+    compilation_engine.compile(tokenizer, output_path)
 
 
 def main():

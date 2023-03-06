@@ -41,17 +41,6 @@ class SymbolTable:
         else:
             print(f'unknown kind - {kind}')
 
-    def var_count(self, kind):
-        if kind == 'field':
-            return self.next_field_ind
-        elif kind == 'static':
-            return self.next_static_ind
-        elif kind == 'argument':
-            return self.next_argument_ind
-        elif kind == 'local':
-            return self.next_local_ind
-        return -1
-
     def type_of(self, name):
         return self.var_property(name, 0)
 
