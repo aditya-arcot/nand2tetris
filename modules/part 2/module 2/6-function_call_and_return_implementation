@@ -26,7 +26,7 @@ before returning, must push value onto stack
 ==========
 
 
-== handling call (psuedo VM code) ==
+== handling call (pseudo VM code) ==
 push return_address	// using label declared below
 push LCL		// save caller segment locations
 push ARG
