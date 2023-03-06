@@ -79,7 +79,7 @@ depending on sel, either output to a or b
 
 
 == multiplexing / demultiplexing in communications networks ==
-multiple simulataneous data streams need to pass through single, shared communications line
+multiple simultaneous data streams need to pass through single, shared communications line
 
 Mux before shared line, DMux after shared line
 
