@@ -45,7 +45,10 @@ class SymbolTable:
         return self.var_property(name, 0)
 
     def kind_of(self, name):
-        return self.var_property(name, 1)
+        kind = self.var_property(name, 1)
+        if kind == 'field':
+            return 'this'
+        return kind
     
     def index_of(self, name):
         return self.var_property(name, 2)
