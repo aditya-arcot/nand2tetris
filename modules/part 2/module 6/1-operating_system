@@ -1,0 +1,31 @@
+== typical OS services ==
+language extensions / standard library
+- math operations
+- abstract data types
+- input functions
+- textual output
+- graphics output
+- ...
+
+system oriented services
+- memory management (objects, arrays, ...)
+- file system
+- I/O device drivers
+- UI management (shell / windows)
+- multi-tasking
+- networking
+- security
+- ...
+==========
+
+
+Jack OS
+- Math
+- Memory
+- Screen
+- Output
+- Keyboard
+- String
+- Array
+- Sys
+
