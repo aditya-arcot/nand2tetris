@@ -1,0 +1,29 @@
+== Array API ==
+Class Array {
+  function Array new(int size)
+  method void dispose()
+}
+
+array processing is done by compiler
+==========
+
+
+== typical usage ==
+var Array a, b;
+let a = Array.new(3);
+let a[2] = 222;
+let b = Array.new(50);
+let b[1] = a[2] - 100;
+do a.dispose();
+==========
+
+
+== implementation notes ==
+Array.new implemented as function, not constructor
+- no fields, so no need for symbol table lookups by compiler
+- must call Memory.alloc since it will not be called
+
+Array.dispose
+- Memory.deAlloc
+==========
+
