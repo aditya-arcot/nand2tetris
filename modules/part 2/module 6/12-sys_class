@@ -1,0 +1,39 @@
+bootstrapping
+- loading basic software into memory
+- software will take care of loading other software
+
+hardware contract
+- when computer is reset, execution starts with instruction in ROM[0]
+
+VM contract
+- following code (in machine code) should be placed at top of ROM
+  - sp = 256
+  - call Sys.init
+
+Jack contract
+- program execution starts with function Main.main()
+
+OS contract
+- Sys.init should initialize OS, then call Main.main()
+
+
+== implementation notes ==
+function void init() {
+  do Main.init();
+  do Memory.init();
+  do Screen.init();
+  ...
+  do Main.main();
+}
+
+// use infinite loop
+function void halt() {}
+
+// duration in milliseconds
+// use loop, machine-specific delay
+function void wait(int duration) {}
+
+// prints given error code in specific form, halts
+function void error(int errorCode) {}
+==========
+
