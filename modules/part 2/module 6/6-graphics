@@ -15,7 +15,7 @@ Hack computer refreshes screen every few seconds
 function void drawPixel(int x, int y) {
   addr = 32*y + x/16
   val = Memory.peek[16384 + addr]
-  set (x%16)th bit of value to current color
+  set (x%16)th bit of value to current color // use logical operations
   do Memory.poke(addr, val)
 }
 ==========
