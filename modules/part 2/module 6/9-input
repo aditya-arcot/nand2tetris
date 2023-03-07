@@ -1,0 +1,60 @@
+keyboard memory map
+- single RAM register
+- RAM[24576]
+- when key pressed, register set to ASCII scan code
+- when no key pressed, register set to 0
+
+
+== keyPressed ==
+use Memory.peek
+
+if key is pressed:
+  return scan code
+else
+  return 0
+==========
+
+
+== readChar ==
+waits until key is pressed and released
+echoes key on screen
+advances cursor
+returns key char val
+
+display cursor
+while (keyPressed() == 0):
+  do nothing
+c = code of currently pressed key
+while (keyPressed() != 0):
+  do nothing
+display c at current cursor location
+advance cursor
+==========
+
+
+== readLine ==
+displays message on screen
+gets next line (until newLine char) from keyboard
+returns value as string
+
+str = empty string
+repeat
+  c = readChar()
+  if (c == newLine):
+    display newLine
+    return str
+  else if (c == backSpace):
+    remove last char from str
+    do Output.backspace()
+  else
+    str = str.append(c)
+return str
+==========
+
+
+== readInt ==
+prints message on screen
+reads next line (until newLine char) from keyboard
+returns integer value (until first non numeric char)
+==========
+
