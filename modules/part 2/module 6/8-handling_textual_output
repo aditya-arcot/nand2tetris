@@ -1,0 +1,95 @@
+textual output
+- screen - 23 rows of 64 chars, b&w
+- managed by Output class
+
+
+== printable characters ==
+(space)	32
+!	33
+"	34
+#	35
+$	36
+%	37
+&	38
+'	39
+(	40
+)	41
+*	42
++	43
+,	44
+-	45
+.	46
+/	47
+0...9	48...57
+:	58
+;	59
+<	60
+=	61
+>	62
+?	63
+@	64
+A...Z	65...90
+[	91
+/	92
+]	93
+^	94
+_	95
+`	96
+a...z	97...122
+{	123
+|	124
+}	125
+~	126
+==========
+
+
+== Hack font ==
+each char occupies fixed 11-pixel high, 8-pixel wide frame
+frame includes 2 empty right columns, 1 empty bottom row for spacing
+already implemented
+==========
+
+
+== font implementation ==
+static Array charMaps // only happens once
+
+function void initMap() {
+  let charMaps = Array.new(127);
+  do Output.create(97, 0, 0, 0, 14, ...); //a
+  do Output.create(98, 3, 3, 3, 15, ...); //b
+  do Output.create(99, 0, 0, 0, 30, ...); //c
+  ...
+  return;
+}
+
+function void create(int index, int a, int b, int c, ..., int k) {
+  var Array map;
+  let map = Array.new(11);
+  let charMaps[index] = map;
+  // populate map array
+  return;
+}
+==========
+
+
+== cursor ==
+where next character will be written
+
+if asked to display newLine, move cursor to beginning of next line
+if asked to display backspace, move cursor one column left
+if asked to display any printable char, display and move cursor one column right
+==========
+
+
+== Output class API ==
+class Output {
+  function void init() {}
+  function void moveCursor(int i, int j) {}
+  function void printChar(char c) {}
+  function void printString(String str) {}
+  function void printInt(int i) {}
+  function void println() {}
+  function void backSpace() {}
+}
+==========
+
