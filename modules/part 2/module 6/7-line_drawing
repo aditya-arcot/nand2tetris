@@ -1,0 +1,50 @@
+== drawing lines ==
+must be fast to avoid sluggish behavior
+
+if screen resolution is sufficiently high, series of pixels can look like a smooth line
+
+simplifying assumption - focusing on NE lines
+algorithm places origin at bottom-left
+drawLine(x1, y1, x2, y2)
+  dx = x2-x1
+  dy = y2-y1
+
+  a = 0
+  b = 0
+
+  // b/a > dy/dx is same as a*dy < b*dx
+  // diff = a*dy - b*dx
+  diff = 0
+
+  while a <= dx and b <= dy
+    drawPixel(x+a, y+b)
+    if diff < 0
+      a = a+1
+      diff = diff+dy
+    else
+      b = b+1
+      diff = diff-dx
+==========
+
+
+== drawing circle ==
+need to draw 2r rows of pixels
+
+drawCircle(x, y, r)
+  for each dy = -r to r do
+    drawLine(x - sqrt(r^2 - dy^2), y+dy, x + sqrt(r^2 - dy^2), y+dy)
+
+for outline of circle, draw 2 pixels instead of line
+==========
+
+
+== implementation notes ==
+drawLine
+- modify for top-left origin
+- generalize for lines in any direction
+- horizontal, vertical lines should be handled as special cases
+
+drawCircle
+- can lead to overflow (limit r to <= 181)
+==========
+
