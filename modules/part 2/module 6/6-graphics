@@ -1,0 +1,22 @@
+bitmap graphics
+- drawn from pixel grid
+- doesn't scale well
+
+vector graphics
+- drawn through lines/shapes
+- easily stored, transmitted, scaled, turned into bitmap
+
+
+Hack computer refreshes screen every few seconds
+- from memory map
+
+
+== pixel drawing ==
+function void drawPixel(int x, int y) {
+  addr = 32*y + x/16
+  val = Memory.peek[16384 + addr]
+  set (x%16)th bit of value to current color
+  do Memory.poke(addr, val)
+}
+==========
+
