@@ -1,0 +1,72 @@
+== String API ==
+class String {
+  constructor String new(int maxLength) {}
+  method void dispose() {}
+  method int length() {}
+  method char charAt(int j) {}
+  method void setCharAt(int j, char c) {}
+  method String appendChar(char c) {}
+  method void eraseLastChar() {}
+  method int intValue() {}
+  method void setInt(int num) {}
+  function char newLine() {} // return 128
+  function char backSpace() {} // return 129
+  function char doubleQuote() {} // return 34
+}
+==========
+
+
+== typical string usage ==
+var String s;
+var int x;
+
+let s = String.new(6);
+
+let s = s.appendChar(97); // a
+let s = s.appendChar(98); // ab
+let s = s.appendChar(99); // abc
+
+let x = s.length(); // 3 (actual length)
+
+do s.setInt(314); // 314
+
+let x = 2 * s.intValue(); // 628
+==========
+
+
+== int to string ==
+returns string representation of non-negative integer
+
+int2String(val):
+  lastDigit = val % 10
+  c = char representing lastDigit
+  if (val < 10)
+    return c (as string)
+  return int2String(val / 10).append(c)
+==========
+
+
+== string to int ==
+returns int value of string of digit chars
+assuming str[0] represents most significant digit
+
+string2Int(str):
+  val = 0
+  for (i=0 ... str.length) do
+    d = integer value of str[i]
+    val = val * 10 + d
+  return val
+==========
+
+
+== implementation notes ==
+field Array str
+field int length // actual length, not max
+
+constructor String new(int maxLength) {
+  let str = Array.new(maxLength);
+  let length = 0;
+  return this;
+}
+==========
+
