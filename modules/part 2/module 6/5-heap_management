@@ -1,0 +1,83 @@
+during run-time, programs typically create objects, arrays
+- implemented using reference vars pointing at data blocks in heap
+
+challenge
+- allocating memory for new objects, arrays
+- recycling memory of disposed objects, arrays
+
+function int alloc(int size)
+function void deAlloc(int object)
+
+
+== object construction ==
+variable defined (var Point p)
+- p added to stack, initialized to 0
+variable assigned (let p = Point.new(7,5))
+- constructor builds new instance
+- memory block allocated in heap
+- p set to block base addr
+==========
+
+
+== object destruction ==
+recycle memory block associated with instance
+needs to be done explicitly in Jack
+==========
+
+
+== heap management - simple ==
+init:
+  free = heapBase // first addr after stack
+
+alloc(size):
+  block = free
+  free = free + size
+  return block
+
+dealloc(object):
+  do nothing
+
+problem
+- only go down in heap
+- will eventually run out of memory
+==========
+
+
+== heap management - actual ==
+use linked list to keep track of available heap segments
+- typical segment - next, size, data region
+
+terminology
+- if segment.size >= size+2, segment is possible
+
+alloc(size):
+  search freeList for
+    - first possible segment (first fit) or
+    - smallest possible segments (best fit)
+  carve block of size size+2 from this segment
+  return base addr of block's data region
+
+dealloc(object):
+  append object to end of freeList
+
+more recycling (dealloc) results in more fragmentation of freeList
+- solved by occasional calls to a defrag function
+==========
+
+
+== implementation ==
+class Memory {
+  ...
+  static Array heap; // never call Array.new
+  ...
+
+  // in Memory.init:
+  ...
+  let heap = 2048; // heapBase
+  let freeList = 2048
+  let heap[0] = 0; // next
+  let heap[1] = 14335; // length
+  // freeList begins with only 1 large block
+}
+==========
+
