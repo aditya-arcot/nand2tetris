@@ -10,34 +10,236 @@
  * the screen is indexed (0,0).
  */
 class Screen {
+    static boolean is_black;
+    static Array screen;
 
     /** Initializes the Screen. */
     function void init() {
+        let is_black = true;
+        let screen = 16384; // 16384 - 24575
+        return;
     }
 
     /** Erases the entire screen. */
     function void clearScreen() {
+        var int i;
+        let i = 0;
+        while (i < 8192){ // 24575 - 16384 + 1
+            let screen[i] = 0;
+        }
+        return;
     }
 
     /** Sets the current color, to be used for all subsequent drawXXX commands.
      *  Black is represented by true, white by false. */
     function void setColor(boolean b) {
+        let is_black = b;
+        return;
     }
 
     /** Draws the (x,y) pixel, using the current color. */
     function void drawPixel(int x, int y) {
+        var int addr, power, mask;
+
+        let addr = (32 * y) + (x / 16);
+        let power = x & 15; // same as x % 16 since 16 is power of 2
+        let mask = Math.power_of_two(power);
+
+        if (is_black){
+            let screen[addr] = screen[addr] | mask;
+        }
+        else {
+            let screen[addr] = screen[addr] & (~mask);
+        }
+        return;
     }
 
     /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
     function void drawLine(int x1, int y1, int x2, int y2) {
+        var int tmp, dx, dy, a, b, diff;
+
+        if (x1 = x2){ // vertical
+            if (y1 < y2){
+                do Screen.drawVerticalLine(x1, y1, y2);
+            }
+            else {
+                do Screen.drawVerticalLine(x2, y2, y1);
+            }
+            return;
+        }
+
+        if (y1 = y2){ // horizontal
+            if (x1 < x2){
+                do Screen.drawHorizontalLine(x1, x2, y1);
+            }
+            else {
+                do Screen.drawHorizontalLine(x2, x1, y1);
+            }
+            return;
+        }
+
+
+        // diagonal
+
+        // 4 initial cases
+        // NE - x2 > x1, y1 > y2 
+        // SW - x1 > x2, y2 > y1
+        // SE - x2 > x1, y2 > y1
+        // NW - x1 > x2, y1 > y2
+
+        if (x1 > x2){
+            // convert SW to NE
+            if (y2 > y1){
+                // switch x1, x2
+                let tmp = x1;
+                let x1 = x2;
+                let x2 = tmp;
+
+                // switch y1, y2
+                let tmp = y1;
+                let y1 = y2;
+                let y2 = tmp;
+            }
+            // convert NW to SE
+            else {
+                // switch x1, x2
+                let tmp = x1;
+                let x1 = x2;
+                let x2 = tmp;
+
+                // switch y1, y2
+                let tmp = y1;
+                let y1 = y2;
+                let y2 = tmp;
+            }
+        }
+        
+        // 2 remaining cases
+        // NE - x2 > x1, y1 > y2
+        // SE - x2 > x1, y2 > y1
+
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        let a = 0;
+        let b = 0;
+        let diff = 0;
+
+        if (y2 > y1){ // SE
+            while ((~(a > dx)) & (~(b > dy))){
+                do Screen.drawPixel(x1+a, y1+b);
+                if (diff < 0){ // a*dy - b*dx
+                    let a = a + 1;
+                    let diff = diff + dy;
+                }
+                else {
+                    let b = b + 1;
+                    let diff = diff - dx;
+                }
+            }
+        }
+        else { // NE
+            while ((~(a > dx)) & (~(b < dy))){
+                do Screen.drawPixel(x1+a, y1+b);
+
+                if (diff > 0){
+                    let a = a + 1;
+                    let diff = diff + dy;
+                }
+                else {
+                    let b = b - 1;
+                    let diff = diff + dx;
+                }
+            }
+        }
+
+        return;
+    }
+
+    function void drawVerticalLine(int x, int y1, int y2){
+        while (~(y1 > y2)){
+            do Screen.drawPixel(x, y1);
+            let y1 = y1 + 1;
+        }
+        return;
+    }
+
+    function void drawHorizontalLineByPixels(int x1, int x2, int y){
+        while (~(x1 > x2)){
+            do Screen.drawPixel(x1, y);
+            let x1 = x1 + 1;
+        }
+        return;
+    }
+
+    function void drawHorizontalLine(int x1, int x2, int y){
+        var int x1_mod16, x2_mod16, left_addr, right_addr;
+
+        // 1 partial segment
+        if (x2 - x1 < 15){
+            do Screen.drawHorizontalLineByPixels(x1, x2, y);
+            return;
+        }
+
+        // find modulo 16
+        let x1_mod16 = x1 & 15;
+        let x2_mod16 = x2 & 15;
+
+        // find addresses
+        let left_addr = (32 * y) + (x1 / 16);
+        let right_addr = (32 * y) + (x2 / 16);
+
+        // remaining - either 1 entire segment or multiple partial / complete segments
+
+        // 1 complete segment, since diff = 15
+        if (left_addr = right_addr){
+            let screen[left_addr] = is_black;
+            return;
+        }
+
+        // remaining - 2+ partial / complete segments
+        // left segment
+        if (~(x1_mod16 = 0)){
+            do Screen.drawHorizontalLineByPixels(x1, x1 + (15 - x1_mod16), y);
+            let left_addr = left_addr + 1;
+        }
+        // right segment
+        if (~(x2_mod16 = 15)){
+            do Screen.drawHorizontalLineByPixels(x2 - x2_mod16, x2, y);
+            let right_addr = right_addr - 1;
+        }
+
+        // remaining - 0+ complete segments
+        while (~(left_addr > right_addr)){
+            let screen[left_addr] = is_black;
+            let left_addr = left_addr + 1;
+        }
+        return;
     }
 
     /** Draws a filled rectangle whose top left corner is (x1, y1)
      * and bottom right corner is (x2,y2), using the current color. */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
+        while (~(y1 > y2)){
+            do Screen.drawHorizontalLine(x1, x2, y1);
+            let y1 = y1 + 1;
+        }
+        return;
     }
 
     /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
     function void drawCircle(int x, int y, int r) {
+        var int dx, dy, r_squared;
+
+        if (~(r > 181)){
+            let dy = -r;
+            let r_squared = r * r;
+            while (~(dy > r)){
+                let dx = Math.sqrt(r_squared - (dy*dy));
+                do Screen.drawHorizontalLine(x - dx, x + dx, y + dy);
+                let dy = dy + 1;
+            }
+
+        }
+        return;
     }
 }
