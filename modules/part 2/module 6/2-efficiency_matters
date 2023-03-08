@@ -31,7 +31,7 @@ multiply(x,y):
   for i = 0 ... w - 1 do
     if (ith bit of y == 1)
       sum = sum + shiftedX
-    shiftedX = shifted X * 2
+    shiftedX = shiftedX * 2
   return sum
 
 run-time
