@@ -21,7 +21,7 @@ only addition operations
 divide(x,y):
   if (y > x) return 0
   q = divide(x, 2 * y)
-  if x - (2*x*y) < y:
+  if x - (2*q*y) < y:
     return 2 * q
   return 2*q + 1
 ==========
