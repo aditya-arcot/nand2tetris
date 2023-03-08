@@ -26,6 +26,11 @@ class Math {
         return;
     }
 
+    /** Returns value of power of 2. */
+    function int power_of_two(int pow){
+        return two_to_the[pow];
+    }
+
     /** Returns the absolute value of x. */
     function int abs(int x) {
         if (x < 0){
