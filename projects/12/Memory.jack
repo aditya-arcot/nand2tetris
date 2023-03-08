@@ -9,26 +9,80 @@
  * consists of 32,768 words, each holding a 16-bit binary number.
  */ 
 class Memory {
+    static Array ram;
+    static Array free_blocks;
+    static int length, next;
 
     /** Initializes the class. */
     function void init() {
+        let ram = 0; // start of RAM segment
+
+        let next = 0;
+        let length = 1;
+
+        // heap: 2048 - 16383
+        let free_blocks = 2048;
+        let free_blocks[next] = null;
+        let free_blocks[length] = 14334; // 16383 - 2048 + 1 - 2
+
+        return;
     }
 
     /** Returns the RAM value at the given address. */
     function int peek(int address) {
+        return ram[address];
     }
 
     /** Sets the RAM value at the given address to the given value. */
     function void poke(int address, int value) {
+        let ram[address] = value;
+        return;
     }
 
     /** Finds an available RAM block of the given size and returns
      *  a reference to its base address. */
     function int alloc(int size) {
+        var Array cur_block, prev_block, new_block;
+        var int alloc_size;
+
+        let alloc_size = size + 2;
+
+        // space available in 1st block
+        if (~(free_blocks[length] < alloc_size)){
+            let new_block = free_blocks + 2 + free_blocks[length] - alloc_size;
+            let new_block[length] = size; // next doesn't matter
+            let free_blocks[length] = free_blocks[length] - alloc_size; // next stays same
+            return new_block + 2;
+        }
+
+        // need to look past 1st block
+        let cur_block = free_blocks;
+        while (cur_block[length] < alloc_size){
+            let prev_block = cur_block;
+            let cur_block = cur_block[next];
+            if (cur_block = 0){
+                return -1; // no more blocks
+            }
+        }
+
+        // update prev_block[next]
+        let prev_block[next] = cur_block;
+
+        // create new_block at end of cur_block
+        let new_block = cur_block + 2 + cur_block[length] - alloc_size;
+        let new_block[length] = size;
+        let cur_block[length] = cur_block[length] - alloc_size;
+
+        // return data segment of new_block
+        return new_block + 2;
     }
 
     /** De-allocates the given object (cast as an array) by making
      *  it available for future allocations. */
-    function void deAlloc(Array o) {
+    function void deAlloc(Array object) {
+        let object = object - 2;
+        let object[next] = free_blocks;
+        let free_blocks = object;
+        return;
     }    
 }
