@@ -116,23 +116,23 @@ class Main {
         // Test that deallocated blocks are placed on the free list and can
         // be reused.
 
-        let out[0] = 70;
+        let out[0] = 80;
         let a = Memory.alloc(8000);
         let out[7] = a;                     // RAM[17007] = block address
 
-        let out[0] = 71;
+        let out[0] = 81;
         do Main.checkRange(a, 8000);
 
-        let out[0] = 72;
+        let out[0] = 82;
         do Memory.deAlloc(a);
 
-        let out[0] = 73;
+        let out[0] = 83;
         let a = Memory.alloc(7000);
 
-        let out[0] = 74;
+        let out[0] = 84;
         do Main.checkRange(a, 7000);
 
-        let out[0] = 75;
+        let out[0] = 85;
         do Memory.deAlloc(a);
         let out[8] = a;                     // RAM[17008] = block address
 
