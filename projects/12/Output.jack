@@ -20,15 +20,15 @@ class Output {
     static Array charMaps; 
     static Array screen;
     static int cursor_x, cursor_y;
-    static int x_bound, y_bound;
+    static int max_cursor_x, max_cursor_y;
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
         let screen = 16384;
         let cursor_x = 0;
         let cursor_y = 0;
-        let x_bound = 64 * 8;
-        let y_bound = 23 * 11;
+        let max_cursor_x = 63 * 8;
+        let max_cursor_y = 22 * 11;
         do Output.initMap();
         return;
     }
@@ -216,13 +216,13 @@ class Output {
         var boolean left_char;
         var int addr, i, curr, old;
 
+        if ((c < 32) | (c > 126)) {
+            return;
+        }
+
         let left_char = ((cursor_x & 15) < 8);
         let map = Output.getMap(c);
         let addr = (32 * cursor_y) + (cursor_x / 16);
-
-        if ((c < 32) | (c > 126)){
-            let c = 0;
-        }
 
         let i = 0;
         while (i < 11){
@@ -240,17 +240,14 @@ class Output {
         }
 
         let cursor_x = cursor_x + 8;
-        do Output.checkBounds();
-        return;
-    }
-
-    function void checkBounds() {
-        if (~(cursor_x < x_bound)){
-            do Output.println();
-        }
-        if (~(cursor_y < y_bound)){
-            let cursor_y = 0;
+        if (cursor_x > max_cursor_x){
             let cursor_x = 0;
+            if (cursor_y = max_cursor_y){
+                let cursor_y = 0;
+            }
+            else {
+                let cursor_y = cursor_y + 11;
+            }
         }
         return;
     }
@@ -280,22 +277,35 @@ class Output {
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
-        let cursor_y = cursor_y + 11;
         let cursor_x = 0;
-        do Output.checkBounds();
+        if (cursor_y = max_cursor_y){
+            let cursor_y = 0;
+        }
+        else {
+            let cursor_y = cursor_y + 11;
+        }
+        return;
+    }
+
+    /** Clears the previous character and moves the cursor one column back. */
+    function void backSpace() {
+        do Output.moveBack();
+        do Output.printChar(32);
+        do Output.moveBack();
         return;
     }
 
     /** Moves the cursor one column back. */
-    function void backSpace() {
+    function void moveBack() {
         if (cursor_x = 0){
-            if (~(cursor_y = 0)) {
-                let cursor_x = 63 * 8;
-                let cursor_y = cursor_y - 11;
+            let cursor_x = 63 * 8;
+            if (cursor_y = 0){
+                let cursor_y = 22 * 11;
             }
-            return;
         }
-        let cursor_x = cursor_x - 8;
+        else {
+            let cursor_x = cursor_x - 8;
+        }
         return;
     }
 }

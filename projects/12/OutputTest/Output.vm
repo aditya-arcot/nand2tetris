@@ -5,11 +5,11 @@ push constant 0
 pop static 2
 push constant 0
 pop static 3
-push constant 64
+push constant 63
 push constant 8
 call Math.multiply 2
 pop static 4
-push constant 23
+push constant 22
 push constant 11
 call Math.multiply 2
 pop static 5
@@ -1576,6 +1576,19 @@ label WHILE_END0
 push constant 0
 return
 function Output.printChar 6
+push argument 0
+push constant 32
+lt
+push argument 0
+push constant 126
+gt
+or
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
 push static 2
 push constant 15
 and
@@ -1593,19 +1606,6 @@ push constant 16
 call Math.divide 2
 add
 pop local 2
-push argument 0
-push constant 32
-lt
-push argument 0
-push constant 126
-gt
-or
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-push constant 0
-pop argument 0
-label IF_FALSE0
 push constant 0
 pop local 3
 label WHILE_EXP0
@@ -1685,33 +1685,30 @@ push static 2
 push constant 8
 add
 pop static 2
-call Output.checkBounds 0
-pop temp 0
-push constant 0
-return
-function Output.checkBounds 0
 push static 2
 push static 4
-lt
-not
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-call Output.println 0
-pop temp 0
-label IF_FALSE0
-push static 3
-push static 5
-lt
-not
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
-push constant 0
-pop static 3
+gt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
 push constant 0
 pop static 2
-label IF_FALSE1
+push static 3
+push static 5
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+pop static 3
+goto IF_END3
+label IF_FALSE3
+push static 3
+push constant 11
+add
+pop static 3
+label IF_END3
+label IF_FALSE2
 push constant 0
 return
 function Output.printString 1
@@ -1754,45 +1751,63 @@ pop temp 0
 push constant 0
 return
 function Output.println 0
+push constant 0
+pop static 2
+push static 3
+push static 5
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+pop static 3
+goto IF_END0
+label IF_FALSE0
 push static 3
 push constant 11
 add
 pop static 3
-push constant 0
-pop static 2
-call Output.checkBounds 0
-pop temp 0
+label IF_END0
 push constant 0
 return
 function Output.backSpace 0
+call Output.moveBack 0
+pop temp 0
+push constant 32
+call Output.printChar 1
+pop temp 0
+call Output.moveBack 0
+pop temp 0
+push constant 0
+return
+function Output.moveBack 0
 push static 2
 push constant 0
 eq
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
-push static 3
-push constant 0
-eq
-not
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
 push constant 63
 push constant 8
 call Math.multiply 2
 pop static 2
 push static 3
+push constant 0
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 22
 push constant 11
-sub
+call Math.multiply 2
 pop static 3
 label IF_FALSE1
-push constant 0
-return
+goto IF_END0
 label IF_FALSE0
 push static 2
 push constant 8
 sub
 pop static 2
+label IF_END0
 push constant 0
 return
