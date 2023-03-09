@@ -42,6 +42,10 @@ class Screen {
         var int addr, power, mask;
 
         let addr = (32 * y) + (x / 16);
+
+        // binary representation direction switched for screen
+        // ex: 0000 0000 0000 1111 draws left 4 pixels for an address
+        
         let power = x & 15; // same as x % 16 since 16 is power of 2
         let mask = Math.power_of_two(power);
 
