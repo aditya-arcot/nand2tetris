@@ -1,0 +1,23 @@
+mass storage
+network access
+
+assume we have devices already
+- hard disk
+- network interface card
+
+saving, loading Hack programs
+- programs must be able to reside in writable memory space, not ROM
+- specify simple file system
+- develop OS class for file system
+- command shell?
+
+connecting to Internet
+- card must be able to handle stream of bits from Internet
+- new OS class with communications protocol
+
+building new chip
+- plan exact functionality
+- identify what else needs to be modified
+- specify necessary API's & test
+- create Java class for low-level functionality
+
