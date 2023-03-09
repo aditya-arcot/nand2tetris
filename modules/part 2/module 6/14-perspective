@@ -1,0 +1,10 @@
+features missing from our OS
+- multi-threading, multi-processing
+- file system
+- command line shell
+- window system
+- security
+- communication
+
+still, our OS closes many gaps between programs and underlying hardware
+
