@@ -186,26 +186,11 @@ class Output {
     /** Moves the cursor to the j-th column of the i-th row,
      *  and erases the character displayed there. */
     function void moveCursor(int i, int j) {
-        var int addr, old, i;
-        var boolean left_char;
-
         let cursor_y = i * 11;
         let cursor_x = j * 8;
-
-        let left_char = ((cursor_x & 15) < 8);
-        let addr = (32 * cursor_y) + (cursor_x / 16);
-
-        let i = 0;
-        while (i < 11){
-            if (left_char){
-                let screen[addr] = 0 | ((screen[addr] * Math.power_of_two(8)) & -256);
-            }
-            else {
-                let screen[addr] = 0 | (screen[addr] & 255);
-            }
-            let addr = addr + 32;
-            let i = i + 1;
-        }
+        do Output.printChar(32);
+        let cursor_y = i * 11;
+        let cursor_x = j * 8;
         return;
     }
 
@@ -224,17 +209,18 @@ class Output {
         let map = Output.getMap(c);
         let addr = (32 * cursor_y) + (cursor_x / 16);
 
+        // binary representation direction switched for screen
+        // ex: 0000 0000 0000 1111 draws left 4 pixels for an address
+
         let i = 0;
         while (i < 11){
             if (left_char){
-                let curr = map[i] & 255;
-                let old = (screen[addr] * Math.power_of_two(8)) & -256;
+                let screen[addr] = (map[i] & 255) | (screen[addr] & -256); // new | old
             }
             else {
-                let curr = (map[i] * Math.power_of_two(8)) & -256;
-                let old = screen[addr] & 255;
+                // need to shift letter to right
+                let screen[addr] = ((map[i] * Math.power_of_two(8)) & -256) | (screen[addr] & 255);
             }
-            let screen[addr] = curr | old;
             let addr = addr + 32;
             let i = i + 1;
         }
