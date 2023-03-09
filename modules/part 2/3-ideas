@@ -1,0 +1,18 @@
+Jack
+- more friendly syntax
+- new commands
+- extend type system
+- add inheritance
+
+implementing another high-level language
+- new or existing
+
+== physical implementation of Hack machine ==
+2 ways
+- emulate on existing device
+- build from scratch
+  - learn industrial strength HDL like VHDL or Verilog
+  - rewrite hardware chips
+  - commit chips to programmable hardware platform (ex: FGPA)
+==========
+
