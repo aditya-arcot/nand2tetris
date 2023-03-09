@@ -11,8 +11,7 @@
  * spacing) and 8 pixels wide (including 2 pixels for inter-character spacing).
  * The resulting grid accommodates 23 rows (indexed 0..22, top to bottom)
  * of 64 characters each (indexed 0..63, left to right). The top left 
- * character position on the screen is indexed (0,0). A cursor, implemented
- * as a small filled square, indicates where the next character will be displayed.
+ * character position on the screen is indexed (0,0).
  */
 class Output {
 
@@ -200,10 +199,6 @@ class Output {
         var Array map;
         var boolean left_char;
         var int addr, i, curr, old;
-
-        if ((c < 32) | (c > 126)) {
-            return;
-        }
 
         let left_char = ((cursor_x & 15) < 8);
         let map = Output.getMap(c);
