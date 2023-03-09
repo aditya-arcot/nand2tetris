@@ -26,6 +26,7 @@ class Screen {
         let i = 0;
         while (i < 8192){ // 24575 - 16384 + 1
             let screen[i] = 0;
+            let i = i + 1;
         }
         return;
     }
